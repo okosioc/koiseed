@@ -1,0 +1,10 @@
+# Each line is a folder or file
+# For folder, only files with extension .jinja2 will be rendered
+
+# www
+www/static/js/enums.js.jinja2
+www/templates/{{#blueprints}}
+www/blueprints/__init__.py.jinja2
+www/blueprints/{{#blueprints}}.py.jinja2
+
+# miniapp

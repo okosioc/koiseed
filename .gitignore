@@ -1,0 +1,51 @@
+# Byte-compiled
+*.pyc
+*.DS_Store
+
+# Logs
+www/logs/*.log
+www/logs/*.log.*
+
+# LocalConfig
+instance/*.py
+instance/*.pem
+instance/*.txt
+
+# PyCharm
+.idea/
+
+# Data preparation
+www/scripts/*.json
+www/scripts/*.log
+
+# Wsgi
+wsgi.pid
+
+# Uploads
+www/static/uploads/
+www/static/downloads/
+www/static/exports/
+www/static/reports/
+
+# Qiniu
+.qiniu*
+
+# pytest
+.pytest_cache
+
+# npm
+node_modules/
+build/
+npm-debug.log
+.env
+
+# venv
+venv/
+
+# jupyter
+.ipynb_checkpoints/
+
+# pyseed
+*.*.BASE
+*.*.THIS
+*.*.OTHER

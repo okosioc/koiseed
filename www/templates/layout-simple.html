@@ -1,0 +1,30 @@
+{% from "macros.html" import base, version with context %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block seo %}
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+    {% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    <link href="/static/img/favicon.ico" rel="shortcut icon"/>
+    <link href="/static/landkit/assets/fonts/feather/feather.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/landkit/assets/css/theme.min.css" rel="stylesheet" type="text/css"/>
+    {% block style %}
+    {% endblock %}
+</head>
+<body>
+{% block content %}
+{% endblock %}
+<script src="/static/landkit/assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="/static/landkit/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+{# customize scripts #}
+<script src="/static/vendor/bootstrap4-notify/bootstrap-notify.min.js"></script>
+<script src="/static/js/app.js?{{ version() }}"></script>
+{% block script %}
+{% endblock %}
+</body>
+</html>

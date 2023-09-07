@@ -1,0 +1,281 @@
+{# * #}
+{# * global var to control code generation #}
+{# * #}
+{% set render_controls = namespace(relations_needing_preload=[], relations_needing_search=[], relations_needing_async_load=[]) %}
+{# * #}
+{# * macro - iterate layout to get needed relations and etc, param layout is rows, param schema is alway a object's schema #}
+{# * #}
+{% macro iterate_layout(rows, schema) %}
+    {% for row in rows %}
+        {% for column in row %}
+            {% set column_name = column['name'] %}
+            {% set column_schema = schema.properties[column_name] or {} %}
+            {% set column_layout = column['rows'] %}
+            {# column format overwrites schema format #}
+            {% set column_format = column.format or column_schema.format %}
+            {# skip summary format, as summmary is only for displaying which do not impact any complex logic #}
+            {% if column_format == 'summary' %}
+                {# pass #}
+            {# group column #}
+            {% elif column_name|float(-1) != -1 %}
+                {{- iterate_layout(column_layout, schema) -}}
+            {# normal column #}
+            {% elif column_schema %}
+                {% set inner_schema = none %}
+                {% if column_schema.type == 'object' %}
+                    {% set inner_schema = column_schema %}
+                {% elif column_schema.type == 'array' %}
+                    {% set inner_schema = column_schema['items'] if column_schema['items']['type'] == 'object' else none %}
+                {% endif %}
+                {# relation logic #}
+                {% if column_schema.is_relation %}
+                    {% set related_model_name = inner_schema.py_type %}
+                    {# relations_needing_preload is used in action form when loading view #}
+                    {% if column_schema.is_out_relation and related_model_name not in render_controls.relations_needing_preload %}
+                        {% set render_controls.relations_needing_preload = render_controls.relations_needing_preload + [(related_model_name, inner_schema['columns'])] %}
+                    {% endif %}
+                    {# relations_needing_search is used in action form when searching related models #}
+                    {% if column_schema.is_out_relation and column_schema.format in ['media', 'timeline', 'modal'] and related_model_name not in render_controls.relations_needing_search %}
+                        {% set render_controls.relations_needing_search = render_controls.relations_needing_search + [(related_model_name, inner_schema['columns'])] %}
+                    {% endif %}
+                    {# relations_needing_async_load is used in action read #}
+                    {% if column_schema.format in ['calendar'] and related_model_name not in render_controls.relations_needing_async_load %}
+                        {% set render_controls.relations_needing_async_load = render_controls.relations_needing_async_load + [(related_model_name, column_layout|fields or inner_schema['columns'])] %}
+                    {% endif %}
+                {# object/array/simple #}
+                {% else %}
+                    {# iterate inner layout #}
+                    {% if inner_schema %}
+                        {{- iterate_layout(column_layout, inner_schema) -}}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endmacro %}
+{# * #}
+{# * macro - render permission expression for an action #}
+{# * #}
+{% macro render_permisson(blueprint_name) %}
+{% if blueprint_name == 'admin' %}
+@admin_permission
+{% elif blueprint_name != 'public' %}
+@auth_permission
+{% endif %}
+{% endmacro %}
+{# * #}
+{# * macro - render snippet for reading a model by id #}
+{# * #}
+{% macro render_model_read(model) %}
+{{ model.name_snake }} = {{ model.name }}.find_one(id_)
+if not {{ model.name_snake }}:
+    abort(404)
+{% endmacro %}
+{# * #}
+{# * macro - render snippet for creating a model #}
+{# * #}
+{% macro render_model_create(model) %}
+{{ model.name_snake }} = {{ model.name }}()
+{% for field in model.schema.properties %}
+{% set field_schema = model.schema.properties[field] %}
+{# presetting values for out relation fields #}
+{# e.g, task.project -> project.tasks, project field is a out relation to project, and project owns a task means we have to create task under project, by passing project_id param #}
+{# e.g, task.user -> user.tasks, user has many tasks and we can create task by passing user_id #}
+{% if field_schema.is_out_relation and field_schema.ownership %}
+#
+if '{{ field_schema.save_field_name }}' in request.args:
+    {% if field_schema.type == 'array' %}
+    {{ field_schema.save_field_name }} = list(map({{ field_schema['items'].id_type }}, request.args.getlist('{{ field_schema.save_field_name }}')))
+    {{ model.name_snake }}.{{ field }} = {{ field_schema['items'].py_type }}.find_by_ids({{ field_schema.save_field_name }})
+    args.extend([('{{ field_schema.save_field_name }}', i) for i in {{ field_schema.save_field_name }}])
+    {% else %}
+    {{ field_schema.save_field_name }} = {{ field_schema.id_type }}(request.args.get('{{ field_schema.save_field_name }}'))
+    {{ model.name_snake }}.{{ field }} = {{ field_schema.py_type }}.find_one({{ field_schema.save_field_name }})
+    args.append(('{{ field_schema.save_field_name }}', {{ field_schema.save_field_name }}))
+    {% endif %}
+{% endif %}
+{% endfor %}
+{% endmacro %}
+{# * #}
+{# * macro - render snippet for preloading related models in a create/update/upcreate action #}
+{# * #}
+{% macro render_preloads() %}
+{% if render_controls.relations_needing_preload %}
+#
+{% endif %}
+{% for relation, projection in render_controls.relations_needing_preload %}
+{% set related_model = models[relation] %}
+{{ related_model.name_snake_plural }}, {{ related_model.name_snake_plural }}_pagination = {{ related_model.name }}.search({}, projection={{ projection }}, sort=[('create_time', -1)])
+current_app.logger.info(f'Preloaded {len({{ related_model.name_snake_plural }})} {{ related_model.name_title_lower_plural }}')
+preloads.update({'{{ related_model.name_snake_plural }}': {{ related_model.name_snake_plural }}, '{{ related_model.name_snake_plural }}_pagination': dict({{ related_model.name_snake_plural }}_pagination), })
+{% endfor %}
+{% endmacro %}
+{# * #}
+{# * macro - render snippet for model create post #}
+{# * #}
+{% macro render_model_create_post(model) %}
+req_{{ model.name_snake }}.save()
+id_ = req_{{ model.name_snake }}.{{ model.schema.id_name }}
+current_app.logger.info(f'Successfully create {{ model.name_title_lower }} {{ '{' }}id_{{ '}' }}')
+{% endmacro %}
+{# * #}
+{# * macro - render snippet for model update post #}
+{# * #}
+{% macro render_model_update_post(model, layout) %}
+existing = {{ model.name }}.find_one(id_)
+if not existing:
+    abort(404)
+#
+{% for field in layout|fields if model.schema.properties[field].editable %}
+existing.{{ field }} = req_{{ model.name_snake }}.{{ field }}
+{% endfor %}
+#
+existing.update_time = datetime.now()
+existing.save()
+current_app.logger.info(f'Successfully update {{ model.name_title_lower }} {{ '{' }}id_{{ '}' }}')
+{% endmacro %}
+{# * #}
+{# * main #}
+{# * #}
+""" {{ blueprint.name }} module. """
+from datetime import datetime
+
+from bson import ObjectId
+from flask import Blueprint, render_template, current_app, redirect, request, abort, jsonify, url_for
+from flask_login import current_user
+
+from py3seed import populate_model, populate_search
+from core.models import {{ blueprint.models|map(attribute='name')|unique|join(', ') }}
+from www.commons import get_id, auth_permission, admin_permission
+{# public blueprint with blank url_prefix is defined at www/public.py #}
+{% if blueprint.name == 'public' %}
+from www.public import public
+{% else %}
+
+{{ blueprint.name_snake }} = Blueprint('{{ blueprint.name }}', __name__, url_prefix='/{{ blueprint.name }}')
+{% endif %}
+
+
+{% for view in blueprint.views %}
+{# core variables #}
+{% set model = view.model %}
+{% set action = view.action %}
+{% set layout = view.rows %}
+{# reset and recalculate render controls #}
+{% set render_controls.relations_needing_preload = [] %}
+{% set render_controls.relations_needing_search = [] %}
+{% set render_controls.relations_needing_async_load = [] %}
+{{- iterate_layout(layout, model.schema) -}}
+{# define view function #}
+@{{ blueprint.name_snake }}.route('/{{ view.name }}')
+{{ render_permisson(blueprint.name) -}}
+def {{ view.name_snake }}():
+    """ {{ view.params.title }}. """
+    {# read #}
+    {% if action == 'read' %}
+    id_ = get_id({{ model.schema.id_type }})
+    {% filter right(4) %}{{ render_model_read(model) }}{% endfilter %}
+    #
+    return render_template('{{ blueprint.name }}/{{ view.name }}.html', {{ model.name_snake }}={{ model.name_snake }})
+    {# update #}
+    {% elif action == 'update' %}
+    preloads = {}
+    id_ = get_id({{ model.schema.id_type }})
+    {% filter right(4) %}{{ render_model_read(model) }}{% endfilter %}
+    {% filter right(4) %}{{ render_preloads() }}{% endfilter %}
+    #
+    return render_template('{{ blueprint.name }}/{{ view.name }}.html', {{ model.name_snake }}={{ model.name_snake }}, **preloads)
+    {# create #}
+    {% elif action == 'create' %}
+    args, preloads = [], {}
+    {% filter right(4) %}{{ render_model_create(model) }}{% endfilter %}
+    {% filter right(4) %}{{ render_preloads() }}{% endfilter %}
+    #
+    return render_template('{{ blueprint.name }}/{{ view.name }}.html', {{ model.name_snake }}={{ model.name_snake }}, args=args, **preloads)
+    {# upcreate #}
+    {% elif action == 'upcreate' %}
+    args, preloads = [], {}
+    id_ = get_id({{ model.schema.id_type }})
+    if id_:
+        {% filter right(8) %}{{ render_model_read(model) }}{% endfilter %}
+    else:
+        {% filter right(8) %}{{ render_model_create(model) }}{% endfilter %}
+    {% filter right(4) %}{{ render_preloads() }}{% endfilter %}
+    #
+    return render_template('{{ blueprint.name }}/{{ view.name }}.html', {{ model.name_snake }}={{ model.name_snake }}, args=args, **preloads)
+    {# query #}
+    {% elif action == 'query' %}
+    page, sort = request.args.get('p', 1, lambda x: int(x) if x.isdigit() else 1), [('create_time', -1)]
+    search, condition = populate_search(request.args, {{ model.name }})
+    current_app.logger.info(f'Try to search {{ model.name_title_lower }} by {condition}, sort by {sort}')
+    {{ model.name_snake_plural }}, pagination = {{ model.name }}.search(condition, page, sort=sort)
+    #
+    return render_template('{{ blueprint.name }}/{{ view.name }}.html',
+                           search=search, pagination=pagination, {{ model.name_snake_plural }}={{ model.name_snake_plural }})
+    {# unsupported action #}
+    {% else %}
+    # FIXME: UNSUPPORTED action {{ action }}!
+    return render_template('{{ blueprint.name }}/{{ view.name }}.html')
+    {% endif %}
+
+
+{# define post function in read #}
+{% if action == 'read' %}
+{# define load relation function in read, i.e, loading events monthly in a calendar #}
+{% for relation, projection in render_controls.relations_needing_async_load %}
+{% set related_model = models[relation] %}
+@{{ blueprint.name_snake }}.route('/{{ view.name }}/load-{{ related_model.name_kebab_plural }}', methods=('POST',))
+{{ generate_permisson(blueprint.name) -}}
+def {{ view.name_snake }}_load_{{ related_model.name_snake_plural }}():
+    """ $$(text_load){{ related_model.name_title_lower }}. """
+    page, sort = request.form.get('p', 1, lambda x: int(x) if x.isdigit() else 1), [('create_time', -1)]
+    search, condition = populate_search(request.form, {{ related_model.name }})
+    current_app.logger.info(f'Try to load {{ related_model.name_title_lower }} at page {page} by {condition}, sort by {sort}')
+    {{ related_model.name_snake_plural }}, pagination = {{ related_model.name }}.search(condition, page, projection={{ projection }}, sort=sort)
+    return jsonify(error=0, message='Load {{ related_model.name_title_lower }} successfully.', pagination=dict(pagination), {{ related_model.name_snake_plural }}={{ related_model.name_snake_plural }})
+
+
+{% endfor %}
+{% endif %}
+{# define post function for create/update/upcreate #}
+{% if action in ['create', 'update', 'upcreate'] %}
+@{{ blueprint.name_snake }}.route('/{{ view.name }}-{{ action }}', methods=('POST',))
+{{ render_permisson(blueprint.name) -}}
+def {{ view.name_snake }}_{{ action }}():
+    """ $$(text_save){{ view.params.title }}. """
+    req_{{ model.name_snake }} = populate_model(request.form, {{ model.name }})
+    id_ = get_id({{ model.schema.id_type }})
+    current_app.logger.info(f'Try to save {{ model.name_title_lower }} with id {id_}: {{ '{' }}req_{{ model.name_snake }}{{ '}' }}')
+    #
+    {% if action == 'create' %}
+    {% filter right(4) %}{{ render_model_create_post(model) }}{% endfilter %}
+    {% elif action == 'update' %}
+    {% filter right(4) %}{{ render_model_update_post(model, layout) }}{% endfilter %}
+    {% else %}
+    if not id_:
+        {% filter right(8) %}{{ render_model_create_post(model) }}{% endfilter %}
+    else:
+        {% filter right(8) %}{{ render_model_update_post(model, layout) }}{% endfilter %}
+    {% endif %}
+    #
+    return jsonify(error=0, message='Save {{ model.name_title_lower }} successfully.', id=id_)
+
+
+{# define search relation function in create/update/upcreate #}
+{% for relation, projection in render_controls.relations_needing_search %}
+{% set related_model = models[relation] %}
+@{{ blueprint.name_snake }}.route('/{{ view.name }}/search-{{ related_model.name_kebab_plural }}', methods=('POST',))
+{{ render_permisson(blueprint.name) -}}
+def {{ view.name_snake }}_search_{{ related_model.name_snake_plural }}():
+    """ $$(text_search){{ related_model.schema.title }}. """
+    page, sort = request.form.get('p', 1, lambda x: int(x) if x.isdigit() else 1), [('create_time', -1)]
+    search, condition = populate_search(request.form, {{ related_model.name }})
+    current_app.logger.info(f'Try to search {{ related_model.name_title_lower }} at page {page} by {condition}, sort by {sort}')
+    {{ related_model.name_snake_plural }}, pagination = {{ related_model.name }}.search(condition, page, projection={{ projection }}, sort=sort)
+    return jsonify(error=0, message='Search {{ related_model.name_title_lower }} successfully.', pagination=dict(pagination), {{ related_model.name_snake_plural }}={{ related_model.name_snake_plural }})
+
+
+{% endfor %}
+{% endif %}
+{# /.blueprint.views #}
+{% endfor %}

@@ -1,0 +1,19 @@
+{# * #}
+{# * available context {view, model, action, render_controls, ...} #}
+{# * #}
+{% set view_is_card = view.params.is_card or false %}
+{% set view_is_horizontal = view.params.is_horizontal or false %}
+{# * #}
+{# * main #}
+{# * #}
+<div id="div-{{ view.name_kebab }}">
+    {% if view_is_card %}
+    <div class="card"><div class="card-body">
+    {% endif %}
+    <div class="object" name="{{ model.name_snake }}">
+        {% filter right(8) %}{{ display_layout(model.name_snake, model.name_snake, model.schema, view.rows, view_is_card, true) }}{% endfilter %}
+    </div>
+    {% if view_is_card %}
+    </div></div>
+    {% endif %}
+</div>

@@ -1,0 +1,14 @@
+Flask >= 2.2
+Flask-Caching
+Flask-Login
+Flask-WTF
+wtforms[email]
+Flask-Mail
+Flask-Babel
+pytest
+pymongo
+fabric
+schedule
+arrow
+py3seed
+qiniu

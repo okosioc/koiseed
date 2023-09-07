@@ -1,0 +1,8 @@
+{% extends "layout-public.html" %}
+{% set title = _('Index') %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% include 'includes/landkit/welcome-basic.html' %}
+    {% include 'includes/landkit/introduce-basic.html' %}
+    {% include 'includes/landkit/call-to-action-basic.html' %}
+{% endblock %}

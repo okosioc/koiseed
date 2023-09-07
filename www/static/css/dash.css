@@ -1,0 +1,351 @@
+/* margin & padding */
+
+.m1 {
+    margin: 1rem !important;
+}
+
+.mb1 {
+    margin-bottom: 1rem !important;
+}
+
+.p1 {
+    padding: 1rem !important;
+}
+
+.pb1 {
+    padding-bottom: 1rem !important;
+}
+
+.modal-footer {
+    padding: .5rem 1.25rem !important;
+}
+
+
+/* table */
+
+.table-compact th {
+    padding: 0.8rem 1rem;
+}
+
+.table-compact td {
+    padding: 0.8rem 1rem;
+}
+
+/* gallery */
+
+.gallery {
+    position: relative;
+}
+
+.gallery a {
+    display: block;
+    position: relative;
+    height: 300px;
+    border: 1px solid #E3EBF6;
+    border-radius: 0.375rem;
+    padding: 0.25rem;
+    margin: 0 1.5rem 1.5rem 0;
+    float: left;
+}
+
+.gallery a img {
+    width: auto;
+    height: 100%;
+}
+
+/* twitter-typeahead */
+
+span.twitter-typeahead {
+    display: inline !important;
+}
+
+span.twitter-typeahead .tt-input {
+    border-style: dotted;
+    border-width: 1px;
+    border-color: #D2DDEC;
+}
+
+span.twitter-typeahead .tt-input:focus {
+    color: #12263F;
+    background-color: #FFFFFF;
+    border-color: #2C7BE5;
+    outline: 0;
+    box-shadow: transparent;
+}
+
+.input-group span.twitter-typeahead {
+    display: flex !important;
+    align-items: center;
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+}
+
+.input-group span.twitter-typeahead .tt-menu, .input-group span.twitter-typeahead .tt-hint, .input-group span.twitter-typeahead .tt-input {
+    width: 100%;
+}
+
+/* field-group */
+
+.field-group {
+    margin-bottom: 1rem;
+}
+
+.field-group label:after {
+    content: ":";
+    position: relative;
+    top: -1px;
+    margin-left: 0.25rem;
+}
+
+.field-group.row label {
+    padding-right: 0;
+}
+
+.field-group.row label.col-field-label {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+.field-group.row .field-control {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    line-height: 1.5;
+}
+
+.field-group.row .field-control .badge {
+    margin-top: -0.25rem;
+}
+
+/* select */
+
+.custom-select option[value=""] {
+    color: #B1C2D9;
+}
+
+/* last row's margin with in a card or modal */
+.card > .card-body > .row:last-child > .col > .form-group,
+.card > .card-body > .row:last-child > [class*=col-] > .form-group,
+.card > .card-body > .object > .row:last-child > .col > .form-group,
+.card > .card-body > .object > .row:last-child > [class*=col-] > .form-group,
+.card > .card-body > .array > .row:last-child > .col > .form-group,
+.card > .card-body > .array > .row:last-child > [class*=col-] > .form-group,
+.modal-content > .modal-body > .row:last-child > .col > .form-group,
+.modal-content > .modal-body > .row:last-child > [class*=col-] > .form-group {
+    margin-bottom: 0;
+}
+
+.card > .card-body > .row:last-child > .col > .field-group,
+.card > .card-body > .row:last-child > [class*=col-] > .field-group,
+.card > .card-body > .object > .row:last-child > .col > .field-group,
+.card > .card-body > .object > .row:last-child > [class*=col-] > .field-group,
+.card > .card-body > .array > .row:last-child > .col > .field-group,
+.card > .card-body > .array > .row:last-child > [class*=col-] > .field-group,
+.modal-content > .modal-body > .row:last-child > .col > .field-group,
+.modal-content > .modal-body > .row:last-child > [class*=col-] > .field-group {
+    margin-bottom: 0;
+}
+
+.card > .card-body > .row:last-child > .form-group,
+.card > .card-body > .object > .row:last-child > .form-group,
+.card > .card-body > .array > .row:last-child > .form-group,
+.modal-content > .modal-body > .row:last-child > .form-group {
+    margin-bottom: 0;
+}
+
+.card > .card-body > .row:last-child > .field-group,
+.card > .card-body > .object > .row:last-child > .field-group,
+.card > .card-body > .array > .row:last-child > .field-group,
+.modal-content > .modal-body > .row:last-child > .field-group {
+    margin-bottom: 0;
+}
+
+.card > .card-body > .row:last-child.form-group,
+.card > .card-body > .object > .row:last-child.form-group,
+.card > .card-body > .array > .row:last-child.form-group,
+.modal-content > .modal-body > .row:last-child.form-group {
+    margin-bottom: 0;
+}
+
+.card > .card-body > .row:last-child.field-group,
+.card > .card-body > .object > .row:last-child.field-group,
+.card > .card-body > .array > .row:last-child.field-group,
+.modal-content > .modal-body > .row:last-child.field-group {
+    margin-bottom: 0;
+}
+
+.card > .card-body > .form-group:last-child,
+.card > .card-body > .object > .form-group:last-child,
+.card > .card-body > .array > .form-group:last-child,
+.modal-content > .modal-body > .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.card > .card-body > .field-group:last-child,
+.card > .card-body > .object > .field-group:last-child,
+.card > .card-body > .array > .field-group:last-child,
+.modal-content > .modal-body > .field-group:last-child {
+    margin-bottom: 0;
+}
+
+.card > .card-body > .list-group:first-child,
+.card > .card-body > .object > .list-group:first-child,
+.card > .card-body > .array > .list-group:first-child,
+.modal-content > .modal-body > .list-group:first-child {
+    margin-top: -0.75rem;
+}
+
+.card > .card-body > .list-group:last-child,
+.card > .card-body > .object > .list-group:last-child,
+.card > .card-body > .array > .list-group:last-child,
+.modal-content > .modal-body > .list-group:last-child {
+    margin-bottom: -0.75rem;
+}
+
+.card > .card-body > div > .list-group:first-child,
+.card > .card-body > .object > div > .list-group:first-child,
+.card > .card-body > .array > div > .list-group:first-child,
+.modal-content > .modal-body > div > .list-group:first-child {
+    margin-top: -0.75rem;
+}
+
+.card > .card-body > div > .list-group:last-child,
+.card > .card-body > .object > div > .list-group:last-child,
+.card > .card-body > .array > div > .list-group:last-child,
+.modal-content > .modal-body > div > .list-group:last-child {
+    margin-bottom: -0.75rem;
+}
+
+.card > .card-body > .array-actions:last-child,
+.card > .card-body > .object > .array-actions:last-child,
+.card > .card-body > .array > .array-actions:last-child,
+.modal-content > .modal-body > .array-actions:last-child {
+    margin-bottom: 0;
+}
+
+.card > .table-responsive:last-child table {
+    margin-bottom: 0;
+}
+
+/* form */
+
+.card-wrapper.template, .array-item.template, .list-group-item.template, tr.template {
+    display: none;
+}
+
+.form-editor {
+    font-size: 1rem;
+}
+
+.form-editor select.is-invalid ~ .select2-container .custom-select {
+    border: 1px solid #E63757;
+}
+
+.form-editor select.is-valid ~ .select2-container .custom-select {
+    border: 1px solid #00D97E;
+}
+
+.form-editor .radio-input-group.is-invalid .btn-group {
+    border-radius: 0.375rem;
+    border: 1px solid #E63757;
+}
+
+.form-editor .radio-input-group.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.form-editor .cascader-input-group.is-invalid .form-control {
+    border: 1px solid #E63757;
+}
+
+.form-editor .cascader-input-group.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.form-editor .cascader-input-group.is-valid .form-control {
+    border: 1px solid #00D97E;
+}
+
+.form-editor .image-input-group.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.form-editor .rte-input-group.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.form-editor div[contenteditable] {
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #D2DDEC;
+    border-radius: 0.375rem;
+    width: 100%;
+}
+
+.form-editor div[contenteditable].is-invalid {
+    border: 1px solid #E63757;
+}
+
+.form-editor .image-input-group .image-input-result .image {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #E3EBF6;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    float: left;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-editor .image-input-group .image-input-result .image .btns {
+    position: absolute;
+    top: 50%;
+    height: 20px;
+    margin-top: -10px;
+    width: 100%;
+    text-align: center;
+    display: none;
+}
+
+.form-editor .image-input-group .image-input-result .image .btns a {
+    background-color: #EDF2F9;
+    border-radius: 20px;
+    line-height: 20px;
+    width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    color: #12263F;
+    margin-right: 0.25rem;
+}
+
+.form-editor .image-input-group .image-input-result .image:hover .btns {
+    display: block;
+    opacity: 0.8;
+}
+
+.form-editor .image-input-group .image-input-result .image.uploaded img {
+    height: 100%;
+    width: auto;
+}
+
+.form-editor .image-input-group .image-input-result .image.error {
+    text-align: center;
+    display: table;
+}
+
+.form-editor .image-input-group .image-input-result .image.error small {
+    display: table-cell;
+    vertical-align: middle;
+    color: #E63757;
+}
+
+.form-editor .image-input-group .image-input-result .image.uploading .progress {
+    position: absolute;
+    top: 50%;
+    width: 140px;
+    left: 50%;
+    margin-left: -70px;
+}

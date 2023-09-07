@@ -1,0 +1,107 @@
+{# 以图文为主的功能/业务/服务的介绍, 包含多个版块, 合成为一个完整的介绍 #}
+{# 各版块的布局会相互影响, 如下 #}
+{# - 第一个板块图片在左, 那么第二个板块为了视觉上的平衡就会把图片放在右边 #}
+{# - 会在版块前后增加修饰, 如弧形曲线以形成视觉上的连贯效果 #}
+{% set blocks = [
+    {
+        'tag': 'DATA',
+        'title': '数据优先',
+        'subtitle': '数据结构决定了整个项目的业务逻辑，可配合项目模板生成种子项目。',
+        'image': '/static/landkit/assets/img/illustrations/illustration-8.png',
+        'children': [
+            {'title': '支持复杂数据结构', 'subtitle': '通过优雅的方式支持数据结构之间的嵌套和关联，从而能够实现复杂的业务逻辑'},
+            {'title': '支持主流数据库', 'subtitle': '支持内存以及主流数据库，包含MySQL以及MongoDB等'},
+            {'title': '通过视图定义逻辑', 'subtitle': '定义数据结构的视图，可配合项目模版生成业务逻辑代码'}
+        ],
+    },
+    {
+        'tag': 'TEMPLATE',
+        'title': '项目模板',
+        'subtitle': '可根据数据结构及其视图快速生成多个平台的种子项目，如网站、小程序、iOS和Android应用等；该种子项目符合最佳实践，代码规范且易于维护；通过自动合并的机制实现了代码生成与定制开发的平衡。',
+        'image': '/static/landkit/assets/img/illustrations/illustration-7.png',
+        'children': [
+            {'title': '平台的支持'},
+            {'title': '专业的模板'},
+            {'title': '丰富的组件'},
+            {'title': '方便的定制'},
+        ],
+    },
+] %}
+{% set block = blocks[0] %}
+<section class="pt-8 pt-md-11">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8 text-center">
+                <span class="badge badge-pill badge-primary-soft mb-3">
+                    <span class="h6 text-uppercase">{{ block.tag }}</span>
+                </span>
+                <h1>
+                    {{ block.title|safe }}
+                </h1>
+                <p class="lead text-gray-700 mb-7 mb-md-9">
+                    {{ block.subtitle }}
+                </p>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6 col-lg-7">
+                <div class="mb-8 mb-md-0">
+                    <img src="{{ block.image }}" alt="..."
+                         class="{{ block.cls }} img-fluid mw-md-100 float-right mr-md-6 mb-6 mb-md-0">
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-5">
+                {% for c in block.children %}
+                    <div class="d-flex">
+                        <div class="badge badge-lg badge-rounded-circle badge-primary-soft mt-1">
+                            <span>{{ loop.index }}</span>
+                        </div>
+                        <div class="ml-5">
+                            <h3>
+                                {{ c.title }}
+                            </h3>
+                            <p class="text-gray-700 mb-6">
+                                {{ c.subtitle }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% set block = blocks[1] %}
+<section class="py-8 py-md-11">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6">
+                <span class="badge badge-pill badge-primary-soft mb-3">
+                    <span class="h6 text-uppercase">{{ block.tag }}</span>
+                </span>
+                <h2>
+                    {{ block.title|safe }}
+                </h2>
+                <p class="font-size-lg text-gray-700 mb-6">
+                    {{ block.subtitle }}
+                </p>
+                <div class="row">
+                    {% for c in block.children %}
+                        <div class="col-lg-6">
+                            <div class="d-flex">
+                                <div class="badge badge-rounded-circle badge-primary-soft mt-1 mr-4">
+                                    <i class="fe fe-check"></i>
+                                </div>
+                                <p>
+                                    {{ c.title }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <img src="{{ block.image }}" alt="..." class="img-fluid mw-md-130">
+            </div>
+        </div>
+    </div>
+</section>
