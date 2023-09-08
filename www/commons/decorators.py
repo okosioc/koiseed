@@ -28,7 +28,8 @@ def async_exec(f):
 
     @async_exec
     def _execute(app, **kwargs):
-        with app.context():
+        with app.app_context():
+            current_app.logger.info('Executing')
             pass
     """
 

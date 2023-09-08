@@ -553,22 +553,27 @@ def configure_blueprints(app):
 
 def configure_logging(app):
     """ Config logging. """
-    subject = '[Error] %s encountered errors on %s' % (app.config['DOMAIN'], datetime.now().strftime('%Y/%m/%d'))
-    hostname = socket.gethostname()
-    subject += (' [%s]' % hostname if hostname else '')
-    mail_config = [(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
-                   app.config['MAIL_DEFAULT_SENDER'], app.config['ADMINS'],
-                   subject,
-                   (app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])]
-    #
-    if app.config['MAIL_USE_SSL']:
-        mail_handler = SSLSMTPHandler(*mail_config)
-    else:
-        mail_handler = SMTPHandler(*mail_config)
-    # Only send email when app is not in debug mode
-    if not app.debug:
-        mail_handler.setLevel(logging.ERROR)
-        app.logger.addHandler(mail_handler)
+    mail_server = app.config['MAIL_SERVER']
+    if mail_server:
+        subject = '[Error] %s encountered errors on %s' % (app.config['DOMAIN'], datetime.now().strftime('%Y/%m/%d'))
+        hostname = socket.gethostname()
+        subject += (' [%s]' % hostname if hostname else '')
+        mail_config = [
+            (mail_server, app.config['MAIL_PORT']),
+            app.config['MAIL_DEFAULT_SENDER'],
+            app.config['ADMINS'],
+            subject,
+            (app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']),
+        ]
+        #
+        if app.config['MAIL_USE_SSL']:
+            mail_handler = SSLSMTPHandler(*mail_config)
+        else:
+            mail_handler = SMTPHandler(*mail_config)
+        # Only send email when app is not in debug mode
+        if not app.debug:
+            mail_handler.setLevel(logging.ERROR)
+            app.logger.addHandler(mail_handler)
     #
     formatter = logging.Formatter(
         '%(asctime)s %(process)d-%(thread)d %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')

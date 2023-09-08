@@ -22,8 +22,8 @@ from werkzeug.utils import secure_filename
 from wtforms import StringField, PasswordField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, Regexp
 
-from core.models import User, UserRole
-from www.commons import send_support_email, editor_permission
+from core.models import User, UserStatus, UserRole
+from www.commons import send_service_mail, editor_permission
 
 public = Blueprint('public', __name__, url_prefix='')
 
@@ -148,6 +148,7 @@ def signup():
         count = User.count({})
         # Set first signup user to admin
         if count == 0:
+            u.status = UserStatus.NORMAL
             u.roles = [UserRole.MEMBER, UserRole.ADMIN]
             current_app.logger.info('First user, set it to admin')
         else:
@@ -155,7 +156,10 @@ def signup():
         #
         u.save()
         current_app.logger.info(f'A new user created: {u}')
-        send_support_email('signup()', f'New user {u}')
+        # Send verification email to user
+        subject = _('Verify Email Address')
+        email = render_template('emails/verify.html', title=subject, name=u.name)
+        send_service_mail(current_app._get_current_object(), subject, [u.email], email)
         # Keep the user info in the session using Flask-Login
         login_user(u)
         return redirect('/')

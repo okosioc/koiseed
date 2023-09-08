@@ -14,7 +14,7 @@ from fabric import task
 # Multi hosts
 # host, e.g, root@129.168.0.1:9527
 hosts = [
-    {'host': '<FIXME>', 'connect_kwargs': {'password': '<FIXME>'}}
+    {'host': 'FIXME', 'connect_kwargs': {'password': 'FIXME'}}
 ]
 
 # Use instance package to overwrite hosts
@@ -23,8 +23,8 @@ try:
 except ImportError:
     pass
 
-# www folder
-project_folder = '/appl/projects/seed/www'
+# project deploy folder
+project_folder = '/appl/projects/koiseed'
 
 
 @task(hosts=hosts)
