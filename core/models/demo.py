@@ -84,7 +84,7 @@ class DemoUserType(SimpleEnum):
 class DemoUser(CacheModel, UserMixin):
     """ 用户. """
     name: str = Field(searchable=Comparator.LIKE, icon='type', title='用户名')
-    status: DemoUserStatus = Field(default=DemoUserStatus.PENDING, icon='circle', title='用户状态')
+    status: DemoUserStatus = Field(default=DemoUserStatus.NORMAL, icon='circle', title='用户状态')
     roles: List[DemoUserRole] = Field(default=[DemoUserRole.MEMBER], format_=Format.SELECT, icon='box', title='用户角色')
     type: DemoUserType = Field(default=DemoUserType.STANDARD, title='用户类型')  # 默认为标准类型
     due_date: str = Field(required=False, format_=Format.DATE, title='过期日')  # 通过定时任务检测到过期日

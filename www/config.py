@@ -1,4 +1,5 @@
 DOMAIN = 'koiseed.com'
+SHORT_NAME = 'KoiSeed'
 SECRET_KEY = 'FIXME'
 # Cache
 CACHE_TYPE = 'SimpleCache'

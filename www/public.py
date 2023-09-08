@@ -145,8 +145,6 @@ def signup():
         if u:
             form.email.errors.append(_('This email has already been registered!'))
             return render_template('public/signup.html', form=form)
-        #
-        to_send_verify_email = False
         # Create user
         u = User()
         u.email = em
@@ -174,7 +172,9 @@ def signup():
         login_user(u)
         # If user is in pending status, send verify email
         if u.status == UserStatus.PENDING:
-            _generate_verify_code(current_user, 'email')
+            _generate_verify_code(u, 'email')
+        elif u.status == UserStatus.NORMAL:
+            _send_welcome_email(u)
         #
         return redirect('/')
     #
@@ -201,7 +201,8 @@ def send_verify_email():
 def _generate_verify_code(user: User, type_: str):
     """ Genreate a verify code for user. """
     now = datetime.now()
-    code = generate_password_hash(user.email + str(now)) + '_' + type_
+    # Remove starting 14 chars of hash code, i.e, pbkdf2:sha256:
+    code = generate_password_hash(user.email + str(now))[14:] + '_' + type_
     if type_ == 'email':
         subject = _('Verify Email Address')
         link = f'verify_email_address?verify_code={code}'
@@ -218,6 +219,15 @@ def _generate_verify_code(user: User, type_: str):
     user.save()
     current_app.logger.info(f'Update verify code for user {user.email}: {code}')
     #
+    send_service_mail(current_app._get_current_object(), subject, [user.email], email)
+
+
+def _send_welcome_email(user: User):
+    """ Send a welcome email to user. """
+    # Add name to subject can reduce the chance of being marked as spa
+    subject = _('Welcome to ') + _(current_app.config['SHORT_NAME']) + _(', ') + user.name.capitalize()
+    link = ''
+    email = render_template('emails/welcome.html', title=subject, name=user.name, link=link)
     send_service_mail(current_app._get_current_object(), subject, [user.email], email)
 
 
@@ -254,6 +264,8 @@ def verify_email_address():
     user.update_time = now
     user.save()
     current_app.logger.info(f'User {user}\'s email address {user.email} has been verified')
+    # Send welcome email
+    _send_welcome_email(user)
     #
     return render_template('public/ack.html', ack={
         'title': _('Success.'),
