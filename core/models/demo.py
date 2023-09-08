@@ -94,6 +94,9 @@ class DemoUser(CacheModel, UserMixin):
     avatar: str = Field(required=False, format_=Format.AVATAR, title='头像')
     intro: str = Field(required=False, format_=Format.TEXTAREA, title='个人简介')
     #
+    verify_code: str = Field(required=False, title='验证码')
+    verify_time: datetime = Field(required=False, title='验证码生成时间')
+    #
     team: DemoTeam = Relation(
         required=False, title='所属团队',
         back_field_name='members', back_field_is_list=True, back_field_order=[('team_join_time', 1)],

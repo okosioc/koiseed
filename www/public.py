@@ -10,7 +10,7 @@
 """
 import os
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import Blueprint, render_template, current_app, redirect, request, abort, jsonify, url_for
 from flask_babel import gettext as _
@@ -23,7 +23,7 @@ from wtforms import StringField, PasswordField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, Regexp
 
 from core.models import User, UserStatus, UserRole
-from www.commons import send_service_mail, editor_permission
+from www.commons import send_service_mail, auth_permission
 
 public = Blueprint('public', __name__, url_prefix='')
 
@@ -42,6 +42,12 @@ def index():
 def error():
     """ Error page. """
     abort(int(request.path.strip('/')))
+
+
+@public.route('/ack')
+def ack():
+    """ Ack page. """
+    return render_template('public/ack.html')
 
 
 @public.route('/contact')
@@ -139,6 +145,8 @@ def signup():
         if u:
             form.email.errors.append(_('This email has already been registered!'))
             return render_template('public/signup.html', form=form)
+        #
+        to_send_verify_email = False
         # Create user
         u = User()
         u.email = em
@@ -152,16 +160,22 @@ def signup():
             u.roles = [UserRole.MEMBER, UserRole.ADMIN]
             current_app.logger.info('First user, set it to admin')
         else:
+            # If mail is configured, need to verify account
+            if current_app.config['MAIL_SERVER']:
+                u.status = UserStatus.PENDING
+            else:
+                u.status = UserStatus.NORMAL
+            #
             current_app.logger.info('Current number of users is %s' % count)
         #
         u.save()
-        current_app.logger.info(f'A new user created: {u}')
-        # Send verification email to user
-        subject = _('Verify Email Address')
-        email = render_template('emails/verify.html', title=subject, name=u.name)
-        send_service_mail(current_app._get_current_object(), subject, [u.email], email)
+        current_app.logger.info(f'A new user created {u} with status {u.status}')
         # Keep the user info in the session using Flask-Login
         login_user(u)
+        # If user is in pending status, send verify email
+        if u.status == UserStatus.PENDING:
+            _generate_verify_code(current_user, 'email')
+        #
         return redirect('/')
     #
     return render_template('public/signup.html', form=form)
@@ -169,8 +183,86 @@ def signup():
 
 # TODO: Forget password?
 
+@public.route('/send_verify_email', methods=('POST',))
+@auth_permission
+def send_verify_email():
+    """ Send verify email to check email address is correct. """
+    if current_user.status != UserStatus.PENDING:
+        return jsonify(error=1, message=_('No need to verify email address for current user!'))
+    # Check verify time
+    now = datetime.now()
+    if current_user.verify_time and now - current_user.verify_time < timedelta(minutes=5):
+        return jsonify(error=1, message=_('We have sent the verify email 5 minutes ago, please check your inbox firstly!'))
+    #
+    _generate_verify_code(current_user, 'email')
+    return jsonify(error=0, message=_('Verify email has been sent!'))
+
+
+def _generate_verify_code(user: User, type_: str):
+    """ Genreate a verify code for user. """
+    now = datetime.now()
+    code = generate_password_hash(user.email + str(now)) + '_' + type_
+    if type_ == 'email':
+        subject = _('Verify Email Address')
+        link = f'verify_email_address?verify_code={code}'
+        email = render_template('emails/verify_email_address.html', title=subject, name=user.name, link=link)
+    elif type_ == 'forget':
+        subject = _('Password Reset')
+        link = f'reset_password?verify_code={code}'
+        email = render_template('emails/forget_password.html', title=subject, name=user.name, link=link)
+    else:
+        raise ValueError('Invalid verify type: %s' % type_)
+    #
+    user.verify_code = code
+    user.verify_time = now
+    user.save()
+    current_app.logger.info(f'Update verify code for user {user.email}: {code}')
+    #
+    send_service_mail(current_app._get_current_object(), subject, [user.email], email)
+
+
+@public.route('/verify_email_address')
+def verify_email_address():
+    """ User click the verify link in email. """
+    verify_code = request.args.get('verify_code')
+    if not verify_code:
+        abort(400)
+    #
+    user = User.find_one({'verify_code': verify_code})
+    if not user:
+        return render_template('public/ack.html', ack={
+            'title': _('Failed!'),
+            'content': _('Your verify code is invalid!')
+        })
+    #
+    if user.status != UserStatus.PENDING:
+        return render_template('public/ack.html', ack={
+            'title': _('Success.'),
+            'content': _('Your email address has been verified.')
+        })
+    #
+    now = datetime.now()
+    if user.verify_time and now - user.verify_time > timedelta(days=1):
+        return render_template('public/ack.html', ack={
+            'title': _('Failed!'),
+            'content': _('Your verify link has expired!')
+        })
+    #
+    user.status = UserStatus.NORMAL
+    user.verify_code = None
+    user.verify_time = None
+    user.update_time = now
+    user.save()
+    current_app.logger.info(f'User {user}\'s email address {user.email} has been verified')
+    #
+    return render_template('public/ack.html', ack={
+        'title': _('Success.'),
+        'content': _('Thanks a lot, your email address has been verified!'),
+    })
+
+
 @public.route('/upload', methods=('POST',))
-@editor_permission
+@auth_permission
 def upload_file():
     """ Create a simple upload service.
 

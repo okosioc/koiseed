@@ -31,6 +31,8 @@ def send_service_mail(app, subject, recipients, html, bcc=None):
     If you are calling in a request context, you need to pass the real app object:
     e.g,
     - send_service_mail(current_app._get_current_object(), subject, recipients, html)
+
+    NOTE: this method should not be triggered by user directly, if you have to do so, please limit the frequency, or your service email will be in a high risk of being blocked by mail server.
     """
     with app.app_context():
         mail_server = current_app.config['MAIL_SERVER']
