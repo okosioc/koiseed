@@ -94,8 +94,8 @@ class DemoUser(CacheModel, UserMixin):
     avatar: str = Field(required=False, format_=Format.AVATAR, title='头像')
     intro: str = Field(required=False, format_=Format.TEXTAREA, title='个人简介')
     #
-    verify_code: str = Field(required=False, title='验证码')
-    verify_time: datetime = Field(required=False, title='验证码生成时间')
+    check_code: str = Field(required=False, title='校验码', description='用来生成在一定时间内有效的校验码，用于邮箱验证、找回密码等')
+    check_time: datetime = Field(required=False, title='校验生成时间')
     #
     team: DemoTeam = Relation(
         required=False, title='所属团队',
