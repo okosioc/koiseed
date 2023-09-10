@@ -1,0 +1,169 @@
+{% set blocks = [
+    {
+        'title': _('We’re Here to Help'),
+        'subtitle': _('We always want to hear from you! Let us know how we can best help you and we will do our very best.'),
+        'image': '/static/landkit/assets/img/covers/cover-5.jpg',
+        'children': [
+            {'icon': 'fe fe-map-pin', 'title': '地址', 'content': '中国香港中环'},
+            {'icon': 'fe fe-phone', 'title': '电话', 'content': '+852-12345678'},
+            {'icon': 'fe fe-mail', 'title': '邮箱', 'content': 'service#koiseed.com'},
+        ],
+    },
+    {
+        'title': _('Let us hear from you directly.'),
+        'subtitle': _('Send us a email and we will get back to you as soon as possible.'),
+    }
+] %}
+{% set block = blocks[0] %}
+<section class="py-10 py-md-14 overlay overlay-black overlay-60 bg-cover"
+         style="background-image: url({{ block.image }});">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8 text-center">
+                <h1 class="display-2 font-weight-bold text-white">
+                    {{ block.title }}
+                </h1>
+                <p class="lead text-white-75 mb-0">
+                    {{ block.subtitle }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="position-relative">
+    <div class="shape shape-bottom shape-fluid-x svg-shim text-light">
+        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+        </svg>
+    </div>
+</div>
+<section class="py-7 py-md-9 border-bottom border-gray-300" id="info">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <a href="#info" class="btn btn-white btn-rounded-circle shadow mt-n11 mt-md-n13"
+                   data-toggle="smooth-scroll">
+                    <i class="fe fe-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            {% for c in block.children %}
+                <div class="col-12 col-md text-center {{ 'border-right border-gray-300' if not loop.last }}">
+                    <h6 class="text-uppercase text-gray-700 mb-1">
+                        <i class="{{ c.icon }} mr-1"></i>{{ c.title }}
+                    </h6>
+                    <div class="mb-5 mb-md-0">
+                        {% if c.url %}
+                            <a href="{{ c.url }}" target="_blank" class="text-primary">
+                                {{ c.content }}
+                            </a>
+                        {% else %}
+                            <span class="text-primary">
+                        {{ c.content }}
+                    </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% set block = blocks[1] %}
+<section class="pt-8 pt-md-11 pb-8 pb-md-14">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8 text-center">
+                <h2 class="font-weight-bold">
+                    {{ block.title }}
+                </h2>
+                <p class="font-size-lg text-muted mb-7 mb-md-9">
+                    {{ block.subtitle }}
+                </p>
+            </div>
+        </div> <!-- / .row -->
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-12 col-lg-10">
+                <form novalidate>
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group mb-5">
+                                <label for="contactName">
+                                    __(Full name)
+                                </label>
+                                <input type="text" class="form-control" id="contactName" placeholder="__(Full name)">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group mb-5">
+                                <label for="contactEmail">
+                                    __(Email)
+                                </label>
+                                <input type="email" class="form-control" id="contactEmail"
+                                       placeholder="hello@domain.com"
+                                       value="{{ current_user.email if current_user.is_authenticated and current_user.status == 'normal' }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group mb-7 mb-md-9">
+                                <label for="contactMessage">
+                                    __(What can we help you with?)
+                                </label>
+                                <textarea class="form-control" id="contactMessage" rows="5"
+                                          placeholder="__(Tell us what we can help you with!)"></textarea>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-primary lift" onclick="contact($(this));">
+                                __(Send Message)
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="position-relative">
+    <div class="shape shape-bottom shape-fluid-x svg-shim text-dark">
+        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+        </svg>
+    </div>
+</div>
+<script type="text/javascript">
+    function contact(btn) {
+        if (btn.is(".doing")) {
+            return;
+        }
+        var msg = "__(Are you sure to send this message?)";
+        var con = window.confirm(msg);
+        if (!con) {
+            return false;
+        }
+        //
+        btn.addClass("doing");
+        var method = btn.is("input") ? "val" : "text";
+        var oldLabel = btn[method]();
+        btn[method](oldLabel + "...");
+        //
+        $.post('/contact', {
+            'name': $('#contactName').val(),
+            'email': $('#contactEmail').val(),
+            'message': $('#contactMessage').val(),
+        }, function (result) {
+            if (result.error == 0) {
+                showSuccess(result.message);
+            } else {
+                showError(result.message);
+            }
+            btn.removeClass("doing");
+            btn[method](oldLabel);
+        }, "json");
+    }
+</script>

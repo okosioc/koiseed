@@ -25,7 +25,7 @@ from . import async_exec, retry
 
 
 @async_exec
-def send_service_mail(app, subject, recipients, html, bcc=None):
+def send_service_mail(app, subject, recipients, html=None, body=None, bcc=None):
     """ Async Send emails to business user for notification.
 
     If you are calling in a request context, you need to pass the real app object:
@@ -39,7 +39,7 @@ def send_service_mail(app, subject, recipients, html, bcc=None):
         if not mail_server:
             return
         #
-        msg = Message(subject, recipients, html=html, bcc=bcc)
+        msg = Message(subject, recipients, body=body, html=html, bcc=bcc)
         try:
             retry_send(msg)
         except Exception as e:

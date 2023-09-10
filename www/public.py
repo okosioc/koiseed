@@ -52,12 +52,6 @@ def ack():
     return render_template('public/ack.html')
 
 
-@public.route('/contact')
-def contact():
-    """ Contact us. """
-    return render_template('public/contact.html')
-
-
 @public.route('/dashboard')
 def dashboard():
     """ User home page. """
@@ -188,8 +182,8 @@ def signup():
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# Email Verify/Password Reset
-# Classic samples if you do not want to define Form class, and action send_verify_email are invoked using ajax as it can be triggered from many pages
+# Email Verify/Password Reset/Contact Us
+# Classic samples if you do not want to define Form class, and some actions are invoked by ajax.
 #
 
 CHECK_CODE_SUFFIX_VERIFY = '_verify'
@@ -383,6 +377,52 @@ def _send_reset_email(user: User):
     current_app.logger.info(f'Sent reset code for user {user.email}: {code}')
     #
     send_service_mail(current_app._get_current_object(), subject, [user.email], email)
+
+
+@public.route('/contact', methods=('GET', 'POST'))
+def contact():
+    """ Contact us. """
+    # Open contact us page
+    if request.method == 'GET':
+        return render_template('public/contact.html')
+    # Send message in contact us page
+    else:
+        if not current_app.config['ADMINS'] or not current_app.config['MAIL_SERVER']:
+            return jsonify(error=1, message=_('We are very sorry that our email service is not ready, please contact us by another way!'))
+        #
+        if not current_user.is_authenticated:
+            return jsonify(error=1, message=_('Please login firstly!'))
+        #
+        name = request.values.get('name').strip()
+        if not name:
+            return jsonify(error=1, message=_('Full name is required!'))
+        #
+        email = request.values.get('email').strip().lower()
+        try:
+            email_validator.validate_email(email, check_deliverability=False)
+        except email_validator.EmailNotValidError as e:
+            return jsonify(error=1, message=_('Invalid email address!'))
+        #
+        message = request.values.get('message').strip()
+        if not message:
+            return jsonify(error=1, message=_('Message is required!'))
+        # Limit frequency
+        now = datetime.now()
+        if current_user.last_contact_time and now - current_user.last_contact_time < timedelta(minutes=5):
+            return jsonify(error=1, message=_('You have sent the message 5 minutes ago, please wait for a while!'))
+        #
+        current_user.last_contact_time = now
+        current_user.save()
+        #
+        current_app.logger.info(f'User {current_user} leave a contact message: {message}')
+        email = f'User {current_user} leave a contact message:\n\n{message}\n\nPlease reply to {name} {email}.\n\n- ' + current_app.config['DOMAIN']
+        send_service_mail(
+            current_app._get_current_object(),
+            f'Contact Message from {name}',
+            current_app.config['ADMINS'], body=email, bcc=[current_app.config['MAIL_DEFAULT_SENDER']]
+        )
+        #
+        return jsonify(error=0, message=_('Your message has been sent, we will contact you as soon as possible!'))
 
 
 @public.route('/upload', methods=('POST',))
