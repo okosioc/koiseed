@@ -415,8 +415,8 @@ def contact():
         current_user.save()
         #
         current_app.logger.info(f'User {current_user} leave a contact message: {message}')
-        subject = f'New Contact Message'
-        email = render_template('emails/contact_us.html', title=subject, name=name, email=email, message_lines=message.splitlines(), user=current_user._get_current_object())
+        subject = f'New Contact Message from {name}'
+        email = render_template('emails/contact_us.html', title=subject, name=name, email=email, message_lines=message.splitlines())
         send_service_mail(current_app._get_current_object(), subject, current_app.config['ADMINS'], email)
         #
         return jsonify(error=0, message=_('Your message has been sent, we will contact you as soon as possible!'))

@@ -31,21 +31,6 @@
     'url': '/',
     'children': [
         {
-            'title': 'Rich Menu',
-            'url': '#!',
-            'children': [
-                {
-                    'icon': '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"/><path d="M8 3v.5A1.5 1.5 0 009.5 5h5A1.5 1.5 0 0016 3.5V3h2a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h2z" fill="#335EEA" opacity=".3"/><path d="M11 2a1 1 0 012 0h1.5a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-5a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5H11z" fill="#335EEA"/><rect fill="#335EEA" opacity=".3" x="7" y="10" width="5" height="2" rx="1"/><rect fill="#335EEA" opacity=".3" x="7" y="14" width="9" height="2" rx="1"/></g></svg>',
-                    'title': 'Documentation', 'subtitle': 'Customizing and building', 'url': '/documentation',
-                },
-                {
-                    'icon': '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"/><path d="M5.857 2h7.88a1.5 1.5 0 01.968.355l4.764 4.029A1.5 1.5 0 0120 7.529v12.554c0 1.79-.02 1.917-1.857 1.917H5.857C4.02 22 4 21.874 4 20.083V3.917C4 2.127 4.02 2 5.857 2z" fill="#335EEA" opacity=".3"/><rect fill="#335EEA" x="6" y="11" width="9" height="2" rx="1"/><rect fill="#335EEA" x="6" y="15" width="5" height="2" rx="1"/></g></svg>',
-                    'tag': '0.5',
-                    'title': 'Changelog', 'subtitle': 'Keep track of changes', 'url': '/changelog',
-                },
-            ],
-        },
-        {
             'title': 'Mega Menu',
             'url': '#!',
             'image': '/static/landkit/assets/img/photos/photo-3.jpg',
@@ -71,7 +56,30 @@
                 ]},
             ],
         },
-        {'title': _('Contact'), 'url': '/contact'},
+        {
+            'title': 'Services',
+            'url': '#!',
+            'children': [
+                {
+                    'icon': '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"/><path d="M8 3v.5A1.5 1.5 0 009.5 5h5A1.5 1.5 0 0016 3.5V3h2a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h2z" fill="#335EEA" opacity=".3"/><path d="M11 2a1 1 0 012 0h1.5a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-5a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5H11z" fill="#335EEA"/><rect fill="#335EEA" opacity=".3" x="7" y="10" width="5" height="2" rx="1"/><rect fill="#335EEA" opacity=".3" x="7" y="14" width="9" height="2" rx="1"/></g></svg>',
+                    'title': 'Documentation', 'subtitle': 'Customizing and building', 'url': 'javascript:coming();',
+                },
+                {
+                    'icon': '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"/><path d="M5.857 2h7.88a1.5 1.5 0 01.968.355l4.764 4.029A1.5 1.5 0 0120 7.529v12.554c0 1.79-.02 1.917-1.857 1.917H5.857C4.02 22 4 21.874 4 20.083V3.917C4 2.127 4.02 2 5.857 2z" fill="#335EEA" opacity=".3"/><rect fill="#335EEA" x="6" y="11" width="9" height="2" rx="1"/><rect fill="#335EEA" x="6" y="15" width="5" height="2" rx="1"/></g></svg>',
+                    'tag': '0.5',
+                    'title': 'Changelog', 'subtitle': 'Keep track of changes', 'url': 'javascript:coming();',
+                },
+            ],
+        },
+        {
+            'title': _('Connect'), 'url': '/about', 'children': [
+                {'title': _('Contact Us'), 'url': '/contact'},
+                {'title': 'Help Center', 'url': 'javascript:coming();'},
+                {'title': '', 'url': '#!'},
+                {'title': 'Privacy Policy', 'url': 'javascript:coming();'},
+                {'title': 'Terms and Conditions', 'url': 'javascript:coming();'},
+            ],
+        },
     ],
 } %}
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
@@ -293,18 +301,17 @@
         {
             'title': 'Services',
             'children': [
-                {'title': 'Source Code', 'url': '#!'},
-                {'title': 'Documentation', 'url': '#!'},
-                {'title': 'Changelog', 'url': '#!'},
+                {'title': 'Documentation', 'url': 'javascript:coming();'},
+                {'title': 'Changelog', 'url': 'javascript:coming();'},
             ]
         },
         {
             'title': 'Connect',
             'children': [
-                {'title': 'Contact Us', 'url': '#!'},
-                {'title': 'Help Center', 'url': '#!'},
-                {'title': 'Privacy Policy', 'url': '#!'},
-                {'title': 'Terms and Conditions', 'url': '#!'},
+                {'title': 'Contact Us', 'url': '/contact'},
+                {'title': 'Help Center', 'url': 'javascript:coming();'},
+                {'title': 'Privacy Policy', 'url': 'javascript:coming();'},
+                {'title': 'Terms and Conditions', 'url': 'javascript:coming();'},
             ]
         },
     ],

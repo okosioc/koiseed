@@ -45,7 +45,7 @@
                                     <td class="content-block"
                                         style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                         valign="top">
-                                        {{ name|capitalize }}__( leave a contact message:)
+                                        {{ name|capitalize }} leave a contact message:
                                     </td>
                                 </tr>
 
@@ -62,20 +62,8 @@
                                     <td class="content-block"
                                         style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;"
                                         valign="top">
-                                        Please reply to {{ name }} {{ email|replace('@', '#')|replace('.', '_') }}
-                                    </td>
-                                </tr>
-                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
-                                    <td class="content-block"
-                                        style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px; color: #999;"
-                                        valign="top">
-                                        <hr style="margin-bottom: 15px;">
-                                        <span>__(User Info: )</span><span>{{ user|string }}</span><br>
-                                        <span>__(User Email: )</span><span>{{ user.email|replace('@', '#')|replace('.', '_') }}</span><br>
-                                        <span>__(User Status: )</span><span>{{ user.status }}</span><br>
-                                        <span>__(User Roles: )</span><span>{{ user.roles|join(' ') }}</span><br>
-                                        <span>__(User Phone: )</span><span>{{ user.phone or '-' }}</span><br>
-                                        <span></span>
+                                        Please reply to {{ name }} <{{ email|replace('@', '#')|replace('.', '_') }}> as
+                                        soon as possible.
                                     </td>
                                 </tr>
                                 <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
