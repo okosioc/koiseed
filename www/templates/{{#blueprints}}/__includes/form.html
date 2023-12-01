@@ -93,7 +93,7 @@ UNSUPPORTED! {{ format_file }} does not exist!
     {% elif column_name == '-' %}
         <hr class="mt-3 mb-3">
     {# group column #}
-    {% elif column_name|float(-1) != -1 %}
+    {% elif column_name|replace('.','')|int(-1) != -1 %}
         <fieldset class="group" name="{{ column_name }}" format="{{ column_format }}">
         {# tab format #}
         {% if column_format == 'tab' %}

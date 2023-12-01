@@ -713,8 +713,8 @@ function _install_components(container) {
                 ranger.attr("max", max);
                 // find step from value
                 for (var step in steps) {
-                    if (String(steps[step]) == value) {
-                        ranger.val(parseInt(step));
+                    if (steps[step] == value) {
+                        ranger.val(step);
                         break;
                     }
                 }
@@ -750,7 +750,14 @@ function _install_components(container) {
         // Plupload
         // https://www.plupload.com/docs/v2/Getting-Started
         formGroup.find(".plupload").each(function (i, n) {
+            // Install
             install_plupload($(n));
+            // Sortable for plupload-input-result
+            var result = $(n).closest(".plupload-input-group").find(".plupload-input-result")[0];
+            new Sortable(result, {
+                animation: 150,
+                ghostClass: 'blue-background-class'
+            });
         });
 
         // Rte
@@ -945,7 +952,8 @@ function _process(param, field, path) {
     if (field.is(".object") || field.is(".group")) {
         var card = field.children(".card");
         if (card.length) {
-            field = card.children("div")
+            // .card-body or .table-responsive or other wrapper in .card
+            field = card.children("div");
         }
         field.find(
             "> .form-group, " +
@@ -956,7 +964,8 @@ function _process(param, field, path) {
             "> fieldset, " +
             "> .row  > div > fieldset, " +
             "> .row  > div > .card > div > fieldset, " +
-            "> .row  > div > .card > div > .row  > div > fieldset"
+            "> .row  > div > .card > div > .row  > div > fieldset, " +
+            "> .tab-content > .tab-pane > .row > div > fieldset"
         ).each(function (i, n) {
             if ($(n).is("fieldset.group")) {
                 _process(param, $(n), path);
@@ -1310,12 +1319,24 @@ function debug(msg, more) {
 
 function my_preview(url, config) {
     var rawUrl = url.split(/[#?]/)[0];
-    var ext = rawUrl.split('.').pop().trim().toLowerCase();
-    var isVideo = (ext == "mov" || ext == "mp4" || ext == "mpeg" || ext == "webm") ? true : false;
+    var ext = rawUrl.split('.').pop().trim();
+    var isVideo = /mov|mp4|mpeg|webm/i.test(ext);
     if (isVideo && "video" in config) {
-        return rawUrl + config["video"];
+        // poster ops
+        var preview_ops = config["video"];
+        if (preview_ops.startsWith("_")) {
+            return rawUrl.replace('.' + ext, preview_ops + '.jpg');
+        } else {
+            return rawUrl + config["video"];
+        }
     } else if ("image" in config) {
-        return rawUrl + config["image"];
+        // preview ops
+        var preview_ops = config["image"];
+        if (preview_ops.startsWith("_")) {
+            return rawUrl.replace('.' + ext, preview_ops + '.' + ext);
+        } else {
+            return rawUrl + config["image"];
+        }
     } else {
         return url;
     }

@@ -95,7 +95,7 @@
                                 </a>
                                 <div class="collapse {{ 'show' if ns.active }}" id="sidebar-{{ loop.index }}">
                                     <ul class="nav nav-sm flex-column">
-                                        {% for ll in l.children if current_user.has_role(ll.role) %}
+                                        {% for ll in l.children if not ll.hide %}
                                             <li class="nav-item">
                                                 <a href="{{ ll.url }}"
                                                    class="nav-link {{ 'active' if ll.url|path == request.path }}">
@@ -162,7 +162,7 @@
                                             {{ l.title|safe }}
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            {% for ll in l.children %}
+                                            {% for ll in l.children if not ll.hide %}
                                                 {% if ll.title %}
                                                     <a class="dropdown-item" href="{{ ll.url }}">{{ ll.title }}</a>
                                                 {% else %}

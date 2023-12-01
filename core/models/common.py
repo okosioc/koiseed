@@ -53,13 +53,14 @@ class Block(MongoModel):
     values: List[float] = Field(required=False, title='数值列表')
     unit: str = Field(required=False, title='单位')
     #
+    hide: bool = Field(default=False, title='是否隐藏')  # 默认显示
     url: str = Field(required=False, title='转跳地址')
     cls: str = Field(required=False, title='样式')
     role: str = Field(required=False, title='角色', description='能访问此版块的角色')
     action: Action = Field(required=False, title='动作')
     actions: List[Action] = Field(required=False, title='动作列表')
     #
-    hide_children: bool = Field(default=False, title='是否隐藏子版块')
+    hide_children: bool = Field(default=False, title='是否隐藏子版块')  # 默认显示
     children: List[ForwardRef('Block')] = Field(required=False, title='子版块')
     #
     __indexes__ = [

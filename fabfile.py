@@ -9,10 +9,12 @@
     :date: 16/7/21
 """
 
+from paramiko import RSAKey
 from fabric import task
 
 # Multi hosts
-# host, e.g, root@129.168.0.1:9527
+# host, e.g, webusr@192.168.0.1:9527
+# connect_kwargs, e.g, {'password': 'xxx'} or {'pkey': paramiko.RSAKey.from_private_key_file('xxx/keys/webusr')}
 hosts = [
     {'host': 'FIXME', 'connect_kwargs': {'password': 'FIXME'}}
 ]
@@ -32,20 +34,23 @@ def deploy(ctx):
     """ Check newest version and confirm if needed to deploy. """
     with ctx.cd(project_folder):
         ctx.run('git fetch')
-        print('\n- Newest Version:')
-        ctx.run('git log origin/master -1')
-        print('\n- Current Version:')
+        print('\n----- Newest Version -----\n')
+        ctx.run('git log origin/main -1')
+        print('\n----- Current Version -----\n')
         ctx.run('git log -1')
         ctx.run('git status')
 
         if confirm('\n- Are you sure to deploy?'):
             ctx.run('git pull')
             ctx.run('. venv/bin/activate')
-            # Restart unicorn
-            # run('killall -9 gunicorn')
-            # About workers and threads, refer to https://docs.gunicorn.org/en/stable/settings.html#workers
-            # ctx.run('gunicorn wsgi:www --threads 8 -p wsgi.pid -b 0.0.0.0:6060 -D --timeout 300 --log-file www/logs/gunicorn.log')
-            ctx.run('kill -HUP `cat wsgi.pid`')
+            #
+            pid_file = 'wsgi.pid'
+            if ctx.run(f'test -f {pid_file}', warn=True).failed:
+                ctx.run(f'gunicorn wsgi:www --threads 3 -p {pid_file} -b 0.0.0.0:6060 -D --timeout 300 --log-file www/logs/gunicorn.log')
+            else:
+                ctx.run(f'kill -HUP `cat {pid_file}`')
+            #
+            ctx.run(f'cat {pid_file}')
 
 
 def confirm(question, assume_yes=True):

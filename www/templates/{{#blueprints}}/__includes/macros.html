@@ -26,9 +26,11 @@
 {# * macro - display field content inline, i.e, in a table column or in summary's .list-group-item #}
 {# * #}
 {% macro display_inline(field_name, field_path, field_schema, fallback=none) %}
+{# object #}
 {% if field_schema.type == 'object' %}
 {% set title_field_name = field_schema|field('title|name|\\w*name') %}
 {{ '{{' }} {{ field_path }}.{{ title_field_name }} or '-' {{ '}}' }}
+{# array #}
 {% elif field_schema.type == 'array' %}
 {# display length for object array #}
 {% if field_schema['items'].type == 'object' %}
@@ -36,9 +38,14 @@
 {% else %}
 {# display each for simple array #}
 {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
+{% if field_schema.format in ['image', 'carousel'] %}
+<img src="{{ '{{' }} {{ field_name }}_item or '' {{ '}}' }}" alt="..." class="img-thumbnail" style="height:100px;">
+{% else %}
 {{ '{{' }} ' ' if not loop.fist {{ '}}' }}{{ display_inline('-', field_name~'_item', field_schema['items']) -}}
+{% endif %}
 {{ '{%' }} endfor {{ '%}' }}
 {% endif %}
+{# simple types #}
 {% else %}
 {% if field_schema.format in ['int', 'float'] %}
 {{ '{{' }} {{ field_path }}|int|commas if {{ field_path }} is not none else '-' {{ '}}' }} {{ '%' if field_schema.unit == '%' }}
@@ -222,7 +229,7 @@
     {% elif column_name == '-' %}
         <hr class="mt-3 mb-3">
     {# group column #}
-    {% elif column_name|float(-1) != -1 %}
+    {% elif column_name|replace('.','')|int(-1) != -1 %}
         <div class="group" name="{{ column_name }}" format="{{ column_format }}">
         {# w/ format, i.e, summary #}
         {% if column_format %}

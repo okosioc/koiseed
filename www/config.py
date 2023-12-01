@@ -39,9 +39,8 @@ MONGODB_URI_PYTEST = 'mongodb://localhost:27017/pytest'
 #                 'audio/mpeg', 'audio/x-wav', 'audio/webm',
 #                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
 # UPLOAD_MAX = 50
-# UPLOAD_IMAGE_PREVIEW_SM = '?imageMogr2/thumbnail/x200'
-# UPLOAD_IMAGE_PREVIEW_MD = '?imageMogr2/thumbnail/600x'
-# UPLOAD_VIDEO_POSTER_SM = '?vframe/jpg/offset/1/h/200'
+# UPLOAD_IMAGE_PREVIEW = '?imageMogr2/thumbnail/x300'
+# UPLOAD_VIDEO_POSTER = '?vframe/jpg/offset/1/h/200'
 # Upload to Local
 UPLOAD_ENDPOINT = '/upload'
 UPLOAD_FOLDER = 'uploads'
@@ -49,6 +48,14 @@ UPLOAD_MIMES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif',
                 'video/quicktime', 'video/mp4', 'video/mpeg', 'video/webm',
                 'audio/mpeg', 'audio/x-wav', 'audio/webm']
 UPLOAD_MAX = 50
-UPLOAD_IMAGE_PREVIEW_SM = ''
-UPLOAD_IMAGE_PREVIEW_MD = ''
-UPLOAD_VIDEO_POSTER_SM = ''
+# starts with _ means inject this thumbnail ops before file extension
+# e.g,
+# /static/uploads/20200101/xxx.jpg -> /static/uploads/20200101/xxx_thumbnail_x300.jpg
+# _thumbnail_<Width>x -> fix width
+# _thumbnail_x<Height> -> fix height
+# _thumbnail_<Width>x<Height> -> outer fit
+# _thumbnail_!<Width>x<Height>r -> inner fit
+# _thumbnail_<Width>x<Height>! -> just resize
+UPLOAD_IMAGE_PREVIEW = '_thumbnail_x300'
+# _frame_<Second>_<Width>x<Height> -> get the frame of the video at specified second
+UPLOAD_VIDEO_POSTER = '_frame_1_x300'

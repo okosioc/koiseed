@@ -9,6 +9,9 @@
         >
         <label class="custom-control-label"></label>
     </div>
+    {% if field_schema.description %}
+    <small class="mt-2 form-text text-muted">{{ field_schema.description }}</small>
+    {% endif %}
     {% if view_is_horizontal %}
     </div>
     {% endif %}

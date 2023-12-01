@@ -131,10 +131,10 @@ def configure_uploads(app):
             'endpoint': endpoint,
             'mimes': mimes,
             'mimes_image': [m for m in mimes if m.startswith('image')],
+            'mimes_video': [m for m in mimes if m.startswith('video')],
             'max': f'{upload_max}mb',  # Config unit is megabyte
-            'image_preview_sm': app.config['UPLOAD_IMAGE_PREVIEW_SM'],
-            'image_preview_md': app.config['UPLOAD_IMAGE_PREVIEW_MD'],
-            'video_poster_sm': app.config['UPLOAD_VIDEO_POSTER_SM'],
+            'image_preview': app.config['UPLOAD_IMAGE_PREVIEW'],
+            'video_poster': app.config['UPLOAD_VIDEO_POSTER'],
             'token': token
         }
         return dict(upload_config=uc)
@@ -195,12 +195,12 @@ def configure_template_filters(app):
         return helpers.timesince(value)
 
     @app.template_filter()
-    def date(value):
-        """ 显示日期. """
+    def date(value, format_=None):
+        """ 显示日期, 默认格式为%Y-%m-%d. """
         if isinstance(value, str):
             return value
         #
-        return helpers.date_str(value)
+        return helpers.date_str(value, format_)
 
     @app.template_filter()
     def datetime(value):
@@ -348,8 +348,7 @@ def configure_template_filters(app):
 
     @app.template_filter()
     def tocolor(value: str):
-        """ 将字符串转化为颜色代码, e.g, primary, secondary, success, info, danger, warning
-        """
+        """ 将字符串转化为颜色代码, e.g, primary, secondary, success, info, danger, warning. """
         if not value:
             return 'secondary'
         #
@@ -363,6 +362,18 @@ def configure_template_filters(app):
             return 'warning'
         else:
             return 'secondary'  # something is done
+
+    @app.template_filter()
+    def thumbnail(value: str):
+        """ get thumbnail url of an image url. """
+        thumbnail_ops = getattr(current_app.config, 'UPLOAD_IMAGE_PREVIEW', '')
+        if value.startswith('?'):
+            return value + thumbnail_ops
+        elif value.startswith('_'):
+            ext = os.path.splitext(value)[1]
+            return value.replace(ext, thumbnail_ops + ext)
+        else:
+            return value
 
 
 def configure_template_functions(app):
@@ -469,7 +480,7 @@ def configure_before_handlers(app):
 
     @app.before_request
     def set_is_xhr():
-        """ Set is_xhr. """
+        """ Set XHR. """
         request.XHR = request.accept_mimetypes.best == 'application/json'
 
 

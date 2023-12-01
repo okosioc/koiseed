@@ -1,13 +1,16 @@
 """ demo module. """
-from datetime import datetime
+import os
+import re
 
+from datetime import datetime
 from bson import ObjectId
+
 from flask import Blueprint, render_template, current_app, redirect, request, abort, jsonify, url_for
 from flask_login import current_user
-
 from py3seed import populate_model, populate_search
+
 from core.models import DemoProject, DemoUser, DemoTask, DemoProjectDashboard, DemoTeam
-from www.commons import get_id, auth_permission, admin_permission
+from www.commons import get_id, auth_permission, admin_permission, json_dumps
 
 demo = Blueprint('demo', __name__, url_prefix='/demo')
 

@@ -67,7 +67,7 @@
     border: 1px solid #E3EBF6;
     border-radius: 0.375rem;
     padding: 0.25rem;
-    margin: 0 1.5rem 1.5rem 0;
+    margin: 0 1rem 1rem 0;
     float: left;
 }
 
@@ -162,99 +162,86 @@ span.twitter-typeahead .tt-input:focus {
 /* last row's margin with in a card or modal */
 .card > .card-body > .row:last-child > .col > .form-group,
 .card > .card-body > .row:last-child > [class*=col-] > .form-group,
-.card > .card-body > .object > .row:last-child > .col > .form-group,
-.card > .card-body > .object > .row:last-child > [class*=col-] > .form-group,
-.card > .card-body > .array > .row:last-child > .col > .form-group,
-.card > .card-body > .array > .row:last-child > [class*=col-] > .form-group,
+.card > .card-body > .row:last-child > .col > .object > .form-group,
+.card > .card-body > .row:last-child > [class*=col-] > .object > .form-group,
+.card > .card-body > .row:last-child > .col > .array > .form-group,
+.card > .card-body > .row:last-child > [class*=col-] > .array > .form-group,
 .modal-content > .modal-body > .row:last-child > .col > .form-group,
 .modal-content > .modal-body > .row:last-child > [class*=col-] > .form-group {
     margin-bottom: 0;
 }
 
+.card > .card-body > .tab-content > .tab-pane > .row > .col > fieldset > .row:last-child > .col > .form-group,
+.card > .card-body > .tab-content > .tab-pane > .row > .col > fieldset > .row:last-child > [class*=col-] > .form-group {
+    margin-bottom: 0;
+}
+
 .card > .card-body > .row:last-child > .col > .field-group,
 .card > .card-body > .row:last-child > [class*=col-] > .field-group,
-.card > .card-body > .object > .row:last-child > .col > .field-group,
-.card > .card-body > .object > .row:last-child > [class*=col-] > .field-group,
-.card > .card-body > .array > .row:last-child > .col > .field-group,
-.card > .card-body > .array > .row:last-child > [class*=col-] > .field-group,
+.card > .card-body > .row:last-child > .col > .object > .field-group,
+.card > .card-body > .row:last-child > [class*=col-] > .object > .field-group,
+.card > .card-body > .row:last-child > .col > .array > .field-group,
+.card > .card-body > .row:last-child > [class*=col-] > .array > .field-group,
 .modal-content > .modal-body > .row:last-child > .col > .field-group,
 .modal-content > .modal-body > .row:last-child > [class*=col-] > .field-group {
     margin-bottom: 0;
 }
 
 .card > .card-body > .row:last-child > .form-group,
-.card > .card-body > .object > .row:last-child > .form-group,
-.card > .card-body > .array > .row:last-child > .form-group,
+.card > .card-body > .row:last-child > .object > .form-group,
+.card > .card-body > .row:last-child > .array > .form-group,
 .modal-content > .modal-body > .row:last-child > .form-group {
     margin-bottom: 0;
 }
 
 .card > .card-body > .row:last-child > .field-group,
-.card > .card-body > .object > .row:last-child > .field-group,
-.card > .card-body > .array > .row:last-child > .field-group,
+.card > .card-body > .row:last-child > .object > .field-group,
+.card > .card-body > .row:last-child > .array > .field-group,
 .modal-content > .modal-body > .row:last-child > .field-group {
     margin-bottom: 0;
 }
 
 .card > .card-body > .row:last-child.form-group,
-.card > .card-body > .object > .row:last-child.form-group,
-.card > .card-body > .array > .row:last-child.form-group,
 .modal-content > .modal-body > .row:last-child.form-group {
     margin-bottom: 0;
 }
 
 .card > .card-body > .row:last-child.field-group,
-.card > .card-body > .object > .row:last-child.field-group,
-.card > .card-body > .array > .row:last-child.field-group,
 .modal-content > .modal-body > .row:last-child.field-group {
     margin-bottom: 0;
 }
 
 .card > .card-body > .form-group:last-child,
-.card > .card-body > .object > .form-group:last-child,
-.card > .card-body > .array > .form-group:last-child,
 .modal-content > .modal-body > .form-group:last-child {
     margin-bottom: 0;
 }
 
 .card > .card-body > .field-group:last-child,
-.card > .card-body > .object > .field-group:last-child,
-.card > .card-body > .array > .field-group:last-child,
 .modal-content > .modal-body > .field-group:last-child {
     margin-bottom: 0;
 }
 
 .card > .card-body > .list-group:first-child,
-.card > .card-body > .object > .list-group:first-child,
-.card > .card-body > .array > .list-group:first-child,
 .modal-content > .modal-body > .list-group:first-child {
     margin-top: -0.75rem;
 }
 
 .card > .card-body > .list-group:last-child,
-.card > .card-body > .object > .list-group:last-child,
-.card > .card-body > .array > .list-group:last-child,
 .modal-content > .modal-body > .list-group:last-child {
     margin-bottom: -0.75rem;
 }
 
 .card > .card-body > div > .list-group:first-child,
-.card > .card-body > .object > div > .list-group:first-child,
-.card > .card-body > .array > div > .list-group:first-child,
 .modal-content > .modal-body > div > .list-group:first-child {
     margin-top: -0.75rem;
 }
 
 .card > .card-body > div > .list-group:last-child,
-.card > .card-body > .object > div > .list-group:last-child,
-.card > .card-body > .array > div > .list-group:last-child,
 .modal-content > .modal-body > div > .list-group:last-child {
     margin-bottom: -0.75rem;
 }
 
 .card > .card-body > .array-actions:last-child,
-.card > .card-body > .object > .array-actions:last-child,
-.card > .card-body > .array > .array-actions:last-child,
 .modal-content > .modal-body > .array-actions:last-child {
     margin-bottom: 0;
 }

@@ -8,7 +8,7 @@
 } %}
 {% block title %}{{ title }}{% endblock %}
 {% block style %}
-<link href="/static/vendor/@fancyapps/ui/dist/fancybox.css" rel="stylesheet" type="text/css">
+<link href="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block content %}
 <div id="div-team-profile">
@@ -95,8 +95,7 @@
                             <div class="col">
                                 <div class="form-group" name="remarks">
                                     <label class="">备注</label>
-                                    <textarea name="remarks" rows="5"
-                                              class="form-control autosize" >{{ demo_team.remarks or '' }}</textarea>
+                                    <textarea name="remarks" rows="5" class="form-control autosize">{{ demo_team.remarks or '' }}</textarea>
                                     <div class="invalid-feedback">__(Invalid )备注__(!)</div>
                                 </div>
                             </div>
@@ -147,7 +146,8 @@
 </div>
 {% endblock %}
 {% block script %}
-<script src="/static/vendor/@fancyapps/ui/dist/fancybox.umd.js"></script>
+<script src="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script src="/static/vendor/sortablejs/Sortable.min.js"></script>"
 <script src="/static/vendor/plupload/js/plupload.full.min.js"></script>
 <script src="/static/js/form.js?{{ version() }}"></script>
 <script type="text/javascript">

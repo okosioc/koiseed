@@ -17,7 +17,7 @@
             {% if column_format == 'summary' %}
                 {# pass #}
             {# group column #}
-            {% elif column_name|float(-1) != -1 %}
+            {% elif column_name|replace('.','')|int(-1) != -1 %}
                 {{- iterate_layout(column_layout, schema) -}}
             {# normal column #}
             {% elif column_schema %}
@@ -28,7 +28,7 @@
                     {% set inner_schema = column_schema['items'] if column_schema['items']['type'] == 'object' else none %}
                 {% endif %}
                 {# relation logic #}
-                {% if column_schema.is_relation %}
+                {% if column_schema.is_relation and column_schema.editable %}
                     {% set related_model_name = inner_schema.py_type %}
                     {# relations_needing_preload is used in action form when loading view #}
                     {% if column_schema.is_out_relation and related_model_name not in render_controls.relations_needing_preload %}
@@ -138,15 +138,18 @@ current_app.logger.info(f'Successfully update {{ model.name_title_lower }} {{ '{
 {# * main #}
 {# * #}
 """ {{ blueprint.name }} module. """
-from datetime import datetime
+import os
+import re
 
+from datetime import datetime
 from bson import ObjectId
+
 from flask import Blueprint, render_template, current_app, redirect, request, abort, jsonify, url_for
 from flask_login import current_user
-
 from py3seed import populate_model, populate_search
+
 from core.models import {{ blueprint.models|map(attribute='name')|unique|join(', ') }}
-from www.commons import get_id, auth_permission, admin_permission
+from www.commons import get_id, auth_permission, admin_permission, json_dumps
 {# public blueprint with blank url_prefix is defined at www/public.py #}
 {% if blueprint.name == 'public' %}
 from www.public import public

@@ -20,7 +20,7 @@
             {% if column_format == 'summary' %}
                 {# pass #}
             {# group column #}
-            {% elif column_name|float(-1) != -1 %}
+            {% elif column_name|replace('.','')|int(-1) != -1 %}
                 {{- iterate_layout(column_layout, schema) -}}
             {# normal column #}
             {% elif column_schema %}
@@ -103,10 +103,10 @@
 {{ '{% block title %}{{ title }}{% endblock %}' }}
 {{ '{% block style %}' }}
 {% if 'image' in render_controls.formats or 'carousel' in render_controls.formats or 'avatar' in render_controls.formats or 'file' in render_controls.formats %}
-<link href="/static/vendor/@fancyapps/ui/dist/fancybox.css" rel="stylesheet" type="text/css">
+<link href="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" rel="stylesheet" type="text/css">
 {% if 'carousel' in render_controls.formats %}
-<link href="/static/vendor/@fancyapps/ui/dist/carousel/carousel.css" rel="stylesheet" type="text/css">
-<link href="/static/vendor/@fancyapps/ui/dist/carousel/carousel.thumbs.css" rel="stylesheet" type="text/css">
+<link href="/static/vendor/@fancyapps/ui@5.0/dist/carousel/carousel.css" rel="stylesheet" type="text/css">
+<link href="/static/vendor/@fancyapps/ui@5.0/dist/carousel/carousel.thumbs.css" rel="stylesheet" type="text/css">
 {% endif %}
 {% endif %}
 {% if 'calendar' in render_controls.formats %}
@@ -122,13 +122,14 @@
 {{ '{% endblock %}' }}
 {{ '{% block script %}' }}
 {% if 'image' in render_controls.formats or 'carousel' in render_controls.formats or 'avatar' in render_controls.formats or 'file' in render_controls.formats %}
-<script src="/static/vendor/@fancyapps/ui/dist/fancybox.umd.js"></script>
+<script src="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script src="/static/vendor/sortablejs/Sortable.min.js"></script>"
 {% if render_controls.is_form %}
 <script src="/static/vendor/plupload/js/plupload.full.min.js"></script>
 {% endif %}
 {% if 'carousel' in render_controls.formats %}
-<script src="/static/vendor/@fancyapps/ui/dist/carousel/carousel.umd.js"></script>
-<script src="/static/vendor/@fancyapps/ui/dist/carousel/carousel.thumbs.umd.js"></script>
+<script src="/static/vendor/@fancyapps/ui@5.0/dist/carousel/carousel.umd.js"></script>
+<script src="/static/vendor/@fancyapps/ui@5.0/dist/carousel/carousel.thumbs.umd.js"></script>
 {% endif %}
 {% endif %}
 {% if 'calendar' in render_controls.formats %}

@@ -13,15 +13,22 @@
     {% set first_field_schema = first_field_schema.properties[object_field_name] %}
 {% endif %}
 {% set title_field_name = fields|match('title|name|\\w*name') %}
-{% set content_field_name = fields|match('content|text|description|details?|remarks?') %}
-{% set time_field_name = fields|match('update_time|create_time|\\w*time') %}
+{% set content_field_name = fields|match('content|text|description|intro|details?|remarks?') %}
+{% set time_field_name = fields|match('create_time|update_time|\\w*time') %}
 <ul class="array-items list-group list-group-flush list-group-activity">
     {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
+    {% set target_url = generate_url(item_schema.py_type, field_name~'_item', ['read', 'update', 'upcreate']) if field_schema.is_relation else 'javascript:;' %}
     <li class="array-item list-group-item">
         <div class="row align-items-center">
             <div class="col-auto" name="{{ first_field_name }}" format="{{ first_field_schema.format }}">
-                <a href="javascript:;" class="avatar avatar-sm">
+                <a href="{{ target_url }}" class="avatar">
+                    {% if first_field_schema.format in ['int', 'float'] %}
+                    <span class="avatar-title bg-primary-soft rounded-circle text-primary">{{ '{{' }} {{ field_name }}_item.{{ first_field_name }}|int|commas if {{ field_name }}_item.{{ first_field_name }} is not none {{ '}}' }}</span>
+                    {% elif first_field_schema.format in ['datetime', 'date'] %}
+                    <span class="avatar-title bg-primary-soft rounded-circle text-primary">{{ '{{' }} {{ field_name }}_item.{{ first_field_name }}|date('%d') if {{ field_name }}_item.{{ first_field_name }} is not none {{ '}}' }}</span>
+                    {% else %}
                     <span class="avatar-title bg-primary-soft rounded-circle text-primary">{{ '{{' }} {{ field_name }}_item.{{ first_field_name }}|first|upper if {{ field_name }}_item.{{ first_field_name }} is not none {{ '}}' }}</span>
+                    {% endif %}
                 </a>
             </div>
             <div class="col ml-n2">
@@ -41,6 +48,17 @@
     </li>
     {{ '{%' }} endfor {{ '%}' }}
 </ul>
+{# back relation and has defined edit view #}
+{# e.g, project.tasks <- task.project, tasks is back relation field with own ship, so we can go to task creating view, i.e, task-create?project_id={{ project._id }} #}
+{% if view and field_schema.is_back_relation and field_schema.ownership == 'own' %}
+{% set target_url = generate_url(item_schema.py_type, actions=['create', 'upcreate']) %}
+{% if target_url !='javascript:;' %}
+<hr class="border-top border-light mt-1 mx-n4">
+<div class="array-actions border-top-1 border-light">
+    <a class="btn btn-outline-primary" href="{{ target_url }}?{{ field_schema.save_field_name }}={{ '{{ '~view.model.name_snake~'.'~view.model.schema.id_name~' }}' }}">__(Create ){{ item_schema.title }}...</a>
+</div>
+{% endif %}
+{% endif %}
 {% else %}
 UNSUPPORTED! {{ field_schema.format }} format do not support {{ field_schema.type }}!
 {% endif %}

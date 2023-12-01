@@ -12,3 +12,7 @@ schedule
 arrow
 py3seed
 qiniu
+requests
+Pillow
+# Need to install ffmpeg manually
+ffmpeg-python

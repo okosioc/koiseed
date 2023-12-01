@@ -10,10 +10,10 @@
 """
 import os
 import re
+import email_validator
 
 from datetime import datetime, timedelta
 
-import email_validator
 from flask import Blueprint, render_template, current_app, redirect, request, abort, jsonify, url_for
 from flask_babel import gettext as _
 from flask_login import login_user, logout_user, login_required, current_user
@@ -25,7 +25,7 @@ from wtforms import StringField, PasswordField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, Regexp
 
 from core.models import User, UserStatus, UserRole
-from www.commons import send_service_mail, auth_permission
+from www.commons import get_id, send_service_mail, auth_permission, generate_image_thumbnail, generate_video_poster
 
 public = Blueprint('public', __name__, url_prefix='')
 
@@ -438,16 +438,32 @@ def upload_file():
     if not isinstance(file, FileStorage) or '.' not in file.filename:
         abort(400)
     ext = file.filename.rsplit('.', 1)[1].lower()
-    mine_exts = [m.split('/')[1] for m in current_app.config['UPLOAD_MIMES']]
-    if ext not in mine_exts:
+    type_ = None
+    for m in current_app.config['UPLOAD_MIMES']:
+        mine_ext = m.split('/')[1]
+        if ext == mine_ext:
+            type_ = m.split('/')[0]
+            break
+    #
+    if not type_:
         abort(400)
     #
     filename = secure_filename(file.filename)
-    key = '%s/%s/%s' % (current_app.config['UPLOAD_FOLDER'], datetime.now().strftime('%Y%m%d'), filename)
+    token = request.values.get('token')
+    if token:
+        key = '%s/%s/%s' % (current_app.config['UPLOAD_FOLDER'], token, filename)
+    else:
+        key = '%s/%s/%s' % (current_app.config['UPLOAD_FOLDER'], datetime.now().strftime('%Y%m%d'), filename)
+    #
     path = os.path.join(current_app.root_path, 'static', key)
     parent = os.path.dirname(path)
     if not os.path.exists(parent):
         os.makedirs(parent)
     #
     file.save(path)
+    if type_ == 'image':
+        generate_image_thumbnail(path)
+    elif type_ == 'video':
+        generate_video_poster(path)
+    #
     return jsonify(key=key, url=url_for('static', filename=key), name=filename)

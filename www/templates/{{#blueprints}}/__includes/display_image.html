@@ -1,8 +1,15 @@
 {% if field_schema.type == 'array' %}
 <div class="gallery">
 {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
-    <a href=":;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ field_name }}_item.url {{ '}}' }}" data-caption="{{ '{{' }} {{ field_name }}_item.name {{ '}}' }}">
-        <img src="{{ '{{' }} {{ field_name }}_item.url {{ '}}' }}">
+    {% if field_schema['items'].type == 'object' %}
+        {% set src = field_name~'_item.url' %}
+        {% set caption = field_name~'_item.name' %}
+    {% else %}
+        {% set src = field_name~'_item' %}
+        {% set caption = src~'|basename' %}
+    {% endif %}
+    <a href=":;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ src }} {{ '}}' }}" data-caption="{{ '{{' }} {{ caption }} {{ '}}' }}">
+        <img src="{{ '{{' }} {{ src }} {{ '}}' }}">
     </a>
 {{ '{%' }} endfor {{ '%}' }}
 </div>
