@@ -12,7 +12,7 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash
 
-from core.models import DemoTeam, DemoUser, DemoProject, DemoTask, DemoUserRole, DemoActivity, DemoCategory, DemoAttribute, DemoAttributeOption
+from core.models import DemoTeam, DemoUser, DemoProject, DemoTask, DemoUserRole, DemoActivity, DemoPostStatus, DemoPost, DemoCategory, DemoAttribute, DemoAttributeOption
 from . import str_datetime
 
 
@@ -145,6 +145,18 @@ def prepare_demo_data():
     _demo_task(project_2, demo_user_yue, '项目列表', '2022-08-09', '2022-08-09')
     _demo_task(project_2, demo_user_yue, '项目详情', '2022-08-09', '2022-08-09')
     _demo_task(project_2, demo_user_yue, '项目编辑', '2022-08-10', '2022-08-10')
+
+    #
+    post_1 = DemoPost(
+        title='Remote Work is the Future, but Should You Go Remote?',
+        subtitle='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec condimentum quam. Fusce pellentesque faucibus lorem at viverra. Integer at feugiat odio. In placerat euismod risus proin.',
+        content='{"time":1701674320212,"blocks":[{"id":"tFutpNRQyu","type":"paragraph","data":{"text":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi reiciendis odio perferendis libero saepe voluptatum fugiat dolore voluptates aut, ut quas doloremque quo ad quis ipsum molestias neque pariatur commodi."}},{"id":"VZ4bANJkdC","type":"paragraph","data":{"text":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus, quidem, earum! Quo fugiat voluptates similique quidem dolorem ex non quibusdam odio suscipit error, maiores, itaque blanditiis vel, sed, cum velit?"}},{"id":"qKrJQYPg0J","type":"image","data":{"file":{"url":"/static/landkit/assets/img/photos/photo-30.jpg"},"caption":"This is a caption on this photo for reference","withBorder":false,"stretched":false,"withBackground":false}},{"id":"LjnSONdiLd","type":"delimiter","data":{}},{"id":"ck_CsBrWAq","type":"header","data":{"text":"Big heading for a new topic","level":2}},{"id":"t4c-TTDZrO","type":"paragraph","data":{"text":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi reiciendis odio perferendis libero saepe voluptatum fugiat dolore voluptates aut, ut quas doloremque quo ad quis ipsum molestias neque pariatur commodi."}},{"id":"5zxogs1srB","type":"list","data":{"style":"unordered","items":[{"content":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis voluptatem nihil labore, recusandae, at nobis cumque repellendus saepe maiores aperiam fuga vel tenetur placeat. Officia, natus, cupiditate! Natus facere, explicabo?","items":[]},{"content":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio dolorem modi corrupti excepturi quo enim odit deserunt culpa blanditiis quidem doloribus, iusto aspernatur quisquam quod numquam consequatur asperiores? Sint, dolor!","items":[]}]}},{"id":"V7t_4QP3ZP","type":"image","data":{"file":{"url":"/static/landkit/assets/img/photos/photo-29.jpg"},"caption":"","withBorder":false,"stretched":true,"withBackground":false}},{"id":"-jAAG2lqhn","type":"paragraph","data":{"text":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi reiciendis odio perferendis libero saepe voluptatum fugiat dolore voluptates aut, ut quas doloremque quo ad quis ipsum molestias neque pariatur commodi."}},{"id":"oi-nbHOQiW","type":"quote","data":{"text":"So many teams struggle to make their onboarding experience anywhere near as good as their core product, so the results of this is poor retention","caption":"","alignment":"left"}},{"id":"xM4QNy0hqW","type":"delimiter","data":{}},{"id":"y_XS6c51Mg","type":"paragraph","data":{"text":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam ducimus provident, quos sint hic, quidem voluptatibus. Quasi, distinctio cupiditate, omnis vitae maxime nisi eum similique libero ad dolore sint tempora."}}],"version":"2.28.2"}',
+        cover='/static/landkit/assets/img/covers/cover-8.jpg',
+        status=DemoPostStatus.PUBLISHED,
+        publish_date=datetime.now(),
+        author=demo_user_admin,
+    )
+    post_1.save()
 
     #
     # 商城演示数据

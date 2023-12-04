@@ -432,11 +432,25 @@ def upload_file():
 
     It is also suggested to use a storage service to store your files, such us aws s3.
     """
+
+    def _abort(_is_editorjs, code):
+        if _is_editorjs:
+            return jsonify(success=0)
+        else:
+            abort(400)
+
+    # editorjs' image tool has a special format for response
+    # https://github.com/editor-js/image#server-format
+    uploader = request.values.get('uploader')
+    is_editorjs = True if uploader == 'editorjs' else False
+    #
     if 'file' not in request.files:
-        abort(400)
+        _abort(is_editorjs, 400)
+    #
     file = request.files['file']
     if not isinstance(file, FileStorage) or '.' not in file.filename:
-        abort(400)
+        _abort(is_editorjs, 400)
+    #
     ext = file.filename.rsplit('.', 1)[1].lower()
     type_ = None
     for m in current_app.config['UPLOAD_MIMES']:
@@ -446,7 +460,7 @@ def upload_file():
             break
     #
     if not type_:
-        abort(400)
+        _abort(is_editorjs, 400)
     #
     filename = secure_filename(file.filename)
     token = request.values.get('token')
@@ -466,4 +480,7 @@ def upload_file():
     elif type_ == 'video':
         generate_video_poster(path)
     #
-    return jsonify(key=key, url=url_for('static', filename=key), name=filename)
+    if is_editorjs:
+        return jsonify(success=1, file={'url': url_for('static', filename=key)})
+    else:
+        return jsonify(key=key, url=url_for('static', filename=key), name=filename)

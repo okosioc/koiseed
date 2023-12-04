@@ -26,9 +26,9 @@
             {% elif column_schema %}
                 {% set needed_formats = [] %}
                 {% if render_controls.is_read %}
-                    {% set needed_formats = ['image', 'carousel', 'calendar', 'chart'] %}
+                    {% set needed_formats = ['image', 'carousel', 'calendar', 'chart', 'rte'] %}
                 {% elif render_controls.is_form %}
-                    {% set needed_formats = ['image', 'carousel', 'avatar', 'calendar', 'chart', 'date', 'datetime', 'textarea', 'tag', 'select', 'file'] %}
+                    {% set needed_formats = ['image', 'carousel', 'avatar', 'calendar', 'chart', 'date', 'datetime', 'textarea', 'tag', 'select', 'file', 'rte'] %}
                 {% elif render_controls.is_query %}
                     {% set needed_formats = ['date', 'datetime'] %}
                 {% endif %}
@@ -110,7 +110,7 @@
 {% endif %}
 {% endif %}
 {% if 'calendar' in render_controls.formats %}
-<link href="/static//vendor/fullcalendar/main.min.css" rel="stylesheet" type="text/css">
+<link href="/static/vendor/fullcalendar/main.min.css" rel="stylesheet" type="text/css">
 {% endif %}
 {{ '{% endblock %}' }}
 {{ '{% block content %}' }}
@@ -123,8 +123,8 @@
 {{ '{% block script %}' }}
 {% if 'image' in render_controls.formats or 'carousel' in render_controls.formats or 'avatar' in render_controls.formats or 'file' in render_controls.formats %}
 <script src="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
-<script src="/static/vendor/sortablejs/Sortable.min.js"></script>"
 {% if render_controls.is_form %}
+<script src="/static/vendor/sortablejs/Sortable.min.js"></script>"
 <script src="/static/vendor/plupload/js/plupload.full.min.js"></script>
 {% endif %}
 {% if 'carousel' in render_controls.formats %}
@@ -136,7 +136,19 @@
 <script src="/static/vendor/fullcalendar/main.min.js"></script>
 {% endif %}
 {% if 'tag' in render_controls.formats %}
+{% if render_controls.is_form %}
 <script src="/static/vendor/corejs-typeahead/dist/typeahead.jquery.min.js"></script>
+{% endif %}
+{% endif %}
+{% if 'rte' in render_controls.formats %}
+<script src="/static/vendor/@editorjs/editorjs@2.28.2/dist/editorjs.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/header@2.8.1/dist/header.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/image@2.9.0/dist/image.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/nested-list@1.4.2/dist/nested-list.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/code@2.9.0/dist/code.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/quote@2.6.0/dist/quote.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/delimiter@1.4.0/dist/delimiter.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/table@2.3.0/dist/table.umd.min.js"></script>
 {% endif %}
 {# create/update/upcreate #}
 {% if render_controls.is_form %}
@@ -286,6 +298,10 @@
         if (!con) {
             return false;
         }
+        {# support components that require asynchronous data calculation #}
+        {% if 'rte' in render_controls.formats %}
+        prepare_form(function(){
+        {% endif %}
         var param = process_form($("#{{ view.name_kebab }}"));
         if (!param["valid"]) {
             showError('__(Found invalid data, please correct and retry!)');
@@ -320,13 +336,18 @@
             btn.removeClass("doing");
             btn[method](oldLabel);
         }, "json");
+        {% if 'rte' in render_controls.formats %}
+        });
+        {% endif %}
     }
 </script>
 {# read #}
 {% elif render_controls.is_read %}
+<script src="/static/js/read.js?{{ '{{' }} version() {{ '}}' }}"></script>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
         //
+        install_read();
     });
 {% for relation in render_controls.relations_needing_async_load %}
 {% set related_model = models[relation] %}

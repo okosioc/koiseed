@@ -1,0 +1,119 @@
+{% extends "layout-dash-demo.html" %}
+{% set title = '文章预览' %}
+{% set breadcrumb = {
+    'subtitle': '',
+    'title': title,
+    'actions': [{'icon': 'edit', 'title': '文章编辑', 'view': 'post-edit?'}],
+    'tabs': [],
+} %}
+{% block title %}{{ title }}{% endblock %}
+{% block style %}
+<link href="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block content %}
+<div id="div-post-preview">
+    <div class="object" name="demo_post">
+        <div class="row">
+            <div class="col-lg">
+                <div class="group" name="1" format="">
+                    <div class="card"><div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="field-group">
+                                <label class="text-gray-700">封面</label>
+                                <div class="field-control">
+                                    <div class="gallery">
+                                    {% if demo_post.cover %}
+                                    <a href=":;" data-fancybox="封面" data-src="{{ demo_post.cover }}" data-caption="{{ demo_post.cover|basename }}">
+                                        <img src="{{ demo_post.cover }}">
+                                    </a>
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                    </div>
+                                </div>
+                            </div>    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="field-group">
+                                <label class="text-gray-700">标题</label>
+                                <div class="field-control">
+                                    {{ demo_post.title or '-' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="field-group">
+                                <label class="text-gray-700">副标题</label>
+                                <div class="field-control">
+                                    {{ demo_post.subtitle or '-' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="array" name="tags" format="tag">
+                                <div class="field-group">
+                                    <label class="text-gray-700">标签</label>
+                                    <div class="field-control">
+                                        {% for value in demo_post.tags %}
+                                        <span class="font-size-base badge badge-light mr-2 mb-2">{{ value }}</span>
+                                        {% else %}
+                                        -
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg">
+                <div class="group" name="2" format="">
+                    <div class="card"><div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="field-group">
+                                <label class="text-gray-700">正文</label>
+                                <div class="field-control">
+                                    <div class="rte-display-group">
+                                        {% set rte_id = 'rte_'~randstr() %}
+                                        <div id="{{ rte_id }}" class="editorjs"></div>
+                                        <input type="hidden" value="{{ demo_post.content or '' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script src="/static/vendor/@editorjs/editorjs@2.28.2/dist/editorjs.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/header@2.8.1/dist/header.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/image@2.9.0/dist/image.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/nested-list@1.4.2/dist/nested-list.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/code@2.9.0/dist/code.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/quote@2.6.0/dist/quote.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/delimiter@1.4.0/dist/delimiter.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/table@2.3.0/dist/table.umd.min.js"></script>
+<script src="/static/js/read.js?{{ version() }}"></script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        //
+        install_read();
+    });
+</script>
+{% endblock %}

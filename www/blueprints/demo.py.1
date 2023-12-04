@@ -9,10 +9,82 @@ from flask import Blueprint, render_template, current_app, redirect, request, ab
 from flask_login import current_user
 from py3seed import populate_model, populate_search
 
-from core.models import DemoProject, DemoUser, DemoTask, DemoProjectDashboard, DemoTeam
+from core.models import DemoPost, DemoUser, DemoProject, DemoTask, DemoProjectDashboard, DemoTeam
 from www.commons import get_id, auth_permission, admin_permission, json_dumps
 
 demo = Blueprint('demo', __name__, url_prefix='/demo')
+
+
+@demo.route('/post-list')
+@auth_permission
+def post_list():
+    """ 文章列表. """
+    page, sort = request.args.get('p', 1, lambda x: int(x) if x.isdigit() else 1), [('create_time', -1)]
+    search, condition = populate_search(request.args, DemoPost)
+    current_app.logger.info(f'Try to search demo post by {condition}, sort by {sort}')
+    demo_posts, pagination = DemoPost.search(condition, page, sort=sort)
+    #
+    return render_template('demo/post-list.html',
+                           search=search, pagination=pagination, demo_posts=demo_posts)
+
+
+@demo.route('/post-edit')
+@auth_permission
+def post_edit():
+    """ 文章编辑. """
+    args, preloads = [], {}
+    id_ = get_id(int)
+    if id_:
+        demo_post = DemoPost.find_one(id_)
+        if not demo_post:
+            abort(404)
+    else:
+        demo_post = DemoPost()
+    #
+    return render_template('demo/post-edit.html', demo_post=demo_post, args=args, **preloads)
+
+
+@demo.route('/post-edit-upcreate', methods=('POST',))
+@auth_permission
+def post_edit_upcreate():
+    """ 保存文章编辑. """
+    req_demo_post = populate_model(request.form, DemoPost)
+    id_ = get_id(int)
+    current_app.logger.info(f'Try to save demo post with id {id_}: {req_demo_post}')
+    #
+    if not id_:
+        req_demo_post.save()
+        id_ = req_demo_post.id
+        current_app.logger.info(f'Successfully create demo post {id_}')
+    else:
+        existing = DemoPost.find_one(id_)
+        if not existing:
+            abort(404)
+        #
+        existing.title = req_demo_post.title
+        existing.subtitle = req_demo_post.subtitle
+        existing.tags = req_demo_post.tags
+        existing.cover = req_demo_post.cover
+        existing.status = req_demo_post.status
+        existing.content = req_demo_post.content
+        #
+        existing.update_time = datetime.now()
+        existing.save()
+        current_app.logger.info(f'Successfully update demo post {id_}')
+    #
+    return jsonify(error=0, message='Save demo post successfully.', id=id_)
+
+
+@demo.route('/post-preview')
+@auth_permission
+def post_preview():
+    """ 文章预览. """
+    id_ = get_id(int)
+    demo_post = DemoPost.find_one(id_)
+    if not demo_post:
+        abort(404)
+    #
+    return render_template('demo/post-preview.html', demo_post=demo_post)
 
 
 @demo.route('/project-list')

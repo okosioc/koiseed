@@ -314,6 +314,54 @@ class DemoProjectDashboard(CacheModel):
     }
 
 
+class DemoPostStatus(SimpleEnum):
+    """ 文章状态. """
+    DRAFT = 'draft', '草稿'
+    PUBLISHED = 'published', '已发布'
+
+
+@register
+class DemoPost(CacheModel):
+    """ 文章. """
+    title: str = Field(searchable=Comparator.LIKE, title='标题')
+    subtitle: str = Field(required=False, title='副标题')
+    tags: List[str] = Field(required=False, format_=Format.TAG, title='标签')
+    content: str = Field(format_=Format.RTE, title='正文')
+    cover: str = Field(required=False, format_=Format.IMAGE, title='封面')
+    status: DemoPostStatus = Field(default=DemoPostStatus.DRAFT, searchable=Comparator.EQ, title='状态')
+    publish_time: datetime = Field(required=False, format_=Format.DATETIME, title='发布时间')
+    author: DemoUser = Relation(title='作者')
+    #
+    create_time: datetime = Field(default=datetime.now, title='创建时间')
+    update_time: datetime = Field(required=False, title='更新时间')
+    #
+    __icon__ = 'book-open'
+    __title__ = '文章'
+    #
+    __views__ = {
+        'www://demo/post-list': '''#!query?extends=layout-dash-demo&is_card=true&title=文章列表
+            title, status, publish_time, author, tags, create_time
+        ''',
+        'www://demo/post-edit': '''#!upcreate?extends=layout-dash-demo&title=文章编辑
+            1#4,        2#8              
+              title       content      
+              subtitle                 
+              tags                     
+              cover                    
+              status             
+        ''',
+        'www://demo/post-preview': '''#!read?extends=layout-dash-demo&title=文章预览
+            1
+              cover
+              title
+              subtitle
+              tags
+            2
+              content
+        '''
+    }
+
+
 class DemoAttributeOption(BaseModel):
     """ 属性选项. """
     title: str = Field(title='名称')

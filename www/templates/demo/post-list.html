@@ -1,0 +1,188 @@
+{% extends "layout-dash-demo.html" %}
+{% set title = '文章列表' %}
+{% set breadcrumb = {
+    'subtitle': '',
+    'title': title,
+    'actions': [{'icon': 'plus', 'title': '文章编辑', 'view': 'post-edit'}],
+    'tabs': [],
+} %}
+{% block title %}{{ title }}{% endblock %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<div id="div-post-list">
+    <div class="card">
+    <div class="card-body pb-0">
+    <form class="form-query" novalidate>
+        <div class="form-row justify-content-center">
+            <div class="form-group col-sm mb-4">
+                <label class="sr-only">标题</label>
+                <div class="input-group input-group-merge">
+                    <input type="text" class="form-control form-control-prepended" placeholder="标题"
+                           value="{{ search.title__like or '' }}"
+                           name="search.title__like">
+                    <div class="input-group-prepend"><div class="input-group-text"><span class="fe fe-search"></span></div></div>
+                </div>
+            </div>
+            <div class="form-group col-sm-auto mb-4">
+                <label class="sr-only">状态</label>
+                <select class="custom-select" name="search.status" >
+                    <option value="">状态...</option>
+                    {% for value, label in enum_titles('DemoPostStatus')|items %}
+                    <option value="{{ value }}" {{ 'selected' if value==search.status }}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-auto mb-4">
+                <button type="button" class="btn btn-primary btn-default" onclick="search_do($(this));">__(Search)</button>
+                <button type="button" class="btn btn-light btn-default" onclick="search_reset();">__(Reset)</button>
+            </div>
+        </div>
+    </form>
+    <form class="form-batch" novalidate style="display:none">
+        <div class="alert alert-light mb-4">
+            <div class="row align-items-center">
+                <div class="col-sm">
+                    <i class="fe fe-info mr-2"></i>__(Choosed )<span id="span-checked" class="text-primary mx-1"></span>
+                </div>
+                <div class="col-sm-auto">
+                    <button type="button" class="btn btn-primary btn-default" onclick="coming($(this));">ACTION</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped {{ 'border-bottom mb1' if demo_posts }}">
+            <thead>
+            <tr>
+                <th>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="list-checkbox-all custom-control-input" id="checkbox-all-demo-post">
+                        <label class="custom-control-label" for="checkbox-all-demo-post"></label>
+                    </div>
+                </th>
+                <th>标题</th>
+                <th>状态</th>
+                <th>发布时间</th>
+                <th>作者</th>
+                <th>标签</th>
+                <th>创建时间</th>
+                <th>#</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for demo_post in demo_posts %}
+            <tr>
+                <td>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="list-checkbox custom-control-input" id="checkbox-demo-post-{{ demo_post.id }}">
+                        <label class="custom-control-label" for="checkbox-demo-post-{{ demo_post.id }}"></label>
+                    </div>
+                </td>
+                <td name="title" format="text" enum="">
+                    <a href="post-preview?id={{ demo_post.id }}">
+                    {{ demo_post.title or '-' }}
+                    </a>
+                </td>
+                <td name="status" format="select" enum="DemoPostStatus">
+                    {% if demo_post.status is not none %}<span class="text-{{ demo_post.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoPostStatus')[demo_post.status] }}{% else %}-{% endif %}
+                </td>
+                <td name="publish_time" format="datetime" enum="">
+                    {{ demo_post.publish_time|datetime if demo_post.publish_time is not none else '-' }}
+                </td>
+                <td name="author" format="" enum="">
+                    {{ demo_post.author.name or '-' }}
+                </td>
+                <td name="tags" format="tag" enum="">
+                    {% for tags_item in demo_post.tags %}
+                    {{ ' ' if not loop.fist }}{{ tags_item or '-' }}
+                    {% endfor %}
+                </td>
+                <td name="create_time" format="datetime" enum="">
+                    {{ demo_post.create_time|datetime if demo_post.create_time is not none else '-' }}
+                </td>
+                <td>
+                    <a class="btn pl-0 py-0" href="post-preview?id={{ demo_post.id }}"><i class="fe fe-eye"></i></a>
+                    <a class="btn pl-0 py-0" href="post-edit?id={{ demo_post.id }}"><i class="fe fe-edit"></i></a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8">
+                    <div class="alert alert-light mb-0"><i class="fe fe-alert-circle mr-2"></i>__(No )文章__(!)</div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if demo_posts %}
+        <div class="m1">
+        {% include 'includes/pagination.html' %}
+        </div>
+        {% endif %}
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        $(".list-checkbox-all").change(function () {
+            var checked = $(this).is(":checked");
+            $(this).closest("table").find(".list-checkbox").prop("checked", checked);
+            toggle_batch();
+        });
+        $(".list-checkbox").change(function () {
+            var checked = $(this).is(":checked");
+            toggle_batch();
+        });
+    });
+    //
+    function toggle_batch() {
+        var checked_length = $(".list-checkbox:checked").length;
+        if (checked_length > 0) {
+            $(".form-query").hide();
+            $("#span-checked").text(checked_length);
+            $(".form-batch").show();
+        } else {
+            $("#span-checked").text("");
+            $(".form-batch").hide();
+            $(".form-query").show();
+        }
+    }
+    //
+    function search_do(btn) {
+        var form = btn.closest("form");
+        location.href = "{{ request.path }}?" + form.serialize();
+    }
+    function search_reset() {
+        location.href = "{{ request.path }}";
+    }
+    //
+    function action(btn) {
+        if (btn.is(".doing")) {
+            return;
+        }
+        var con = window.confirm("action?");
+        if (!con) {
+            return false;
+        }
+        //
+        btn.addClass("doing");
+        var method = btn.is("input") ? "val" : "text";
+        var oldLabel = btn[method]();
+        btn[method](oldLabel + "...");
+        //
+        $.post("action", {"r": Math.random()}, function (result) {
+            if (result.error == 0) {
+                showSuccess(result.message);
+            } else {
+                showError(result.message);
+            }
+            btn.removeClass("doing");
+            btn[method](oldLabel);
+        }, 'json');
+    }
+</script>
+{% endblock %}
+{% block script %}
+{% endblock %}

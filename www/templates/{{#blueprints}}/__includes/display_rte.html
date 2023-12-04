@@ -1,0 +1,16 @@
+<div class="field-group{{ ' row' if view_is_horizontal }}">
+    <label class="text-gray-700{{ ' col-auto col-field-label' if view_is_horizontal }}">{{ field_schema.title }}{{ '('~field_schema.unit~')' if field_schema.unit }}</label>
+    {% if view_is_horizontal %}
+    <div class="col">
+    {% endif %}
+    <div class="field-control">
+        <div class="rte-display-group">
+            {{ '{%' }} set rte_id = 'rte_'~randstr() {{ '%}' }}
+            <div id="{{ '{{' }} rte_id {{ '}}' }}" class="editorjs"></div>
+            <input type="hidden" value="{{ '{{' }} {{ field_path }} or '' {{ '}}' }}">
+        </div>
+    </div>
+    {% if view_is_horizontal %}
+    </div>
+    {% endif %}
+</div>

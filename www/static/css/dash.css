@@ -153,6 +153,38 @@ span.twitter-typeahead .tt-input:focus {
     margin-top: -0.25rem;
 }
 
+/* rte display group for editorjs */
+
+.rte-display-group .codex-editor__redactor {
+    padding-bottom: 0 !important;
+}
+
+.rte-display-group .image-tool__caption {
+    border: 0;
+    box-shadow: none;
+    padding-top: 0;
+    text-align: center;
+    color: #95aac9;
+}
+
+.rte-display-group .cdx-quote {
+    border-left: 5px solid #2c7be5;
+    padding: 0 0 0 0.5rem;
+}
+
+.rte-display-group .cdx-quote__text {
+    border: 0;
+    box-shadow: none;
+    min-height: auto;
+}
+
+.rte-display-group .cdx-quote__caption {
+    border: 0;
+    box-shadow: none;
+    padding-top: 0;
+    color: #95aac9;
+}
+
 /* select */
 
 .custom-select option[value=""] {
@@ -297,16 +329,16 @@ span.twitter-typeahead .tt-input:focus {
     display: block;
 }
 
-.form-editor div[contenteditable] {
-    display: inline-block;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #D2DDEC;
-    border-radius: 0.375rem;
+.form-editor .rte-input-group {
+    border-top: 1px solid #d2ddec;
+    border-bottom: 1px solid #d2ddec;
+    padding: 0.5rem 0;
     width: 100%;
 }
 
-.form-editor div[contenteditable].is-invalid {
-    border: 1px solid #E63757;
+.form-editor .rte-input-group.is-invalid {
+    border-top: 1px solid #E63757;
+    border-bottom: 1px solid #E63757;
 }
 
 .form-editor .image-input-group .image-input-result .image {

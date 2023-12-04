@@ -494,6 +494,31 @@ function external_link_open(btn) {
     }
 }
 
+// We need to access the editor in global scope, i.e, in saving logic
+// {id: editorjs instance}
+var global_editors = {};
+
+// A global function to prepare all async components, e.g, editorjs
+function prepare_form(callback) {
+    var promises = [];
+    // For editors
+    for (const editor_id in global_editors) {
+        var editor = global_editors[editor_id];
+        promises.push(editor.save().then(function (outputData) {
+            var hidden = $("#" + editor_id).next(":hidden");
+            if (outputData["blocks"].length == 0) {
+                hidden.val("");
+            } else {
+                hidden.val(JSON.stringify(outputData));
+            }
+        }).catch(function (error) {
+            showError("Failed when saving editorjs content, " + error);
+        }));
+    }
+    //
+    Promise.all(promises).then(callback);
+}
+
 // Install components
 // NOTE: Only install on the non-template inputs, for dynamic created inputs, need to invoke _install_components manually
 function _install_components(container) {
@@ -764,6 +789,63 @@ function _install_components(container) {
         // https://github.com/quilljs/quill/
         formGroup.find(".quill").each(function (i, n) {
             install_quill($(n));
+        });
+        // https://github.com/codex-team/editor.js
+        formGroup.find(".editorjs").each(function (i, n) {
+            var id = $(n).attr("id"),
+                content = $(n).next(":hidden").val(), // current value
+                image_token = $(n).data("token"),
+                image_upload = $(n).data("upload"),
+                image_types = $(n).data("types"); // e.g, image/png, image/jpg
+            var editor = new EditorJS({ // https://github.com/codex-team/editor.js
+                holder: id,
+                placeholder: 'Let`s write somthing awesome!',
+                tools: {
+                    header: { // https://github.com/editor-js/header
+                        class: Header,
+                        inlineToolbar: true
+                    },
+                    image: { // https://github.com/editor-js/image
+                        class: ImageTool,
+                        config: {
+                            endpoints: {
+                                byFile: image_upload,
+                            },
+                            field: "file",
+                            types: image_types,
+                            additionalRequestData: {"token": image_token, "uploader": "editorjs"},
+                        },
+                    },
+                    list: { // https://github.com/editor-js/nested-list
+                        class: NestedList,
+                        inlineToolbar: true,
+                        config: {
+                            defaultStyle: 'unordered'
+                        },
+                    },
+                    code: CodeTool, // https://github.com/editor-js/code
+                    quote: { // https://github.com/editor-js/quote
+                        class: Quote,
+                        inlineToolbar: true,
+                        config: {
+                            quotePlaceholder: 'Enter a quote',
+                            captionPlaceholder: 'Quote\'s author',
+                        },
+                    },
+                    delimiter: Delimiter, // https://github.com/editor-js/delimiter
+                    table: { // https://github.com/editor-js/table
+                        class: Table,
+                        inlineToolbar: true,
+                        config: {
+                            rows: 2,
+                            cols: 3,
+                        },
+                    },
+                },
+                data: content ? JSON.parse(content) : {}, // https://editorjs.io/configuration/#passing-saved-data
+            });
+            //
+            global_editors[id] = editor;
         });
 
         // Autosize
@@ -1147,15 +1229,32 @@ function _process(param, field, path) {
             }
         } else if (rteInputGroup.length) {
             rteInputGroup.removeClass("in-valid is-invalid");
-            var html = rteInputGroup.find(".ql-editor").html().trim(),
-                text = rteInputGroup.find(".ql-editor").text().trim();
-            if (text.length) {
-                param[path] = html;
-            } else {
-                // Manually validate required
-                if (rteInputGroup.is("[required]")) {
-                    rteInputGroup.addClass("is-invalid");
-                    param["valid"] = false;
+            // Quill editor
+            if (rteInputGroup.find(".ql-editor").length) {
+                var html = rteInputGroup.find(".ql-editor").html().trim(),
+                    text = rteInputGroup.find(".ql-editor").text().trim();
+                if (text.length) {
+                    param[path] = html;
+                } else {
+                    // Manually validate required
+                    if (rteInputGroup.is("[required]")) {
+                        rteInputGroup.addClass("is-invalid");
+                        param["valid"] = false;
+                    }
+                }
+            }
+            // Editor.js
+            else if (rteInputGroup.find(".editorjs").length) {
+                // NOTE: As editorjs is async, so we need to invoke prepare_form in your post method
+                var text = rteInputGroup.find(".editorjs").next(":hidden").val();
+                if (text.length) {
+                    param[path] = text;
+                } else {
+                    // Manually validate required
+                    if (rteInputGroup.is("[required]")) {
+                        rteInputGroup.addClass("is-invalid");
+                        param["valid"] = false;
+                    }
                 }
             }
         } else if (timeRangeInputGroup.length) {

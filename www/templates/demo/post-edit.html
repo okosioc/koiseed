@@ -1,0 +1,202 @@
+{% extends "layout-dash-demo.html" %}
+{% set title = '文章编辑' %}
+{% set breadcrumb = {
+    'subtitle': '',
+    'title': title,
+    'actions': [],
+    'tabs': [],
+} %}
+{% block title %}{{ title }}{% endblock %}
+{% block style %}
+<link href="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block content %}
+<div id="div-post-edit">
+    <form id="post-edit" class="form-editor needs-validation" novalidate method="post">
+        <fieldset class="object" name="demo_post">
+            <div class="row">
+                <div class="col-lg-4">
+                    <fieldset class="group" name="1" format="">
+                        <div class="card"><div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group" name="title">
+                                    <label class=""><span class="text-danger mr-1">*</span>标题</label>
+                                    <input name="title" type="text" required class="form-control"
+                                           value="{{ demo_post.title or '' }}">
+                                    <div class="invalid-feedback">__(Invalid )标题__(!)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group" name="subtitle">
+                                    <label class="">副标题</label>
+                                    <input name="subtitle" type="text" class="form-control"
+                                           value="{{ demo_post.subtitle or '' }}">
+                                    <div class="invalid-feedback">__(Invalid )副标题__(!)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <fieldset class="array" name="tags" format="tag">
+                                    <div class="form-group array " name="tags">
+                                        <label class="">标签</label>
+                                        <div class="tag-cloud-input-group mt-2" data-tags='[]'>
+                                            {% for value in demo_post.tags %}
+                                            <span class="font-size-base badge badge-soft-secondary mr-2 mb-2">{{ value }}
+                                                <small class="fe fe-x ml-2" style="cursor:pointer" onclick="$(this).parent().remove();"></small>
+                                            </span>
+                                            {% endfor %}
+                                            <input class="tag-input" type="text" placeholder="+ __(Add )标签">
+                                        </div>
+                                        <div class="invalid-feedback">__(Invalid )标签__(!)</div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group string " name="cover">
+                                    <label class="">封面</label>
+                                    <div class="plupload-input-group image-input-group" >
+                                        <a class="btn btn-outline-primary plupload" href="javascript:;" 
+                                           data-token="{{ upload_config.token }}"
+                                           data-upload="{{ upload_config.endpoint }}"
+                                           data-max="{{ upload_config.max }}"
+                                           data-preview='{"image":"{{ upload_config.image_preview }}", "video":"{{ upload_config.video_poster }}"}'
+                                           data-filters='{"mime_types":"{{ upload_config.mimes_image|join(", ") }}"}'
+                                           data-hiddens="url">__(Choose Image)...</a>
+                                        <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ upload_config.mimes_image|join(', ') }}</small>
+                                        <div class="plupload-input-result image-input-result mt-1 clearfix">
+                                            {% if demo_post.cover %}
+                                            {% set image_obj = {'url': demo_post.cover} %}
+                                            <div class="image uploaded" style="width:auto;">
+                                                <img data-src="{{ image_obj['url'] }}">
+                                                <div class="btns">
+                                                    <a href="{{ image_obj['url'] }}" target="_blank">i</a>
+                                                    <a href="javascript:;" onclick="$(this).closest('.image').remove();">x</a>
+                                                </div>
+                                                <input type="hidden" name="url" value="{{ image_obj['url'] }}">
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">__(Please upload )封面__(!)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group string " name="status">
+                                    <label class=""><span class="text-danger mr-1">*</span>状态</label>
+                                    <select class="custom-select select2" name="status" required>
+                                        <option value="">__(Choose)...</option>
+                                        {% for value, label in enum_titles('DemoPostStatus')|items %}
+                                        <option value="{{ value }}" {{ 'selected' if value==demo_post.status }}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback">__(Please choose at least one )状态__(!)</div>
+                                </div>
+                            </div>
+                        </div>
+                        </div></div>
+                    </fieldset>
+                </div>
+                <div class="col-lg-8">
+                    <fieldset class="group" name="2" format="">
+                        <div class="card"><div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group" name="content">
+                                    <label class=""><span class="text-danger mr-1">*</span>正文</label>
+                                    <div class="rte-input-group" required>
+                                        {% set rte_id = 'rte_'~randstr() %}
+                                        <div id="{{ rte_id }}" class="editorjs"
+                                             data-token="{{ upload_config.token }}"
+                                             data-upload="{{ upload_config.endpoint }}"
+                                             data-types="{{ upload_config.mimes_image|join(", ") }}"></div>
+                                        <input type="hidden" value="{{ demo_post.content or '' }}"/>
+                                    </div>
+                                    <div class="invalid-feedback">__(Invalid )正文__(!)</div>
+                                </div>
+                            </div>
+                        </div>
+                        </div></div>
+                    </fieldset>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <div class="form-actions mb-4">
+        <a class="btn btn-primary mr-2" onclick="post_edit_upcreate($(this));"><i class="fe fe-save mr-1"></i>__(Save)</a>
+        {% if demo_post.id %}
+        <a href="post-list?id={{ demo_post.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script src="/static/vendor/sortablejs/Sortable.min.js"></script>"
+<script src="/static/vendor/plupload/js/plupload.full.min.js"></script>
+<script src="/static/vendor/corejs-typeahead/dist/typeahead.jquery.min.js"></script>
+<script src="/static/vendor/@editorjs/editorjs@2.28.2/dist/editorjs.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/header@2.8.1/dist/header.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/image@2.9.0/dist/image.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/nested-list@1.4.2/dist/nested-list.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/code@2.9.0/dist/code.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/quote@2.6.0/dist/quote.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/delimiter@1.4.0/dist/delimiter.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/table@2.3.0/dist/table.umd.min.js"></script>
+<script src="/static/js/form.js?{{ version() }}"></script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        //
+        install_form();
+    });
+    //
+    function post_edit_upcreate(btn){
+        if (btn.is(".doing")) {
+            return;
+        }
+        var msg = "__(Are you sure to save?)";
+        var con = window.confirm(msg);
+        if (!con) {
+            return false;
+        }
+        prepare_form(function(){
+        var param = process_form($("#post-edit"));
+        if (!param["valid"]) {
+            showError('__(Found invalid data, please correct and retry!)');
+            return false;
+        }
+        //
+        btn.addClass("doing");
+        var method = btn.is("input") ? "val" : "text";
+        var oldLabel = btn[method]();
+        btn[method](oldLabel + "...");
+        //
+        {% for arg in args %}
+        param["demo_post.{{ arg[0] }}"] = "{{ arg[1] }}";
+        {% endfor %}
+        //
+        var url = "/demo/post-edit-upcreate?id={{ demo_post.id or '' }}";
+        $.post(url, param, function (result) {
+            if (result.error == 0) {
+                showSuccess(result.message);
+                showInfo('Refreshing...');
+                setTimeout(function () {
+                    location.href = "post-preview?id=" + result.id;
+                }, 2000);
+            } else {
+                showError(result.message);
+            }
+            btn.removeClass("doing");
+            btn[method](oldLabel);
+        }, "json");
+        });
+    }
+</script>
+{% endblock %}

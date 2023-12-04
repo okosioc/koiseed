@@ -1,18 +1,45 @@
-{% if field_schema.type == 'array' %}
-<div class="gallery">
-{{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
-    {% if field_schema['items'].type == 'object' %}
-        {% set src = field_name~'_item.url' %}
-        {% set caption = field_name~'_item.name' %}
-    {% else %}
-        {% set src = field_name~'_item' %}
-        {% set caption = src~'|basename' %}
+<div class="field-group{{ ' row' if view_is_horizontal }}">
+    <label class="text-gray-700{{ ' col-auto col-field-label' if view_is_horizontal }}">{{ field_schema.title }}{{ '('~field_schema.unit~')' if field_schema.unit }}</label>
+    {% if view_is_horizontal %}
+    <div class="col">
     {% endif %}
-    <a href=":;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ src }} {{ '}}' }}" data-caption="{{ '{{' }} {{ caption }} {{ '}}' }}">
-        <img src="{{ '{{' }} {{ src }} {{ '}}' }}">
-    </a>
-{{ '{%' }} endfor {{ '%}' }}
+    <div class="field-control">
+        {% if field_schema.type == 'array' %}
+        <div class="gallery">
+        {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
+            {% if field_schema['items'].type == 'object' %}
+                {% set src = field_name~'_item.url' %}
+                {% set caption = field_name~'_item.name' %}
+            {% else %}
+                {% set src = field_name~'_item' %}
+                {% set caption = src~'|basename' %}
+            {% endif %}
+            <a href=":;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ src }} {{ '}}' }}" data-caption="{{ '{{' }} {{ caption }} {{ '}}' }}">
+                <img src="{{ '{{' }} {{ src }} {{ '}}' }}">
+            </a>
+        {{ '{%' }} endfor {{ '%}' }}
+        </div>
+        {% else %}
+        {% if field_schema.type == 'object' %}
+            {% set src = field_path~'.url' %}
+            {% set title_field_name = field_schema|field('title|name|\\w*name') %}
+            {% set caption = field_path~'.'~title_field_name %}
+        {% else %}
+            {% set src = field_path %}
+            {% set caption = src~'|basename' %}
+        {% endif %}
+        <div class="gallery">
+        {{ '{% if' }} {{ field_path }} {{ '%}' }}
+        <a href=":;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ src }} {{ '}}' }}" data-caption="{{ '{{' }} {{ caption }} {{ '}}' }}">
+            <img src="{{ '{{' }} {{ src }} {{ '}}' }}">
+        </a>
+        {{ '{% else %}' }}
+        -
+        {{ '{% endif %}' }}
+        {% endif %}
+        </div>
+    </div>
+    {% if view_is_horizontal %}
+    </div>
+    {% endif %}
 </div>
-{% else %}
-UNSUPPORTED! {{ field_schema.format }} format do not support {{ field_schema.type }}!
-{% endif %}
