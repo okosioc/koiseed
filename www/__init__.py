@@ -200,7 +200,7 @@ def configure_template_filters(app):
         if isinstance(value, str):
             return value
         #
-        return helpers.date_str(value, format_)
+        return helpers.date_str(value, format_) if format_ else helpers.date_str(value)
 
     @app.template_filter()
     def datetime(value):
@@ -236,11 +236,6 @@ def configure_template_filters(app):
             return '{:,d}'.format(value)
         else:
             return "{:,.2f}".format(value)
-
-    @app.template_filter()
-    def urlquote(value, charset='utf-8'):
-        """ Url Quote. """
-        return url_quote(value, charset)
 
     @app.template_filter()
     def keys(value):
@@ -463,6 +458,11 @@ def configure_template_functions(app):
     def randstr(n=10):
         """ 生成长度为n的随机字符串. """
         return ''.join(random.choices(string.ascii_lowercase + string.digits, k=n))
+
+    @app.template_global()
+    def current_time():
+        """ 返回当前时间. """
+        return datetime.now()
 
 
 def configure_before_handlers(app):

@@ -331,6 +331,7 @@ class DemoPost(CacheModel):
     status: DemoPostStatus = Field(default=DemoPostStatus.DRAFT, searchable=Comparator.EQ, title='状态')
     publish_time: datetime = Field(required=False, format_=Format.DATETIME, title='发布时间')
     author: DemoUser = Relation(title='作者')
+    featured: bool = Field(default=False, title='是否推荐')
     #
     create_time: datetime = Field(default=datetime.now, title='创建时间')
     update_time: datetime = Field(required=False, title='更新时间')
@@ -340,15 +341,16 @@ class DemoPost(CacheModel):
     #
     __views__ = {
         'www://demo/post-list': '''#!query?extends=layout-dash-demo&is_card=true&title=文章列表
-            title, status, publish_time, author, tags, create_time
+            title, status, publish_time, featured, author, tags, create_time
         ''',
         'www://demo/post-edit': '''#!upcreate?extends=layout-dash-demo&title=文章编辑
             1#4,        2#8              
               title       content      
               subtitle                 
               tags                     
-              cover                    
-              status             
+              cover
+              featured                    
+              status           
         ''',
         'www://demo/post-preview': '''#!read?extends=layout-dash-demo&title=文章预览
             1

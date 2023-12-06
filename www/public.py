@@ -24,7 +24,7 @@ from werkzeug.utils import secure_filename
 from wtforms import StringField, PasswordField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, Regexp
 
-from core.models import User, UserStatus, UserRole
+from core.models import User, UserStatus, UserRole, PostStatus, Post
 from www.commons import get_id, send_service_mail, auth_permission, generate_image_thumbnail, generate_video_poster
 
 public = Blueprint('public', __name__, url_prefix='')
@@ -422,6 +422,10 @@ def contact():
         return jsonify(error=0, message=_('Your message has been sent, we will contact you as soon as possible!'))
 
 
+# ----------------------------------------------------------------------------------------------------------------------
+# File Upload
+#
+
 @public.route('/upload', methods=('POST',))
 @auth_permission
 def upload_file():
@@ -484,3 +488,14 @@ def upload_file():
         return jsonify(success=1, file={'url': url_for('static', filename=key)})
     else:
         return jsonify(key=key, url=url_for('static', filename=key), name=filename)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Blog
+#
+@public.route('/blog')
+def blog_index():
+    """ 博客首页. """
+    featured_posts = Post.find({'status': PostStatus.PUBLISHED, 'featured': True}, sort=[('publish_time', -1)], limit=5)
+    lastest_posts = Post.find({'status': PostStatus.PUBLISHED}, sort=[('publish_time', -1)], limit=5)
+    return render_template('public/blog.html', featured_posts=featured_posts, lastest_posts=lastest_posts)

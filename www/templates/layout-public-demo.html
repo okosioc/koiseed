@@ -73,12 +73,18 @@
             ],
         },
         {
-            'title': _('Connect'), 'url': '/about', 'children': [
-                {'title': _('Contact Us'), 'url': '/contact'},
+            'title': 'Connect', 'url': '/about', 'children': [
+                {'title': 'Contact Us', 'url': '/contact'},
                 {'title': 'Help Center', 'url': 'javascript:coming();'},
                 {'title': '', 'url': '#!'},
                 {'title': 'Privacy Policy', 'url': 'javascript:coming();'},
                 {'title': 'Terms and Conditions', 'url': 'javascript:coming();'},
+            ],
+        },
+        {
+            'title': 'Blog', 'url': '/blog', 'hide_children': true,  'children': [
+                {'url': '/blog-posts'},
+                {'url': '/blog-post'},
             ],
         },
     ],

@@ -70,6 +70,7 @@ def post_edit_upcreate():
         existing.subtitle = req_demo_post.subtitle
         existing.tags = req_demo_post.tags
         existing.cover = req_demo_post.cover
+        existing.featured = req_demo_post.featured
         existing.status = req_demo_post.status
         existing.content = req_demo_post.content
         #

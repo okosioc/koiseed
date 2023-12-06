@@ -1,0 +1,9 @@
+{% extends "layout-public-demo.html" %}
+{% set title = _('Blog') %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% include 'includes/landkit/blog-welcome-basic.html' %}
+    {% include 'includes/landkit/blog-posts-featured-basic.html' %}
+    {% include 'includes/landkit/blog-posts-lastest-basic.html' %}
+    {% include 'includes/landkit/blog-call-to-action-basic.html' %}
+{% endblock %}

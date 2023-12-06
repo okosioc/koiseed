@@ -65,6 +65,7 @@
                 <th>标题</th>
                 <th>状态</th>
                 <th>发布时间</th>
+                <th>是否推荐</th>
                 <th>作者</th>
                 <th>标签</th>
                 <th>创建时间</th>
@@ -91,6 +92,9 @@
                 <td name="publish_time" format="datetime" enum="">
                     {{ demo_post.publish_time|datetime if demo_post.publish_time is not none else '-' }}
                 </td>
+                <td name="featured" format="checkbox" enum="">
+                    {{ demo_post.featured or '-' }}
+                </td>
                 <td name="author" format="" enum="">
                     {{ demo_post.author.name or '-' }}
                 </td>
@@ -109,7 +113,7 @@
             </tr>
             {% else %}
             <tr>
-                <td colspan="8">
+                <td colspan="9">
                     <div class="alert alert-light mb-0"><i class="fe fe-alert-circle mr-2"></i>__(No )文章__(!)</div>
                 </td>
             </tr>

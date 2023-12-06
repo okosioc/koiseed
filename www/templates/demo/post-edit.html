@@ -89,6 +89,17 @@
                         </div>
                         <div class="row">
                             <div class="col">
+                                <div class="form-group " name="featured">
+                                    <label class=""><span class="text-danger mr-1">*</span>是否推荐</label>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" name="featured" required {{ 'checked' if demo_post.featured == true }}>
+                                        <label class="custom-control-label"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <div class="form-group string " name="status">
                                     <label class=""><span class="text-danger mr-1">*</span>状态</label>
                                     <select class="custom-select select2" name="status" required>
