@@ -512,3 +512,14 @@ def posts():
     posts_, pagination = Post.search(condition, page, per_page=9, sort=sort)
     #
     return render_template('public/posts.html', search=search, pagination=pagination, posts=posts_, tags=POST_TAGS)
+
+
+@public.route('/post')
+def post():
+    """ 文章页面. """
+    id_ = get_id(Post.__id_type__)
+    post_ = Post.find_one(id_)
+    if not post_:
+        abort(404)
+    #
+    return render_template('public/post.html', post=post_, tags=POST_TAGS)

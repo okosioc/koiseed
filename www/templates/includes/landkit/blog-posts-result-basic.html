@@ -1,4 +1,6 @@
 {# 用于文章查询页面, 以整齐的网格布局列举出相关文章, 支持翻页 #}
+{# 需要传入posts和pagination参数 #}
+{# 包含搜索框, 需要传入tags参数 #}
 <nav class="bg-gray-200">
     <div class="container">
         <div class="row">
@@ -14,8 +16,8 @@
                     </li>
                 </ol>
             </div>
-        </div> <!-- / .row -->
-    </div> <!-- / .container -->
+        </div>
+    </div>
 </nav>
 <section class="py-6">
     <div class="container">
@@ -36,8 +38,12 @@
                                 <span class="h6 text-uppercase text-muted d-none d-md-block mb-0 mr-5">
                                     {{ pagination.total_count }} posts
                                 </span>
-                                <button type="submit" class="btn btn-sm btn-primary">
-                                  Search
+                                <button type="submit" class="btn btn-sm btn-primary mr-2">
+                                    Search
+                                </button>
+                                <button type="button" class="btn btn-sm btn-secondary-soft"
+                                        onclick="location.href='/posts'">
+                                    Reset
                                 </button>
                             </span>
                         </div>
@@ -51,7 +57,8 @@
                     </div>
                     <div class="col ml-n5">
                         {% for tag in tags %}
-                            <a class="badge badge-pill badge-secondary-soft" href="/posts?search.tags={{ tag }}">
+                            <a class="badge badge-pill badge-{{ 'primary' if tag in search.tags else 'secondary-soft' }}"
+                               href="/posts?search.tags={{ tag }}">
                                 <span class="h6 text-uppercase">{{ tag }}</span>
                             </a>
                         {% endfor %}
@@ -67,7 +74,7 @@
             {% for post in posts %}
                 <div class="col-12 col-md-6 col-lg-4 d-flex">
                     <div class="card mb-6 shadow-light-lg lift lift-lg">
-                        <a class="card-img-top" href="#!">
+                        <a class="card-img-top" href="/post?id={{ post.id }}">
                             <img src="{{ post.cover }}" alt="..." class="card-img-top">
                             <div class="position-relative">
                                 <div class="shape shape-bottom shape-fluid-x svg-shim text-white">
@@ -79,11 +86,11 @@
                                 </div>
                             </div>
                         </a>
-                        <a class="card-body" href="#!">
+                        <a class="card-body" href="/post?id={{ post.id }}">
                             <h3>{{ post.title }}</h3>
                             <p class="mb-0 text-muted">{{ post.subtitle }}</p>
                         </a>
-                        <a class="card-meta mt-auto" href="#!">
+                        <a class="card-meta mt-auto" href="javascript:;">
                             <hr class="card-meta-divider">
                             <div class="avatar avatar-sm mr-2">
                                 {% if post.author.avatar %}
@@ -105,8 +112,8 @@
                     <div class="alert alert-warning">Can not find any posts!</div>
                 </div>
             {% endfor %}
-        </div> <!-- / .row -->
-    </div> <!-- / .container -->
+        </div>
+    </div>
 </section>
 <section class="py-7 py-md-10">
     <div class="container">
@@ -145,6 +152,6 @@
                     </ul>
                 {% endif %}
             </div>
-        </div> <!-- / .row -->
-    </div> <!-- / .container -->
+        </div>
+    </div>
 </section>

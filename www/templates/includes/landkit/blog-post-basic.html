@@ -1,0 +1,119 @@
+{# 博客文章页面 #}
+{# 需传入post参数 #}
+{% macro render_post_meta() %}
+    <div class="row align-items-center py-5 border-top border-bottom">
+        <div class="col-auto">
+            <div class="avatar avatar-lg">
+                {% if post.author.avator %}
+                    <img src="{{ post.author.avator }}" alt="..."
+                         class="avatar-img rounded-circle">
+                {% else %}
+                    <span class="avatar-title rounded-circle bg-primary">{{ post.author.name|first }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col ml-n5">
+            <h6 class="text-uppercase mb-0">
+                {{ post.author.name }}
+            </h6>
+            <span class="font-size-sm text-muted">
+            Published on {{ post.publish_time|date if post.publish_time is not none else '-' }}
+        </span>
+        </div>
+        <div class="col-auto">
+        <span class="h6 text-uppercase text-muted d-none d-md-inline mr-4">
+            Share:
+        </span>
+            <ul class="d-inline list-unstyled list-inline list-social">
+                <li class="list-inline-item list-social-item mr-3">
+                    <a href="#!" class="text-decoration-none">
+                        <img src="/static/landkit/assets/img/icons/social/instagram.svg"
+                             class="list-social-icon" alt="...">
+                    </a>
+                </li>
+                <li class="list-inline-item list-social-item mr-3">
+                    <a href="#!" class="text-decoration-none">
+                        <img src="/static/landkit/assets/img/icons/social/facebook.svg"
+                             class="list-social-icon" alt="...">
+                    </a>
+                </li>
+                <li class="list-inline-item list-social-item mr-3">
+                    <a href="#!" class="text-decoration-none">
+                        <img src="/static/landkit/assets/img/icons/social/twitter.svg"
+                             class="list-social-icon" alt="...">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endmacro %}
+{% if post.cover %}
+    <section data-jarallax data-speed=".8" class="py-12 py-md-15 bg-cover jarallax"
+             style="background-image: url({{ post.cover }});"></section>
+{% endif %}
+<section class="pt-8 pt-md-11">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-9 col-xl-8">
+                <h1 class="display-4 text-center">
+                    {{ post.title }}
+                </h1>
+                <p class="lead mb-7 text-center text-muted">
+                    {{ post.subtitle }}
+                </p>
+                {{ render_post_meta()|indent(16) }}
+            </div>
+        </div>
+    </div>
+</section>
+<section class="pt-6 pt-md-8">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-9 col-xl-8">
+                {% set rte_id = 'rte_'~randstr() %}
+                <div id="{{ rte_id }}" class="editorjs"></div>
+                <input type="hidden" value="{{ post.content or '' }}">
+            </div>
+        </div>
+    </div>
+</section>
+<section class="pt-6 pt-md-8 pb-8 pb-md-11">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-9 col-xl-8">
+                {{ render_post_meta()|indent(16) }}
+            </div>
+        </div>
+    </div>
+</section>
+<script src="/static/vendor/@editorjs/editorjs@2.28.2/dist/editorjs.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/header@2.8.1/dist/header.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/image@2.9.0/dist/image.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/nested-list@1.4.2/dist/nested-list.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/code@2.9.0/dist/code.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/quote@2.6.0/dist/quote.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/delimiter@1.4.0/dist/delimiter.umd.min.js"></script>
+<script src="/static/vendor/@editorjs/table@2.3.0/dist/table.umd.min.js"></script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        //
+        $(".editorjs").each(function (i, n) {
+            var id = $(n).attr("id"),
+                content = $(n).next(":hidden").val();
+            var editor = new EditorJS({
+                holder: id,
+                tools: {
+                    header: Header,
+                    image: ImageTool,
+                    list: NestedList,
+                    code: CodeTool,
+                    quote: Quote,
+                    delimiter: Delimiter,
+                    table: Table,
+                },
+                readOnly: true,
+                data: content ? JSON.parse(content) : {},
+            });
+        });
+    });
+</script>
