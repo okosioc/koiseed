@@ -1,1 +1,150 @@
 {# 用于文章查询页面, 以整齐的网格布局列举出相关文章, 支持翻页 #}
+<nav class="bg-gray-200">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <ol class="breadcrumb breadcrumb-scroll">
+                    <li class="breadcrumb-item">
+                        <a href="/blog" class="text-gray-700">
+                            Blog
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Posts
+                    </li>
+                </ol>
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+</nav>
+<section class="py-6">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <form class="rounded shadow mb-4" action="/posts">
+                    <div class="input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text border-0 pr-1">
+                                <i class="fe fe-search"></i>
+                            </span>
+                        </div>
+                        <input name="search.title__like" type="text" class="form-control border-0 px-1"
+                               aria-label="Search our blog..."
+                               placeholder="Search our blog..." value="{{ search.title__like or '' }}">
+                        <div class="input-group-append">
+                            <span class="input-group-text border-0 py-0 pl-1 pr-3">
+                                <span class="h6 text-uppercase text-muted d-none d-md-block mb-0 mr-5">
+                                    {{ pagination.total_count }} posts
+                                </span>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                  Search
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <h6 class="font-weight-bold text-uppercase text-muted mb-0">
+                            Tags:
+                        </h6>
+                    </div>
+                    <div class="col ml-n5">
+                        {% for tag in tags %}
+                            <a class="badge badge-pill badge-secondary-soft" href="/posts?search.tags={{ tag }}">
+                                <span class="h6 text-uppercase">{{ tag }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-12 col-md-6 col-lg-4 d-flex">
+                    <div class="card mb-6 shadow-light-lg lift lift-lg">
+                        <a class="card-img-top" href="#!">
+                            <img src="{{ post.cover }}" alt="..." class="card-img-top">
+                            <div class="position-relative">
+                                <div class="shape shape-bottom shape-fluid-x svg-shim text-white">
+                                    <svg viewBox="0 0 2880 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                              d="M2160 0C1440 240 720 240 720 240H0v240h2880V0h-720z"
+                                              fill="currentColor"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+                        <a class="card-body" href="#!">
+                            <h3>{{ post.title }}</h3>
+                            <p class="mb-0 text-muted">{{ post.subtitle }}</p>
+                        </a>
+                        <a class="card-meta mt-auto" href="#!">
+                            <hr class="card-meta-divider">
+                            <div class="avatar avatar-sm mr-2">
+                                {% if post.author.avatar %}
+                                    <img src="{{ post.author.avatar }}" alt="..."
+                                         class="avatar-img rounded-circle">
+                                {% else %}
+                                    <span class="avatar-title rounded-circle bg-primary">{{ post.author.name|first }}</span>
+                                {% endif %}
+                            </div>
+                            <h6 class="text-uppercase text-muted mr-2 mb-0">{{ post.author.name }}</h6>
+                            <p class="h6 text-uppercase text-muted mb-0 ml-auto">
+                                <span>{{ post.publish_time|date if post.publish_time is not none else '-' }}</span>
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-warning">Can not find any posts!</div>
+                </div>
+            {% endfor %}
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+</section>
+<section class="py-7 py-md-10">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-9 col-lg-8 col-xl-7">
+                {% if pagination.pages > 0 %}
+                    <ul class="pagination justify-content-center mb-0">
+                        {% if pagination.prev %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="{{ request.path~'?'~update_query(p=pagination.prev) }}">上一页</a>
+                            </li>
+                        {% endif %}
+                        {% for page in pagination.iter_pages %}
+                            {% if page %}
+                                {% if page != pagination.page %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="{{ request.path~'?'~update_query(p=page) }}">{{ page }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="javascript:;">{{ page }}<span class="sr-only">(current)</span></a>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="javascript:;">...</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if pagination.next %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="{{ request.path~'?'~update_query(p=pagination.next) }}">下一页</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div> <!-- / .row -->
+    </div> <!-- / .container -->
+</section>

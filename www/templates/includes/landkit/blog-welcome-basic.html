@@ -33,21 +33,21 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <form class="rounded shadow mb-4">
+                <form class="rounded shadow mb-4" action="/posts">
                     <div class="input-group input-group-lg">
                         <div class="input-group-prepend">
                             <span class="input-group-text border-0 pr-1">
                                 <i class="fe fe-search"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control border-0 px-1"
+                        <input name="search.title__like" type="text" class="form-control border-0 px-1"
                                aria-label="Search our blog..."
-                               placeholder="{{ block.search_placeholder }}">
+                               placeholder="Search our blog...">
                         <div class="input-group-append">
                             <span class="input-group-text border-0 py-0 pl-1 pr-3">
-                                <a class="btn btn-sm btn-primary" href="{{ block.search_url }}">
-                                    Search
-                                </a>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                  Search
+                                </button>
                             </span>
                         </div>
                     </div>
@@ -59,8 +59,8 @@
                         </h6>
                     </div>
                     <div class="col ml-n5">
-                        {% for tag in block.tags %}
-                            <a class="badge badge-pill badge-secondary-soft" href="javascript:coming();">
+                        {% for tag in tags %}
+                            <a class="badge badge-pill badge-secondary-soft" href="/posts?search.tags={{ tag }}">
                                 <span class="h6 text-uppercase">{{ tag }}</span>
                             </a>
                         {% endfor %}

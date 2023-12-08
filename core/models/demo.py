@@ -314,6 +314,14 @@ class DemoProjectDashboard(CacheModel):
     }
 
 
+# 常用文章标签
+DEMO_POST_TAGS = [
+    'Work',
+    'Life',
+    'Travel',
+]
+
+
 class DemoPostStatus(SimpleEnum):
     """ 文章状态. """
     DRAFT = 'draft', '草稿'
@@ -325,7 +333,7 @@ class DemoPost(CacheModel):
     """ 文章. """
     title: str = Field(searchable=Comparator.LIKE, title='标题')
     subtitle: str = Field(required=False, title='副标题')
-    tags: List[str] = Field(required=False, format_=Format.TAG, title='标签')
+    tags: List[str] = Field(required=False, format_=Format.TAG, title='标签', depends=DEMO_POST_TAGS)
     content: str = Field(format_=Format.RTE, title='正文')
     cover: str = Field(required=False, format_=Format.IMAGE, title='封面')
     status: DemoPostStatus = Field(default=DemoPostStatus.DRAFT, searchable=Comparator.EQ, title='状态')

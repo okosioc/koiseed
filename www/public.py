@@ -23,8 +23,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from wtforms import StringField, PasswordField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Email, EqualTo, Regexp
+from py3seed import populate_search
 
-from core.models import User, UserStatus, UserRole, PostStatus, Post
+from core.models import User, UserStatus, UserRole, POST_TAGS, PostStatus, Post
 from www.commons import get_id, send_service_mail, auth_permission, generate_image_thumbnail, generate_video_poster
 
 public = Blueprint('public', __name__, url_prefix='')
@@ -493,9 +494,21 @@ def upload_file():
 # ----------------------------------------------------------------------------------------------------------------------
 # Blog
 #
+
 @public.route('/blog')
-def blog_index():
+def blog():
     """ 博客首页. """
     featured_posts = Post.find({'status': PostStatus.PUBLISHED, 'featured': True}, sort=[('publish_time', -1)], limit=5)
     lastest_posts = Post.find({'status': PostStatus.PUBLISHED}, sort=[('publish_time', -1)], limit=5)
-    return render_template('public/blog.html', featured_posts=featured_posts, lastest_posts=lastest_posts)
+    return render_template('public/blog.html', featured_posts=featured_posts, lastest_posts=lastest_posts, tags=POST_TAGS)
+
+
+@public.route('/posts')
+def posts():
+    """ 博客文章列表. """
+    page, sort = request.args.get('p', 1, lambda x: int(x) if x.isdigit() else 1), [('create_time', -1)]
+    search, condition = populate_search(request.args, Post)
+    current_app.logger.info(f'Try to search post by {condition}, sort by {sort}')
+    posts_, pagination = Post.search(condition, page, per_page=9, sort=sort)
+    #
+    return render_template('public/posts.html', search=search, pagination=pagination, posts=posts_, tags=POST_TAGS)
