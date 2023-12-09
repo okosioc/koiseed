@@ -339,7 +339,7 @@ class DemoPost(CacheModel):
     status: DemoPostStatus = Field(default=DemoPostStatus.DRAFT, searchable=Comparator.EQ, title='状态')
     publish_time: datetime = Field(required=False, format_=Format.DATETIME, title='发布时间')
     author: DemoUser = Relation(title='作者')
-    featured: bool = Field(default=False, title='是否推荐')
+    featured: bool = Field(default=False, format_=Format.SWITCH, title='是否推荐')
     #
     create_time: datetime = Field(default=datetime.now, title='创建时间')
     update_time: datetime = Field(required=False, title='更新时间')

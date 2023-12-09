@@ -3,7 +3,7 @@
     {% if view_is_horizontal %}
     <div class="col">
     {% endif %}
-    <div class="tag-cloud-input-group mt-2" data-tags='{{ '{{ '~field_path~'_depends'~'|tojson }}' if field_schema.depends else '[]' }}'>
+    <div class="tag-cloud-input-group" data-tags='{{ '{{ '~field_path~'_depends'~'|tojson }}' if field_schema.depends else '[]' }}'>
         {{ '{%' }} for value in {{ field_path }} {{ '%}' }}
         <span class="font-size-base badge badge-soft-secondary mr-2 mb-2">{{ '{{' }} value {{ '}}' }}
             <small class="fe fe-x ml-2" style="cursor:pointer" onclick="$(this).parent().remove();"></small>

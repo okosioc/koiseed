@@ -70,9 +70,10 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-9 col-xl-8">
-                {% set rte_id = 'rte_'~randstr() %}
-                <div id="{{ rte_id }}" class="editorjs"></div>
-                <input type="hidden" value="{{ post.content or '' }}">
+                <div class="rte-display-group">
+                    <div id="div-post-content" class="editorjs"></div>
+                    <input type="hidden" value="{{ post.content or '' }}">
+                </div>
             </div>
         </div>
     </div>
@@ -97,23 +98,20 @@
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
         //
-        $(".editorjs").each(function (i, n) {
-            var id = $(n).attr("id"),
-                content = $(n).next(":hidden").val();
-            var editor = new EditorJS({
-                holder: id,
-                tools: {
-                    header: Header,
-                    image: ImageTool,
-                    list: NestedList,
-                    code: CodeTool,
-                    quote: Quote,
-                    delimiter: Delimiter,
-                    table: Table,
-                },
-                readOnly: true,
-                data: content ? JSON.parse(content) : {},
-            });
+        var content = $("#div-post-content").next(":hidden").val();
+        new EditorJS({
+            holder: "div-post-content",
+            tools: {
+                header: Header,
+                image: ImageTool,
+                list: NestedList,
+                code: CodeTool,
+                quote: Quote,
+                delimiter: Delimiter,
+                table: Table,
+            },
+            readOnly: true,
+            data: content ? JSON.parse(content) : {},
         });
     });
 </script>

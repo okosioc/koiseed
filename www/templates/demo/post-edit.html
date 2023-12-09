@@ -43,7 +43,7 @@
                                 <fieldset class="array" name="tags" format="tag">
                                     <div class="form-group array " name="tags">
                                         <label class="">标签</label>
-                                        <div class="tag-cloud-input-group mt-2" data-tags='{{ demo_post.tags_depends|tojson }}'>
+                                        <div class="tag-cloud-input-group" data-tags='{{ demo_post.tags_depends|tojson }}'>
                                             {% for value in demo_post.tags %}
                                             <span class="font-size-base badge badge-soft-secondary mr-2 mb-2">{{ value }}
                                                 <small class="fe fe-x ml-2" style="cursor:pointer" onclick="$(this).parent().remove();"></small>
@@ -91,8 +91,10 @@
                             <div class="col">
                                 <div class="form-group " name="featured">
                                     <label class=""><span class="text-danger mr-1">*</span>是否推荐</label>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" name="featured" required {{ 'checked' if demo_post.featured == true }}>
+                                    <div class="custom-control custom-switch mt-2">
+                                        <input type="checkbox" class="custom-control-input" name="featured"
+                                        required {{ 'checked' if demo_post.featured == true }}
+                                        >
                                         <label class="custom-control-label"></label>
                                     </div>
                                 </div>

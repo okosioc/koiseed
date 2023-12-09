@@ -92,8 +92,8 @@
                 <td name="publish_time" format="datetime" enum="">
                     {{ demo_post.publish_time|datetime if demo_post.publish_time is not none else '-' }}
                 </td>
-                <td name="featured" format="checkbox" enum="">
-                    {{ demo_post.featured or '-' }}
+                <td name="featured" format="switch" enum="">
+                    {{ '是' if demo_post.featured else '否' }}
                 </td>
                 <td name="author" format="" enum="">
                     {{ demo_post.author.name or '-' }}

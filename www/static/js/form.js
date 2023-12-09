@@ -1322,26 +1322,28 @@ function _process(param, field, path) {
             var val = innerInput.val().trim();
             if (innerInput.is(":checkbox")) {
                 val = innerInput.is(":checked") ? "true" : "false";
-            }
-            if (val.length) {
                 param[path] = val;
-                // Invoke built-in validation for Non-empty value
-                if (innerInput[0].checkValidity) {
-                    if (innerInput[0].checkValidity() === false) {
+            } else {
+                if (val.length) {
+                    param[path] = val;
+                    // Invoke built-in validation for Non-empty value
+                    if (innerInput[0].checkValidity) {
+                        if (innerInput[0].checkValidity() === false) {
+                            inputGroup.addClass("is-invalid");
+                            innerInput.addClass("is-invalid");
+                            param["valid"] = false;
+                        } else {
+                            inputGroup.addClass("is-valid");
+                            innerInput.addClass("is-valid");
+                        }
+                    }
+                } else {
+                    // Manually validate required only for empty value
+                    if (inputGroup.is("[required]")) {
                         inputGroup.addClass("is-invalid");
                         innerInput.addClass("is-invalid");
                         param["valid"] = false;
-                    } else {
-                        inputGroup.addClass("is-valid");
-                        innerInput.addClass("is-valid");
                     }
-                }
-            } else {
-                // Manually validate required only for empty value
-                if (inputGroup.is("[required]")) {
-                    inputGroup.addClass("is-invalid");
-                    innerInput.addClass("is-invalid");
-                    param["valid"] = false;
                 }
             }
         } else if (contenteditableDiv.length) {
@@ -1379,23 +1381,25 @@ function _process(param, field, path) {
             var val = simpleInput.val().trim();
             if (simpleInput.is(":checkbox")) {
                 val = simpleInput.is(":checked") ? "true" : "false";
-            }
-            if (val.length) {
                 param[path] = val;
-                // Invoke built-in validation for Non-empty value
-                if (simpleInput[0].checkValidity) {
-                    if (simpleInput[0].checkValidity() === false) {
+            } else {
+                if (val.length) {
+                    param[path] = val;
+                    // Invoke built-in validation for Non-empty value
+                    if (simpleInput[0].checkValidity) {
+                        if (simpleInput[0].checkValidity() === false) {
+                            simpleInput.addClass("is-invalid");
+                            param["valid"] = false;
+                        } else {
+                            simpleInput.addClass("is-valid");
+                        }
+                    }
+                } else {
+                    // Manually validate required only for empty value
+                    if (simpleInput.is("[required]")) {
                         simpleInput.addClass("is-invalid");
                         param["valid"] = false;
-                    } else {
-                        simpleInput.addClass("is-valid");
                     }
-                }
-            } else {
-                // Manually validate required only for empty value
-                if (simpleInput.is("[required]")) {
-                    simpleInput.addClass("is-invalid");
-                    param["valid"] = false;
                 }
             }
         }
