@@ -3,7 +3,7 @@
 {% set breadcrumb = {
     'subtitle': '',
     'title': title,
-    'actions': [{'icon': 'plus', 'title': '项目编辑', 'view': 'project-edit'}],
+    'actions': [{'icon': 'plus', 'title': _('Create ')~'项目', 'view': 'project-edit'}],
     'tabs': [],
 } %}
 {% block title %}{{ title }}{% endblock %}
@@ -95,7 +95,7 @@
                                 <span><i class="fe fe-dollar-sign mr-2"></i>项目价值(元)</span>
                             </div>
                             <div class="col-auto text-muted" name="value" format="float" enum="">
-                                {{ demo_project.value|int|commas if demo_project.value is not none else '-' }} 
+                                {{ demo_project.value|commas if demo_project.value is not none else '-' }} 
                             </div>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                             <div class="col-auto text-muted" name="percent" format="float" enum="">
-                                {{ demo_project.percent|int|commas if demo_project.percent is not none else '-' }} %
+                                {{ demo_project.percent|commas if demo_project.percent is not none else '-' }} %
                             </div>
                         </div>
                     </div>

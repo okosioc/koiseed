@@ -13,7 +13,7 @@
 {% set time_field_name = fields|match('update_time|create_time|\\w*time') %}
 <ul class="array-items list-group list-group-flush">
     {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
-    {% set item_target = generate_url(item_schema.py_type, field_name~'_item', 'read') if field_schema.is_relation else 'javascript:;' %}
+    {% set item_target = generate_url(item_schema.py_type, field_name~'_item', ['read']) if field_schema.is_relation else 'javascript:;' %}
     <li class="array-item list-group-item">
         <div class="row align-items-center">
             {% if first_field_schema.format in ['image', 'avatar'] %}

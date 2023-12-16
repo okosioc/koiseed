@@ -22,7 +22,7 @@
                             <div class="row text-center">
                                 <div class="col">
                                     <div name="logo" format="avatar">
-                                        <a href="team-profile?id={{ demo_team.id }}" class="avatar avatar-xl mt-2 mb-4">
+                                        <a href="team-members?id={{ demo_team.id }}" class="avatar avatar-xl mt-2 mb-4">
                                             <img src="{{ demo_team.logo or '' }}" alt="..." class="avatar-img rounded-circle {{ 'd-none' if not demo_team.logo }}">
                                             <span fallback=name class="avatar-title rounded-circle bg-primary {{ 'd-none' if demo_team.logo }}">{{ demo_team.name|first|upper if demo_team.name is not none }}</span>
                                         </a>
@@ -109,8 +109,8 @@
                                            data-token="{{ upload_config.token }}"
                                            data-upload="{{ upload_config.endpoint }}"
                                            data-max="{{ upload_config.max }}"
-                                           data-preview='{"image":"?imageView2/1/w/200/h/200/","video":""}'
-                                           data-suffix='{"image":"?imageView2/1/w/200/h/200/","video":""}'
+                                           data-preview='{"image":"{{ upload_config.avatar_preview }}","video":""}'
+                                           data-suffix='{"image":"{{ upload_config.avatar_preview }}","video":""}'
                                            data-filters='{"mime_types":"{{ upload_config.mimes_image|join(", ") }}"}'
                                            data-hiddens="url">__(Choose Image)...</a>
                                         <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ upload_config.mimes_image|join(', ') }}</small>

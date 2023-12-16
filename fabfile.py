@@ -14,7 +14,7 @@ from fabric import task
 
 # Multi hosts
 # host, e.g, webusr@192.168.0.1:9527
-# connect_kwargs, e.g, {'password': 'xxx'} or {'pkey': paramiko.RSAKey.from_private_key_file('xxx/keys/webusr')}
+# connect_kwargs, e.g, {'password': 'xxx'} or {'key_filename': 'instance/webusr.key'} or {'pkey': paramiko.RSAKey.from_private_key_file('~/.ssh/webusr')}
 hosts = [
     {'host': 'FIXME', 'connect_kwargs': {'password': 'FIXME'}}
 ]

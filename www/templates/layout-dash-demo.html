@@ -12,9 +12,8 @@
     <title>{% block title %}{% endblock %}</title>
     <link href="/static/img/favicon.ico" rel="shortcut icon"/>
     <link href="/static/dashkit/assets/fonts/feather/feather.css" rel="stylesheet"/>
-    {# flatpickr/quill/highlightjs are parts of dashkit, their css may be overwrited by theme.min.css, so include them firstly #}
+    {# flatpickr/highlightjs are parts of dashkit, their css may be overwrited by theme.min.css, so include them firstly #}
     <link href="/static/dashkit/assets/libs/flatpickr/dist/flatpickr.min.css" rel="stylesheet"/>
-    <link href="/static/dashkit/assets/libs/quill/dist/quill.core.css" rel="stylesheet"/>
     <link href="/static/dashkit/assets/libs/highlightjs/styles/vs2015.css" rel="stylesheet"/>
     <link href="/static/dashkit/assets/css/theme.min.css" rel="stylesheet"/>
     <link href="/static/css/dash.css?{{ version() }}" rel="stylesheet"/>
@@ -25,7 +24,7 @@
 {% set nav = {
     'title': 'KoiSeed',
     'icon': '/static/img/logo.png',
-    'url': '/dashboard',
+    'url': '/home',
     'actions': [
         {'icon':'fe fe-user', 'title':'Profile', 'url':'/profile'},
         {'title':''},
@@ -77,8 +76,10 @@
             {{ render_navbar_user(nav.actions, true) }}
             <div class="collapse navbar-collapse" id="sidebarCollapse">
                 <ul class="navbar-nav">
+                    {% set ns = namespace(active=false) %}
                     {% for l in nav.children if current_user.has_role(l.role) %}
-                        {% set ns = namespace(active=false) %}
+                        {# set active for 1st level menu item #}
+                        {% set ns.active = false %}
                         {% if l.url|path == request.path %}
                             {% set ns.active = true %}
                         {% endif %}
@@ -87,6 +88,11 @@
                                 {% if ll.url|path == request.path %}
                                     {% set ns.active = true %}
                                 {% endif %}
+                                {% for lll in ll.children %}
+                                    {% if lll.url|path == request.path %}
+                                        {% set ns.active = true %}
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
                         {% endif %}
                         {# show children #}
@@ -101,9 +107,20 @@
                                 <div class="collapse {{ 'show' if ns.active }}" id="sidebar-{{ loop.index }}">
                                     <ul class="nav nav-sm flex-column">
                                         {% for ll in l.children if not ll.hide %}
+                                            {# set active for 2nd level menu item #}
+                                            {# NOTE: we do not display 3rd level menu but we can use it to set active for 2nd menu item #}
+                                            {% set ns.active = false %}
+                                            {% if ll.url|path == request.path %}
+                                                {% set ns.active = true %}
+                                            {% endif %}
+                                            {% for lll in ll.children %}
+                                                {% if lll.url|path == request.path %}
+                                                    {% set ns.active = true %}
+                                                {% endif %}
+                                            {% endfor %}
                                             <li class="nav-item">
                                                 <a href="{{ ll.url }}"
-                                                   class="nav-link {{ 'active' if ll.url|path == request.path }}">
+                                                   class="nav-link {{ 'active' if ns.active }}">
                                                     {{ ll.title }}
                                                 </a>
                                             </li>
@@ -240,10 +257,12 @@
                                     {% set href = update_full_path(a.view) %}
                                 {% elif a.url %}
                                     {% set href = a.url %}
+                                {% elif a.href %}
+                                    {% set href = a.href %}
                                 {% else %}
                                     {% set href = 'javascript:;' %}
                                 {% endif %}
-                                <a href="{{ href }}" class="btn btn-{{ a.cls or 'outline-primary' }} ml-2">
+                                <a href="{{ href }}" class="btn btn-outline-{{ a.cls or 'primary' }} ml-2">
                                     {% if a.icon %}<i class="fe fe-{{ a.icon }} mr-2"></i>{% endif %}{{ a.title }}
                                 </a>
                             {% endfor %}
@@ -300,7 +319,6 @@
 <script src="/static/dashkit/assets/libs/highlightjs/highlight.pack.min.js"></script>
 <script src="/static/dashkit/assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
 <script src="/static/dashkit/assets/libs/list.js/dist/list.min.js"></script>
-<script src="/static/dashkit/assets/libs/quill/dist/quill.min.js"></script>
 <script src="/static/dashkit/assets/libs/select2/dist/js/select2.full.min.js"></script>
 <script src="/static/dashkit/assets/libs/chart.js/Chart.extension.js"></script>
 <script src="/static/dashkit/assets/js/theme.min.js"></script>

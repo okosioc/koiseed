@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         eventClick: function (info) {
             // https://fullcalendar.io/docs/event-object
             var event = info.event;
-            location.href = "{{ generate_url(item_schema.py_type, none, 'read') }}?id=" + event.id;
+            location.href = "{{ generate_url(item_schema.py_type, none, ['read']) }}?id=" + event.id;
         },
         {% else %}
         events: {{ '{{' }} {{ field_path }}|tojson {{ '}}' }},

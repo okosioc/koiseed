@@ -22,9 +22,9 @@
             {% set column_path = field_name~'_item.'~c %}
             <td name="{{ c }}">
                 {% if column_schema.format == 'int' %}
-                <input class="form-control" pattern="[0-9]*" name="{{ c }}" {{ 'required' if column_schema.required }} value="{{ '{{' }} {{ column_path }} if {{ column_path }} is not none {{ '}}' }}">
+                <input class="form-control" pattern="[0-9]*" name="{{ c }}" {{ 'required' if column_schema.required }} value="{{ '{{' }} {{ column_path }} if {{ column_path }} is not none {{ '}}' }}" placeholder="{{ column_schema.description or '' }}">
                 {% elif column_schema.format == 'float' %}
-                <input class="form-control" pattern="[0-9\.]*" name="{{ c }}" {{ 'required' if column_schema.required }} value="{{ '{{' }} {{ column_path }} if {{ column_path }} is not none {{ '}}' }}">
+                <input class="form-control" pattern="[0-9\.]*" name="{{ c }}" {{ 'required' if column_schema.required }} value="{{ '{{' }} {{ column_path }} if {{ column_path }} is not none {{ '}}' }}" placeholder="{{ column_schema.description or '' }}">
                 {% elif column_schema.format in ['select', 'buttongroup'] %}
                 <select class="custom-select" name="{{ c }}" {{ 'required' if column_schema.required }} {{ 'multiple' if column_schema.type=='array' }}>
                     <option value="">__(Choose)...</option>
@@ -47,7 +47,7 @@
                     {% endif %}
                 </select>
                 {% else %}
-                <input class="form-control" name="{{ c }}" {{ 'required' if column_schema.required }} value="{{ '{{' }} {{ column_path }} or '' {{ '}}' }}">
+                <input class="form-control" name="{{ c }}" {{ 'required' if column_schema.required }} value="{{ '{{' }} {{ column_path }} or '' {{ '}}' }}" placeholder="{{ column_schema.description or '' }}">
                 {% endif %}
             </td>
             {% endfor %}

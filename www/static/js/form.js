@@ -870,13 +870,14 @@ function install_plupload(btn) {
     var isImageResult = result.is(".image-input-result");
     // Generate a unique id for button so it can work correctly
     btn.attr("id", "plupload-" + my_random());
+    var image_ops = preview.image ? preview.image : "";
     var uploader = new plupload.Uploader({
         browse_button: btn[0],
         url: upload,
         max_file_size: max,
         filters: filters,
         multi_selection: multi,
-        multipart_params: {token: token}
+        multipart_params: {token: token, ops: image_ops},
     });
     uploader.init();
     uploader.bind('FilesAdded', function (up, files) {
@@ -1427,6 +1428,9 @@ function my_preview(url, config) {
     if (isVideo && "video" in config) {
         // poster ops
         var preview_ops = config["video"];
+        if (rawUrl.indexOf(preview_ops) >= 0) {
+            return rawUrl;
+        }
         if (preview_ops.startsWith("_")) {
             return rawUrl.replace('.' + ext, preview_ops + '.jpg');
         } else {
@@ -1435,6 +1439,9 @@ function my_preview(url, config) {
     } else if ("image" in config) {
         // preview ops
         var preview_ops = config["image"];
+        if (rawUrl.indexOf(preview_ops) >= 0) {
+            return rawUrl;
+        }
         if (preview_ops.startsWith("_")) {
             return rawUrl.replace('.' + ext, preview_ops + '.' + ext);
         } else {

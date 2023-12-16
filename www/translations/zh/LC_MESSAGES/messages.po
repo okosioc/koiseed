@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-09-07 18:06+0800\n"
+"POT-Creation-Date: 2023-12-16 16:08+0800\n"
 "PO-Revision-Date: 2023-09-07 18:06+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -18,100 +18,213 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
 
-#: www/public.py:72 www/public.py:115
+#: www/public.py:81 www/public.py:124
 msgid "Email is required!"
 msgstr ""
 
-#: www/public.py:73 www/public.py:116
+#: www/public.py:82 www/public.py:125 www/public.py:295 www/public.py:406
 msgid "Invalid email address!"
 msgstr ""
 
-#: www/public.py:75 www/public.py:119 www/public.py:124
+#: www/public.py:84 www/public.py:128 www/public.py:132
 msgid "Password is required!"
 msgstr ""
 
-#: www/public.py:89
+#: www/public.py:98
 msgid "Email or password not matched!"
 msgstr ""
 
-#: www/public.py:121
+#: www/public.py:129 www/public.py:343
 msgid "Password length should between 8 and 16, and should contains at least one letter and one number!"
 msgstr ""
 
-#: www/public.py:125
+#: www/public.py:133 www/public.py:352
 msgid "Password mismatched!"
 msgstr ""
 
-#: www/public.py:127
+#: www/public.py:135
 msgid "Please agree our terms and policy!"
 msgstr ""
 
-#: www/public.py:140
+#: www/public.py:148
 msgid "This email has already been registered!"
 msgstr ""
 
-#: www/commons/helpers.py:28
+#: www/public.py:200
+msgid "No need to verify email address for current user!"
+msgstr ""
+
+#: www/public.py:204
+msgid "We have sent the verify email 5 minutes ago, please check your inbox firstly!"
+msgstr ""
+
+#: www/public.py:207
+msgid "Verify email has been sent, please check your inbox."
+msgstr ""
+
+#: www/public.py:215
+msgid "Verify Email Address"
+msgstr "验证邮箱地址"
+
+#: www/public.py:237 www/public.py:250 www/public.py:320 www/public.py:327
+msgid "Failed!"
+msgstr ""
+
+#: www/public.py:238
+msgid "Your verify link is invalid!"
+msgstr "您的验证链接无效！"
+
+#: www/public.py:243 www/public.py:264 www/public.py:313 www/public.py:362
+#: www/templates/public/ack.html:6
+msgid "Success."
+msgstr ""
+
+#: www/public.py:244
+msgid "Your email address has been verified."
+msgstr ""
+
+#: www/public.py:251
+msgid "Your verify link has expired!"
+msgstr ""
+
+#: www/public.py:265
+msgid "Thanks a lot, your email address has been verified!"
+msgstr ""
+
+#: www/public.py:272
+msgid "Welcome to "
+msgstr ""
+
+#: www/public.py:272
+msgid "SHORT_NAME"
+msgstr ""
+
+#: www/public.py:272
+msgid ", "
+msgstr "，"
+
+#: www/public.py:302
+msgid "This email address is not registered or it is in an abnormal status!"
+msgstr ""
+
+#: www/public.py:308
+msgid "We have sent the reset email 5 minutes ago, please check your inbox firstly!"
+msgstr ""
+
+#: www/public.py:314
+msgid "Reset email has been sent, please check your inbox."
+msgstr ""
+
+#: www/public.py:321
+msgid "Your reset link is invalid!"
+msgstr ""
+
+#: www/public.py:328
+msgid "Your reset link has expired!"
+msgstr ""
+
+#: www/public.py:363
+msgid "Your password has been reset."
+msgstr ""
+
+#: www/public.py:372 www/templates/emails/reset_password.html:66
+msgid "Password Reset"
+msgstr ""
+
+#: www/public.py:393
+msgid "We are very sorry that our email service is not ready, please contact us by another way!"
+msgstr ""
+
+#: www/public.py:396
+msgid "Please login firstly!"
+msgstr ""
+
+#: www/public.py:400
+msgid "Full name is required!"
+msgstr ""
+
+#: www/public.py:410
+msgid "Message is required!"
+msgstr ""
+
+#: www/public.py:414
+msgid "You have sent the message 5 minutes ago, please wait for a while!"
+msgstr ""
+
+#: www/public.py:424
+msgid "Your message has been sent, we will contact you as soon as possible!"
+msgstr ""
+
+#: www/commons/helpers.py:32
 msgid "just now"
 msgstr "刚刚"
 
-#: www/commons/helpers.py:42
+#: www/commons/helpers.py:46
 #, python-format
 msgid "%(num)s year"
 msgid_plural "%(num)s years"
 msgstr[0] ""
 
-#: www/commons/helpers.py:43
+#: www/commons/helpers.py:47
 #, python-format
 msgid "%(num)s month"
 msgid_plural "%(num)s months"
 msgstr[0] ""
 
-#: www/commons/helpers.py:44
+#: www/commons/helpers.py:48
 #, python-format
 msgid "%(num)s week"
 msgid_plural "%(num)s weeks"
 msgstr[0] ""
 
-#: www/commons/helpers.py:45
+#: www/commons/helpers.py:49
 #, python-format
 msgid "%(num)s day"
 msgid_plural "%(num)s days"
 msgstr[0] ""
 
-#: www/commons/helpers.py:46
+#: www/commons/helpers.py:50
 #, python-format
 msgid "%(num)s hour"
 msgid_plural "%(num)s hours"
 msgstr[0] ""
 
-#: www/commons/helpers.py:47
+#: www/commons/helpers.py:51
 #, python-format
 msgid "%(num)s minute"
 msgid_plural "%(num)s minutes"
 msgstr[0] ""
 
-#: www/commons/helpers.py:48
+#: www/commons/helpers.py:52
 #, python-format
 msgid "%(num)s second"
 msgid_plural "%(num)s seconds"
 msgstr[0] ""
 
-#: www/commons/helpers.py:53
+#: www/commons/helpers.py:57
 #, python-format
 msgid "%(period)s ago"
 msgstr ""
 
-#: www/templates/layout-public.html:74
-msgid "Contact"
-msgstr ""
-
-#: www/templates/layout-public.html:226
+#: www/templates/layout-public-demo.html:241
 msgid "Home"
 msgstr "个人首页"
 
-#: www/templates/layout-public.html:228
+#: www/templates/layout-public-demo.html:243
 msgid "Login/Signup"
 msgstr "登录/注册"
+
+#: www/templates/layout-public-demo.html:257
+msgid "You need to verfiy your email address! Please go to your inbox to check the email."
+msgstr ""
+
+#: www/templates/layout-public-demo.html:258
+msgid "Resend"
+msgstr "再次发送"
+
+#: www/templates/layout-public-demo.html:269
+msgid "Are you sure to resend the verfiy email? Please check your inbox firstly."
+msgstr ""
 
 #: www/templates/macros.html:19
 msgid "Messages"
@@ -125,6 +238,153 @@ msgstr "查看所有"
 msgid "You do not have any messages!"
 msgstr "您还没有消息！"
 
+#: www/templates/demo/post-edit.html:27 www/templates/demo/post-edit.html:37
+#: www/templates/demo/post-edit.html:54 www/templates/demo/post-edit.html:135
+#: www/templates/demo/project-edit.html:27
+#: www/templates/demo/project-edit.html:36
+#: www/templates/demo/project-edit.html:61
+#: www/templates/demo/project-edit.html:71
+#: www/templates/demo/project-edit.html:79
+#: www/templates/demo/project-edit.html:92
+#: www/templates/demo/task-edit.html:113 www/templates/demo/task-edit.html:136
+#: www/templates/demo/task-edit.html:146 www/templates/demo/task-edit.html:154
+#: www/templates/demo/team-profile.html:80
+#: www/templates/demo/team-profile.html:90
+#: www/templates/demo/team-profile.html:99
+#: www/templates/demo/user-profile.html:102
+#: www/templates/demo/user-profile.html:112
+#: www/templates/demo/user-profile.html:121
+msgid "Invalid "
+msgstr "请输入正确的"
+
+#: www/templates/demo/post-edit.html:27 www/templates/demo/post-edit.html:37
+#: www/templates/demo/post-edit.html:54 www/templates/demo/post-edit.html:86
+#: www/templates/demo/post-edit.html:113 www/templates/demo/post-edit.html:135
+#: www/templates/demo/post-list.html:117
+#: www/templates/demo/project-dashboard.html:121
+#: www/templates/demo/project-dashboard.html:150
+#: www/templates/demo/project-detail.html:129
+#: www/templates/demo/project-detail.html:178
+#: www/templates/demo/project-detail.html:212
+#: www/templates/demo/project-edit.html:27
+#: www/templates/demo/project-edit.html:36
+#: www/templates/demo/project-edit.html:50
+#: www/templates/demo/project-edit.html:61
+#: www/templates/demo/project-edit.html:71
+#: www/templates/demo/project-edit.html:79
+#: www/templates/demo/project-edit.html:92
+#: www/templates/demo/project-edit.html:346
+#: www/templates/demo/project-edit.html:355
+#: www/templates/demo/project-list.html:157
+#: www/templates/demo/task-edit.html:113 www/templates/demo/task-edit.html:127
+#: www/templates/demo/task-edit.html:136 www/templates/demo/task-edit.html:146
+#: www/templates/demo/task-edit.html:154 www/templates/demo/task-edit.html:169
+#: www/templates/demo/team-members.html:117
+#: www/templates/demo/team-profile.html:80
+#: www/templates/demo/team-profile.html:90
+#: www/templates/demo/team-profile.html:99
+#: www/templates/demo/team-profile.html:130
+#: www/templates/demo/user-profile.html:102
+#: www/templates/demo/user-profile.html:112
+#: www/templates/demo/user-profile.html:121
+#: www/templates/demo/user-profile.html:152
+msgid "!"
+msgstr "！"
+
+#: www/templates/demo/post-edit.html:52
+msgid "Add "
+msgstr "添加"
+
+#: www/templates/demo/post-edit.html:70
+#: www/templates/demo/team-profile.html:115
+#: www/templates/demo/user-profile.html:137
+msgid "Choose Image"
+msgstr "选择图像"
+
+#: www/templates/demo/post-edit.html:71
+#: www/templates/demo/team-profile.html:116
+#: www/templates/demo/user-profile.html:138
+msgid "Availabe formats: "
+msgstr "支持的格式："
+
+#: www/templates/demo/post-edit.html:86
+#: www/templates/demo/team-profile.html:130
+#: www/templates/demo/user-profile.html:152
+msgid "Please upload "
+msgstr "请上传"
+
+#: www/templates/demo/post-edit.html:108
+#: www/templates/demo/project-edit.html:45
+#: www/templates/demo/project-edit.html:355
+#: www/templates/demo/task-edit.html:122 www/templates/demo/task-edit.html:164
+msgid "Choose"
+msgstr "选择"
+
+#: www/templates/demo/post-edit.html:113
+#: www/templates/demo/project-edit.html:50
+#: www/templates/demo/project-edit.html:355
+#: www/templates/demo/task-edit.html:127 www/templates/demo/task-edit.html:169
+msgid "Please choose at least one "
+msgstr "请选择至少一个"
+
+#: www/templates/demo/post-edit.html:146
+#: www/templates/demo/project-edit.html:237
+#: www/templates/demo/task-edit.html:181
+#: www/templates/demo/team-profile.html:141
+#: www/templates/demo/user-profile.html:163
+msgid "Save"
+msgstr "保存"
+
+#: www/templates/demo/post-edit.html:148
+#: www/templates/demo/project-edit.html:220
+#: www/templates/demo/project-edit.html:239
+#: www/templates/demo/task-edit.html:183
+#: www/templates/demo/team-profile.html:143
+msgid "Cancel"
+msgstr "取消"
+
+#: www/templates/demo/post-edit.html:177
+#: www/templates/demo/project-edit.html:378
+#: www/templates/demo/task-edit.html:200
+#: www/templates/demo/team-profile.html:163
+#: www/templates/demo/user-profile.html:182
+msgid "Are you sure to save?"
+msgstr "确定保存么？"
+
+#: www/templates/demo/post-edit.html:185
+#: www/templates/demo/project-edit.html:385
+#: www/templates/demo/task-edit.html:207
+#: www/templates/demo/team-profile.html:170
+#: www/templates/demo/user-profile.html:189
+msgid "Found invalid data, please correct and retry!"
+msgstr "检测到非法数据，请更正后重试！"
+
+#: www/templates/demo/post-list.html:6
+#: www/templates/demo/project-detail.html:183
+#: www/templates/demo/project-list.html:6
+msgid "Create "
+msgstr "创建"
+
+#: www/templates/demo/post-list.html:37
+#: www/templates/demo/project-edit.html:285
+#: www/templates/demo/project-list.html:45
+msgid "Search"
+msgstr "查找"
+
+#: www/templates/demo/post-list.html:38
+#: www/templates/demo/project-edit.html:286
+#: www/templates/demo/project-list.html:46 www/templates/public/login.html:73
+#: www/templates/public/reset_password.html:50
+msgid "Reset"
+msgstr "重置"
+
+#: www/templates/demo/post-list.html:46
+#: www/templates/demo/project-edit.html:353
+#: www/templates/demo/project-list.html:54
+msgid "Choosed "
+msgstr "选择了"
+
+#: www/templates/demo/post-list.html:117
 #: www/templates/demo/project-dashboard.html:121
 #: www/templates/demo/project-dashboard.html:150
 #: www/templates/demo/project-detail.html:129
@@ -136,211 +396,105 @@ msgstr "您还没有消息！"
 msgid "No "
 msgstr "没有"
 
-#: www/templates/demo/project-dashboard.html:121
-#: www/templates/demo/project-dashboard.html:150
-#: www/templates/demo/project-detail.html:129
-#: www/templates/demo/project-detail.html:178
-#: www/templates/demo/project-detail.html:212
-#: www/templates/demo/project-edit.html:27
-#: www/templates/demo/project-edit.html:37
-#: www/templates/demo/project-edit.html:51
-#: www/templates/demo/project-edit.html:62
-#: www/templates/demo/project-edit.html:72
-#: www/templates/demo/project-edit.html:80
-#: www/templates/demo/project-edit.html:93
-#: www/templates/demo/project-edit.html:346
-#: www/templates/demo/project-edit.html:355
-#: www/templates/demo/project-list.html:157
-#: www/templates/demo/task-edit.html:113 www/templates/demo/task-edit.html:127
-#: www/templates/demo/task-edit.html:137 www/templates/demo/task-edit.html:147
-#: www/templates/demo/task-edit.html:155 www/templates/demo/task-edit.html:170
-#: www/templates/demo/team-members.html:117
-#: www/templates/demo/team-profile.html:80
-#: www/templates/demo/team-profile.html:90
-#: www/templates/demo/team-profile.html:100
-#: www/templates/demo/team-profile.html:131
-#: www/templates/demo/user-profile.html:102
-#: www/templates/demo/user-profile.html:112
-#: www/templates/demo/user-profile.html:122
-#: www/templates/demo/user-profile.html:153
-msgid "!"
-msgstr "！"
+#: www/templates/demo/post-preview.html:6
+#: www/templates/demo/project-detail.html:6
+#: www/templates/demo/task-detail.html:6 www/templates/demo/team-members.html:6
+msgid "Update "
+msgstr "更新"
 
-#: www/templates/demo/project-detail.html:183
-msgid "Create "
-msgstr "创建"
-
-#: www/templates/demo/project-edit.html:27
-#: www/templates/demo/project-edit.html:37
-#: www/templates/demo/project-edit.html:62
-#: www/templates/demo/project-edit.html:72
-#: www/templates/demo/project-edit.html:80
-#: www/templates/demo/project-edit.html:93
-#: www/templates/demo/task-edit.html:113 www/templates/demo/task-edit.html:137
-#: www/templates/demo/task-edit.html:147 www/templates/demo/task-edit.html:155
-#: www/templates/demo/team-profile.html:80
-#: www/templates/demo/team-profile.html:90
-#: www/templates/demo/team-profile.html:100
-#: www/templates/demo/user-profile.html:102
-#: www/templates/demo/user-profile.html:112
-#: www/templates/demo/user-profile.html:122
-msgid "Invalid "
-msgstr "请输入正确的"
-
-#: www/templates/demo/project-edit.html:46
-#: www/templates/demo/project-edit.html:355
-#: www/templates/demo/task-edit.html:122 www/templates/demo/task-edit.html:165
-msgid "Choose"
-msgstr "选择"
-
-#: www/templates/demo/project-edit.html:51
-#: www/templates/demo/project-edit.html:355
-#: www/templates/demo/task-edit.html:127 www/templates/demo/task-edit.html:170
-msgid "Please choose at least one "
-msgstr "请选择至少一个"
-
-#: www/templates/demo/project-edit.html:221
-#: www/templates/demo/project-edit.html:240
-#: www/templates/demo/task-edit.html:184
-#: www/templates/demo/team-profile.html:144
-msgid "Cancel"
-msgstr "取消"
-
-#: www/templates/demo/project-edit.html:238
-#: www/templates/demo/task-edit.html:182
-#: www/templates/demo/team-profile.html:142
-#: www/templates/demo/user-profile.html:164
-msgid "Save"
-msgstr "保存"
-
-#: www/templates/demo/project-edit.html:285
-#: www/templates/demo/project-list.html:45
-msgid "Search"
-msgstr "查找"
-
-#: www/templates/demo/project-edit.html:286
-#: www/templates/demo/project-list.html:46
-#: www/templates/includes/landkit/login-illustration.html:67
-msgid "Reset"
-msgstr "重置"
-
-#: www/templates/demo/project-edit.html:353
-#: www/templates/demo/project-list.html:54
-msgid "Choosed "
-msgstr "选择了"
+#: www/templates/demo/post-preview.html:102
+#: www/templates/demo/project-detail.html:227
+msgid "Back"
+msgstr "后退"
 
 #: www/templates/demo/project-edit.html:354
 msgid "Close"
 msgstr "关闭"
 
-#: www/templates/demo/project-edit.html:378
-#: www/templates/demo/task-edit.html:201
-#: www/templates/demo/team-profile.html:163
-#: www/templates/demo/user-profile.html:182
-msgid "Are you sure to save?"
-msgstr "确定保存么？"
+#: www/templates/emails/reset_password.html:55
+msgid "Click below to reset your password:"
+msgstr "点击下述链接重置密码："
 
-#: www/templates/demo/project-edit.html:385
-#: www/templates/demo/task-edit.html:208
-#: www/templates/demo/team-profile.html:170
-#: www/templates/demo/user-profile.html:189
-msgid "Found invalid data, please correct and retry!"
-msgstr "检测到非法数据，请更正后重试！"
+#: www/templates/emails/reset_password.html:74
+msgid "If you didn't request a password reset, please ignore this email."
+msgstr ""
 
-#: www/templates/demo/team-profile.html:116
-#: www/templates/demo/user-profile.html:138
-msgid "Choose Image"
-msgstr "选择图像"
+#: www/templates/emails/verify_email.html:55
+msgid "Thanks for registering for an account. Before we get started, we just need to confirm that this is you. Click below to verify your email address:"
+msgstr ""
 
-#: www/templates/demo/team-profile.html:117
-#: www/templates/demo/user-profile.html:139
-msgid "Availabe formats: "
-msgstr "支持的格式："
+#: www/templates/emails/verify_email.html:66
+msgid "Verify Email"
+msgstr ""
 
-#: www/templates/demo/team-profile.html:131
-#: www/templates/demo/user-profile.html:153
-msgid "Please upload "
-msgstr "请上传"
+#: www/templates/emails/welcome.html:55
+msgid "Thanks for choosing us. We appreciate the opportunity to serve you. Click below to start:"
+msgstr ""
 
-#: www/templates/includes/basic-contact-us.html:3
+#: www/templates/emails/welcome.html:66
+msgid "Get Started"
+msgstr ""
+
+#: www/templates/emails/welcome.html:74
+msgid "Please let us know if you have any questions at all. We are happy to help."
+msgstr ""
+
+#: www/templates/includes/landkit/contact-us-basic.html:6
 msgid "We’re Here to Help"
 msgstr ""
 
-#: www/templates/includes/basic-contact-us.html:4
+#: www/templates/includes/landkit/contact-us-basic.html:7
 msgid "We always want to hear from you! Let us know how we can best help you and we will do our very best."
 msgstr ""
 
-#: www/templates/includes/landkit/error-illustration.html:21
-msgid "Back to safety"
+#: www/templates/includes/landkit/contact-us-basic.html:16
+msgid "Let us hear from you directly."
 msgstr ""
 
-#: www/templates/includes/landkit/login-illustration.html:25
-#: www/templates/includes/landkit/login-illustration.html:60
-#: www/templates/includes/landkit/signup-illustration.html:84
-#: www/templates/public/login.html:2
-msgid "Login"
-msgstr "登录"
+#: www/templates/includes/landkit/contact-us-basic.html:17
+msgid "Send us a email and we will get back to you as soon as possible."
+msgstr ""
 
-#: www/templates/includes/landkit/login-illustration.html:28
-msgid "Please use your email address to login"
-msgstr "请使用您的邮箱地址登录"
+#: www/templates/includes/landkit/contact-us-basic.html:95
+#: www/templates/includes/landkit/contact-us-basic.html:97
+msgid "Full name"
+msgstr ""
 
-#: www/templates/includes/landkit/login-illustration.html:34
-#: www/templates/includes/landkit/signup-illustration.html:38
-msgid "Email Address"
-msgstr "邮箱地址"
+#: www/templates/includes/landkit/contact-us-basic.html:103
+msgid "Email"
+msgstr ""
 
-#: www/templates/includes/landkit/login-illustration.html:43
-#: www/templates/includes/landkit/signup-illustration.html:47
-msgid "Login Password"
-msgstr "登录密码"
+#: www/templates/includes/landkit/contact-us-basic.html:115
+msgid "What can we help you with?"
+msgstr ""
 
-#: www/templates/includes/landkit/login-illustration.html:56
-msgid "Remember me"
-msgstr "记住我"
+#: www/templates/includes/landkit/contact-us-basic.html:118
+msgid "Tell us what we can help you with!"
+msgstr ""
 
-#: www/templates/includes/landkit/login-illustration.html:64
-msgid "Don't have an account yet?"
-msgstr "还没有账户？"
+#: www/templates/includes/landkit/contact-us-basic.html:126
+msgid "Send Message"
+msgstr "发送"
 
-#: www/templates/includes/landkit/login-illustration.html:64
-#: www/templates/includes/landkit/signup-illustration.html:29
-#: www/templates/includes/landkit/signup-illustration.html:80
-#: www/templates/public/signup.html:2
-msgid "Signup"
-msgstr "注册"
+#: www/templates/includes/landkit/contact-us-basic.html:147
+msgid "Are you sure to send this message?"
+msgstr "确定发送么？"
 
-#: www/templates/includes/landkit/login-illustration.html:67
-msgid "Forget your password?"
-msgstr "忘记密码？"
+#: www/templates/public/ack.html:2
+msgid "Ack"
+msgstr ""
 
-#: www/templates/includes/landkit/signup-illustration.html:32
-msgid "Please use your email address to signup"
-msgstr "请使用您的邮箱地址注册"
+#: www/templates/public/ack.html:7
+msgid "Your request has been processed."
+msgstr ""
 
-#: www/templates/includes/landkit/signup-illustration.html:56
-msgid "Confirm Password"
-msgstr "确认密码"
+#: www/templates/public/ack.html:24
+msgid "Back to index"
+msgstr ""
 
-#: www/templates/includes/landkit/signup-illustration.html:69
-msgid "Agree"
-msgstr "同意"
-
-#: www/templates/includes/landkit/signup-illustration.html:70
-msgid "Terms"
-msgstr "用户协议"
-
-#: www/templates/includes/landkit/signup-illustration.html:71
-msgid "and"
-msgstr "和"
-
-#: www/templates/includes/landkit/signup-illustration.html:72
-msgid "Policy"
-msgstr "隐私政策"
-
-#: www/templates/includes/landkit/signup-illustration.html:84
-msgid "Already have an account?"
-msgstr "已经有账户？"
+#: www/templates/public/blog.html:2
+msgid "Blog"
+msgstr "博客"
 
 #: www/templates/public/contact.html:2
 msgid "Contact Us"
@@ -350,7 +504,110 @@ msgstr ""
 msgid "Error"
 msgstr "出错了"
 
+#: www/templates/public/error.html:25
+msgid "Back to safety"
+msgstr ""
+
 #: www/templates/public/index.html:2
 msgid "Index"
 msgstr "首页"
 
+#: www/templates/public/login.html:2 www/templates/public/login.html:29
+#: www/templates/public/login.html:65
+#: www/templates/public/reset_password.html:76
+#: www/templates/public/signup.html:90
+msgid "Login"
+msgstr "登录"
+
+#: www/templates/public/login.html:32
+msgid "Please use your email address to login"
+msgstr "请使用您的邮箱地址登录"
+
+#: www/templates/public/login.html:38
+#: www/templates/public/reset_password.html:60
+#: www/templates/public/signup.html:42
+msgid "Email Address"
+msgstr "邮箱地址"
+
+#: www/templates/public/login.html:47 www/templates/public/signup.html:51
+msgid "Login Password"
+msgstr "登录密码"
+
+#: www/templates/public/login.html:60
+msgid "Remember me"
+msgstr "记住我"
+
+#: www/templates/public/login.html:70
+msgid "Don't have an account yet?"
+msgstr "还没有账户？"
+
+#: www/templates/public/login.html:70 www/templates/public/signup.html:2
+#: www/templates/public/signup.html:33 www/templates/public/signup.html:85
+msgid "Signup"
+msgstr "注册"
+
+#: www/templates/public/login.html:73
+msgid "Forget your password?"
+msgstr "忘记密码？"
+
+#: www/templates/public/post.html:2
+msgid "Post"
+msgstr ""
+
+#: www/templates/public/posts.html:2
+msgid "Posts"
+msgstr ""
+
+#: www/templates/public/reset_password.html:2
+#: www/templates/public/reset_password.html:22
+msgid "Reset Password"
+msgstr "重置密码"
+
+#: www/templates/public/reset_password.html:26
+msgid "Please enter your new password."
+msgstr ""
+
+#: www/templates/public/reset_password.html:31
+msgid "New Password"
+msgstr "新密码"
+
+#: www/templates/public/reset_password.html:40
+#: www/templates/public/signup.html:60
+msgid "Confirm Password"
+msgstr "确认密码"
+
+#: www/templates/public/reset_password.html:56
+msgid "Please enter your email address and we'll send you a reset password link."
+msgstr "请输入您的登录邮箱地址接收密码重置链接"
+
+#: www/templates/public/reset_password.html:70
+msgid "Send Reset Link"
+msgstr ""
+
+#: www/templates/public/reset_password.html:76
+msgid "Remember your password?"
+msgstr "记得密码？"
+
+#: www/templates/public/signup.html:36
+msgid "Please use your email address to signup"
+msgstr "请使用您的邮箱地址注册"
+
+#: www/templates/public/signup.html:73
+msgid "Agree"
+msgstr "同意"
+
+#: www/templates/public/signup.html:74
+msgid "Terms"
+msgstr "用户协议"
+
+#: www/templates/public/signup.html:75
+msgid "and"
+msgstr "和"
+
+#: www/templates/public/signup.html:76
+msgid "Policy"
+msgstr "隐私政策"
+
+#: www/templates/public/signup.html:90
+msgid "Already have an account?"
+msgstr "已经有账户？"

@@ -1,7 +1,7 @@
 {# * #}
 {# * global var to control code generation #}
 {# * #}
-{% set render_controls = namespace(relations_needing_preload=[], relations_needing_search=[], relations_needing_async_load=[]) %}
+{% set render_controls = namespace(can_delete=false, relations_needing_preload=[], relations_needing_search=[], relations_needing_async_load=[]) %}
 {# * #}
 {# * macro - iterate layout to get needed relations and etc, param layout is rows, param schema is alway a object's schema #}
 {# * #}
@@ -31,15 +31,15 @@
                 {% if column_schema.is_relation and column_schema.editable %}
                     {% set related_model_name = inner_schema.py_type %}
                     {# relations_needing_preload is used in action form when loading view #}
-                    {% if column_schema.is_out_relation and related_model_name not in render_controls.relations_needing_preload %}
+                    {% if column_schema.is_out_relation and related_model_name not in render_controls.relations_needing_preload|keys %}
                         {% set render_controls.relations_needing_preload = render_controls.relations_needing_preload + [(related_model_name, inner_schema['columns'])] %}
                     {% endif %}
                     {# relations_needing_search is used in action form when searching related models #}
-                    {% if column_schema.is_out_relation and column_schema.format in ['media', 'timeline', 'modal'] and related_model_name not in render_controls.relations_needing_search %}
+                    {% if column_schema.is_out_relation and (column_schema.format is undefined or column_schema.format in ['media', 'timeline', 'modal']) and related_model_name not in render_controls.relations_needing_search|keys %}
                         {% set render_controls.relations_needing_search = render_controls.relations_needing_search + [(related_model_name, inner_schema['columns'])] %}
                     {% endif %}
                     {# relations_needing_async_load is used in action read #}
-                    {% if column_schema.format in ['calendar'] and related_model_name not in render_controls.relations_needing_async_load %}
+                    {% if column_schema.format in ['calendar'] and related_model_name not in render_controls.relations_needing_async_load|keys %}
                         {% set render_controls.relations_needing_async_load = render_controls.relations_needing_async_load + [(related_model_name, column_layout|fields or inner_schema['columns'])] %}
                     {% endif %}
                 {# object/array/simple #}
@@ -159,6 +159,7 @@ from www.public import public
 {% endif %}
 
 
+{# iterate each view under current blueprint #}
 {% for view in blueprint.views %}
 {# core variables #}
 {% set model = view.model %}
@@ -168,6 +169,7 @@ from www.public import public
 {% set render_controls.relations_needing_preload = [] %}
 {% set render_controls.relations_needing_search = [] %}
 {% set render_controls.relations_needing_async_load = [] %}
+{% set render_controls.can_delete = view.params.can_delete or false %}
 {{- iterate_layout(layout, model.schema) -}}
 {# define view function #}
 @{{ blueprint.name_snake }}.route('/{{ view.name }}')
@@ -227,8 +229,8 @@ def {{ view.name_snake }}():
 {# define load relation function in read, i.e, loading events monthly in a calendar #}
 {% for relation, projection in render_controls.relations_needing_async_load %}
 {% set related_model = models[relation] %}
-@{{ blueprint.name_snake }}.route('/{{ view.name }}/load-{{ related_model.name_kebab_plural }}', methods=('POST',))
-{{ generate_permisson(blueprint.name) -}}
+@{{ blueprint.name_snake }}.route('/{{ view.name }}-load-{{ related_model.name_kebab_plural }}', methods=('POST',))
+{{ render_permisson(blueprint.name) -}}
 def {{ view.name_snake }}_load_{{ related_model.name_snake_plural }}():
     """ $$(text_load){{ related_model.name_title_lower }}. """
     page, sort = request.form.get('p', 1, lambda x: int(x) if x.isdigit() else 1), [('create_time', -1)]
@@ -239,6 +241,23 @@ def {{ view.name_snake }}_load_{{ related_model.name_snake_plural }}():
 
 
 {% endfor %}
+{# define delete #}
+{% if render_controls.can_delete %}
+@{{ blueprint.name_snake }}.route('/{{ view.name }}-delete', methods=('POST',))
+{{ render_permisson(blueprint.name) -}}
+def {{ view.name_snake }}_delete():
+    """ $$(text_delete){{ view.params.title }}. """
+    id_ = get_id({{ model.schema.id_type }})
+    current_app.logger.info(f'Try to delete {{ model.name_title_lower }} with id {id_}')
+    existing = {{ model.name }}.find_one(id_)
+    if not existing:
+        abort(404)
+    #
+    existing.delete()
+    return jsonify(error=0, message='Delete {{ model.name_title_lower }} successfully.')
+
+
+{% endif %}
 {% endif %}
 {# define post function for create/update/upcreate #}
 {% if action in ['create', 'update', 'upcreate'] %}
@@ -267,7 +286,7 @@ def {{ view.name_snake }}_{{ action }}():
 {# define search relation function in create/update/upcreate #}
 {% for relation, projection in render_controls.relations_needing_search %}
 {% set related_model = models[relation] %}
-@{{ blueprint.name_snake }}.route('/{{ view.name }}/search-{{ related_model.name_kebab_plural }}', methods=('POST',))
+@{{ blueprint.name_snake }}.route('/{{ view.name }}-search-{{ related_model.name_kebab_plural }}', methods=('POST',))
 {{ render_permisson(blueprint.name) -}}
 def {{ view.name_snake }}_search_{{ related_model.name_snake_plural }}():
     """ $$(text_search){{ related_model.schema.title }}. """

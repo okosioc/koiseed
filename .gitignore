@@ -10,6 +10,7 @@ www/logs/*.log.*
 instance/*.py
 instance/*.pem
 instance/*.txt
+instance/*.key
 
 # PyCharm
 .idea/

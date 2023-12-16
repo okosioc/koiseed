@@ -40,6 +40,7 @@ MONGODB_URI_PYTEST = 'mongodb://localhost:27017/pytest'
 #                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
 # UPLOAD_MAX = 50
 # UPLOAD_IMAGE_PREVIEW = '?imageMogr2/thumbnail/x300'
+# UPLOAD_AVATAR_PREVIEW = '?imageView2/1/w/200/h/200'
 # UPLOAD_VIDEO_POSTER = '?vframe/jpg/offset/1/h/200'
 # Upload to Local
 UPLOAD_ENDPOINT = '/upload'
@@ -53,9 +54,11 @@ UPLOAD_MAX = 50
 # /static/uploads/20200101/xxx.jpg -> /static/uploads/20200101/xxx_thumbnail_x300.jpg
 # _thumbnail_<Width>x -> fix width
 # _thumbnail_x<Height> -> fix height
-# _thumbnail_<Width>x<Height> -> outer fit
-# _thumbnail_!<Width>x<Height>r -> inner fit
+# _thumbnail_<Width>x<Height> -> scale to fit
+# _thumbnail_!<Width>x<Height> -> scale to fill
+# _thumbnail_!<Width>x<Height>c -> scale to fill and crop to center
 # _thumbnail_<Width>x<Height>! -> just resize
 UPLOAD_IMAGE_PREVIEW = '_thumbnail_x300'
+UPLOAD_AVATAR_PREVIEW = '_thumbnail_!200x200c'
 # _frame_<Second>_<Width>x<Height> -> get the frame of the video at specified second
 UPLOAD_VIDEO_POSTER = '_frame_1_x300'

@@ -102,7 +102,7 @@
                                     {% if active_projects_item.status is not none %}<span class="text-{{ active_projects_item.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoProjectStatus')[active_projects_item.status] }}{% else %}-{% endif %}
                                 </td>
                                 <td name="value" format="float" enum="">
-                                    {{ active_projects_item.value|int|commas if active_projects_item.value is not none else '-' }} 
+                                    {{ active_projects_item.value|commas if active_projects_item.value is not none else '-' }} 
                                 </td>
                                 <td name="start" format="date" enum="">
                                     {{ active_projects_item.start|date if active_projects_item.start is not none else '-' }}
@@ -111,7 +111,7 @@
                                     {{ active_projects_item.members|length }}
                                 </td>
                                 <td name="percent" format="float" enum="">
-                                    {{ active_projects_item.percent|int|commas if active_projects_item.percent is not none else '-' }} %
+                                    {{ active_projects_item.percent|commas if active_projects_item.percent is not none else '-' }} %
                                 </td>
                                 <td name="create_time" format="datetime" enum="">
                                     {{ active_projects_item.create_time|datetime if active_projects_item.create_time is not none else '-' }}

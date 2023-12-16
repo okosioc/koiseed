@@ -26,7 +26,7 @@ from wtforms.validators import DataRequired, Email, EqualTo, Regexp
 from py3seed import populate_search
 
 from core.models import User, UserStatus, UserRole, POST_TAGS, PostStatus, Post
-from www.commons import get_id, send_service_mail, auth_permission, generate_image_thumbnail, generate_video_poster
+from www.commons import get_id, send_service_mail, auth_permission, generate_image_preview, generate_video_poster
 
 public = Blueprint('public', __name__, url_prefix='')
 
@@ -53,13 +53,14 @@ def ack():
     return render_template('public/ack.html')
 
 
-@public.route('/dashboard')
-def dashboard():
+@public.route('/home')
+def home():
     """ User home page. """
     return redirect(url_for('demo.project_dashboard'))
 
 
 @public.route('/profile')
+@login_required
 def profile():
     """ User profile page. """
     return redirect(url_for('demo.user_profile'))
@@ -101,7 +102,7 @@ def login():
         # TODO: Validate next url
         next_url = form.next_url.data
         if not next_url:
-            next_url = '/'
+            next_url = '/home'
         return redirect(next_url)
     #
     next_url = request.args.get('next', '')
@@ -442,7 +443,7 @@ def upload_file():
         if _is_editorjs:
             return jsonify(success=0)
         else:
-            abort(400)
+            abort(code)
 
     # editorjs' image tool has a special format for response
     # https://github.com/editor-js/image#server-format
@@ -481,7 +482,8 @@ def upload_file():
     #
     file.save(path)
     if type_ == 'image':
-        generate_image_thumbnail(path)
+        ops = request.values.get('ops', None)
+        generate_image_preview(path, ops)
     elif type_ == 'video':
         generate_video_poster(path)
     #

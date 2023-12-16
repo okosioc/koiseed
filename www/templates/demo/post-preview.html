@@ -3,7 +3,7 @@
 {% set breadcrumb = {
     'subtitle': '',
     'title': title,
-    'actions': [{'icon': 'edit', 'title': '文章编辑', 'view': 'post-edit?'}],
+    'actions': [{'icon': 'edit', 'title': _('Update ')~'文章', 'view': 'post-edit?'}],
     'tabs': [],
 } %}
 {% block title %}{{ title }}{% endblock %}
@@ -96,6 +96,11 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="mb-4">
+    {% if demo_post.id %}
+    <a href="post-list?id={{ demo_post.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Back)</a>
+    {% endif %}
     </div>
 </div>
 {% endblock %}

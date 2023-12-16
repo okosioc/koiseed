@@ -33,6 +33,7 @@ def prepare_demo_data():
         roles=[DemoUserRole.MEMBER, DemoUserRole.ADMIN],
         email='admin@koiseed.com',
         password=generate_password_hash('1q2w3e4r'),
+        avatar='/static/img/demo/avatar.jpg',
         team=demo_team_koi,
         team_join_time=datetime.now(),
     )

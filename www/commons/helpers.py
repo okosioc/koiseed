@@ -108,37 +108,41 @@ def get_id(type_: Type):
     return id_
 
 
-def generate_image_thumbnail(path):
-    """ Generate a thumbnail for given image path. """
+def generate_image_preview(path, ops=None):
+    """ Generate a preview for given image path. """
     endpoint = current_app.config['UPLOAD_ENDPOINT']
     is_local = re.match(r'^\/[a-z]+', endpoint)
     # Only generate for local upload, as most of the storage services can generate thumbnails by adding suffix to the image url
-    # e.g, qiniu uses ?imageMogr2/thumbnail/x300 to generate thumbnails with 300px height
-    thumbnail_ops = current_app.config['UPLOAD_IMAGE_PREVIEW']
-    if is_local and thumbnail_ops:
+    # e.g, qiniu uses ?imageMogr2/thumbnail/x300 to generate thumbnails with 300px height, https://developer.qiniu.com/dora/8255/the-zoom
+    if ops is None:
+        ops = current_app.config['UPLOAD_IMAGE_PREVIEW']
+    #
+    if is_local and ops:
         # e.g,
         # /static/uploads/20200101/xxx.jpg -> /static/uploads/20200101/xxx_thumbnail_x300.jpg
         # _thumbnail_<Width>x -> fix width
         # _thumbnail_x<Height> -> fix height
-        # _thumbnail_<Width>x<Height> -> outer fit
-        # _thumbnail_!<Width>x<Height>r -> inner fit
+        # _thumbnail_<Width>x<Height> -> scale to fit
+        # _thumbnail_!<Width>x<Height> -> scale to fill
+        # _thumbnail_!<Width>x<Height>c -> scale to fill and crop to center
         # _thumbnail_<Width>x<Height>! -> just resize
         image_mine_exts = [m.split('/')[1] for m in current_app.config['UPLOAD_MIMES'] if m.startswith('image')]
         ext = os.path.splitext(path)[1][1:]  # (xxx, .jpg) -> [1] -> .jpg -> [1:] -> jpg
         if ext.lower() in image_mine_exts:
-            match = re.match(r'^_thumbnail_(!?)(\d*)x(\d*)([r!]?)$', thumbnail_ops)
+            match = re.match(r'^_thumbnail_(!?)(\d*)x(\d*)([c!]?)$', ops)
             if not match:
-                current_app.logger.error(f'Invalid thumbnail ops {thumbnail_ops}')
+                current_app.logger.error(f'Invalid preview ops {ops}')
                 return
             #
-            thumbnail_path = path.replace('.' + ext, f'{thumbnail_ops}.{ext}')
-            _generate_image_thumbnail(path, thumbnail_path, match.group(1), match.group(2), match.group(3), match.group(4))
+            preview_path = path.replace('.' + ext, f'{ops}.{ext}')
+            _generate_image_preview(path, preview_path, match.group(1), match.group(2), match.group(3), match.group(4))
 
 
-def _generate_image_thumbnail(path, thumbnail_path, prefix, target_width, target_height, suffix):
-    """ Generate a thumbnail for given image path. """
+def _generate_image_preview(path, preview_path, prefix, target_width, target_height, suffix):
+    """ Generate a preview for given image path. """
     with Image.open(path) as image:
         width, height = image.size
+        tw, th = int(target_width), int(target_height)
         # fix width
         if not target_height:
             target_width = int(target_width)
@@ -149,17 +153,27 @@ def _generate_image_thumbnail(path, thumbnail_path, prefix, target_width, target
             target_width = target_height * width // height
         else:
             target_width, target_height = int(target_width), int(target_height)
-            # outer fit
+            # scale to fit, all the image will be shown, so there may be blank area in target canvas
             if not prefix and not suffix:
                 ratio = min(target_width / width, target_height / height)
                 target_width, target_height = int(width * ratio), int(height * ratio)
-            # inner fit
-            elif prefix == '!' and suffix == 'r':
+            # scale to fill, all the target canvas will be filled, so some part of the image may out of the canvas
+            elif prefix == '!':
                 ratio = max(target_width / width, target_height / height)
                 target_width, target_height = int(width * ratio), int(height * ratio)
         #
-        image.resize((target_width, target_height)).save(thumbnail_path)
-        current_app.logger.info(f'Generate thumbnail {target_width}x{target_height} at {thumbnail_path}')
+        image = image.resize((target_width, target_height))
+        current_app.logger.info(f'Resize image to {target_width}x{target_height}')
+        # crop to center, alway works with starts !
+        if suffix == 'c':
+            x = (target_width - tw) // 2
+            y = (target_height - th) // 2
+            image = image.crop((x, y, x + tw, y + th))
+            current_app.logger.info(f'Crop image from ({x}, {y}) with {tw}x{th}')
+        #
+        image.save(preview_path)
+        #
+        current_app.logger.info(f'Generate preview image at {preview_path}')
 
 
 def generate_video_poster(path):
@@ -181,7 +195,7 @@ def generate_video_poster(path):
                 return
             #
             second = float(match.group(1))
-            thumbnail_ops = match.group(2)
+            preview_ops = match.group(2)
             #
             poster_path = path.replace('.' + ext, f'{poster_ops}.jpg')
             try:
@@ -191,9 +205,9 @@ def generate_video_poster(path):
                 current_app.logger.exception(f'Failed when generating video poster')
                 return
             #
-            thumbnail_match = re.match(r'^(!?)(\d*)x(\d*)([r!]?)$', thumbnail_ops)
-            if not thumbnail_match:
-                current_app.logger.error(f'Invalid thumbnail ops {thumbnail_ops}')
+            preview_match = re.match(r'^(!?)(\d*)x(\d*)([c!]?)$', preview_ops)
+            if not preview_match:
+                current_app.logger.error(f'Invalid preview ops {preview_ops}')
                 return
             #
-            _generate_image_thumbnail(poster_path, poster_path, thumbnail_match.group(1), thumbnail_match.group(2), thumbnail_match.group(3), thumbnail_match.group(4))
+            _generate_image_preview(poster_path, poster_path, preview_match.group(1), preview_match.group(2), preview_match.group(3), preview_match.group(4))

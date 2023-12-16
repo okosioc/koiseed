@@ -166,7 +166,7 @@ def project_edit_upcreate():
     return jsonify(error=0, message='Save demo project successfully.', id=id_)
 
 
-@demo.route('/project-edit/search-demo-users', methods=('POST',))
+@demo.route('/project-edit-search-demo-users', methods=('POST',))
 @auth_permission
 def project_edit_search_demo_users():
     """ 查找用户. """

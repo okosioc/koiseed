@@ -4,14 +4,15 @@
 {% macro generate_url(model_name, model_path=none, actions=none) %}
     {# NOTE: models({name:model_setting}) & domain(str) is in context always, while blueprint({name, views}) is in context when rendering view #}
     {% set model = models[model_name] %}
-    {% if actions is not sequence %}
-        {% set actions = [action] %}
-    {% endif %}
     {% set ns = namespace(view=none) %}
-    {% for v in model.views %}
-        {% if domain in v.domains and blueprint.name == v.blueprint and v.action in actions %}
-            {% set ns.view = v %}
-            {% break %}
+    {% for action in actions %}
+        {% if ns.view is none %}
+            {% for v in model.views %}
+                {% if domain in v.domains and blueprint.name == v.blueprint and action == v.action %}
+                    {% set ns.view = v %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
         {% endif %}
     {% endfor %}
     {% if ns.view %}{{ ns.view.name }}{{ '?id={{ '~model_path~'.'~model.schema.id_name~' }}' if model_path }}{% else %}javascript:;{% endif %}
@@ -48,7 +49,7 @@
 {# simple types #}
 {% else %}
 {% if field_schema.format in ['int', 'float'] %}
-{{ '{{' }} {{ field_path }}|int|commas if {{ field_path }} is not none else '-' {{ '}}' }} {{ '%' if field_schema.unit == '%' }}
+{{ '{{' }} {{ field_path }}|commas if {{ field_path }} is not none else '-' {{ '}}' }} {{ '%' if field_schema.unit == '%' }}
 {% elif field_schema.format in ['switch'] %}
 {{ '{{' }} '是' if {{ field_path }} else '否' {{ '}}' }}
 {% elif field_schema.format in ['datetime'] %}
@@ -141,7 +142,11 @@
 {% macro display_format(field_name, field_path, field_schema, field_layout, field_format, is_in_card) %}
 {% set format_file = '__includes/display_' ~ field_format ~ '.html' %}
 {% if not exists(format_file) %}
-    {% set format_file = '__includes/display_*.html' %}
+    {% if field_schema.is_relation %}
+        {% set format_file = '__includes/display_relation.html' %}
+    {% else %}
+        {% set format_file = '__includes/display_*.html' %}
+    {% endif %}
 {% endif %}
 {% include format_file %}
 {% endmacro %}
@@ -153,8 +158,8 @@
 {# object field #}
 {% if field_schema.type == 'object' %}
 <div class="object{{ ' relation' if field_schema.is_relation }}" name="{{ field_name }}" format="{{ field_format }}">
-{# w/ format #}
-{% if field_format %}
+{# w/ format or relation #}
+{% if field_format or field_schema.is_relation %}
     {% filter right(4) %}{{ display_format(field_name, field_path, field_schema, field_layout, field_format, is_in_card) }}{% endfilter %}
 {# w/o format #}
 {% else %}
@@ -172,8 +177,8 @@
 {# array field #}
 {% elif field_schema.type == 'array' %}
 <div class="array{{ ' relation' if field_schema.is_relation }}" name="{{ field_name }}" format="{{ field_format }}">
-{# w/ format #}
-{% if field_format %}
+{# w/ format or relation #}
+{% if field_format or field_schema.is_relation %}
     {% filter right(4) %}{{ display_format(field_name, field_path, field_schema, field_layout, field_format, is_in_card) }}{% endfilter %}
 {# w/o format #}
 {% else %}

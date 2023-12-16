@@ -1,3 +1,40 @@
+{# support relation #}
+{# NOTE: need to preload all related models to create options #}
+{% if field_schema.is_relation %}
+{% set related_model_name = field_schema['items']['py_type'] if field_schema.type == 'array' else field_schema['py_type'] %}
+{% set related_model = models[related_model_name] %}
+{% set related_model_schema = related_model.schema %}
+{% set title_field_name = related_model_schema|field('title|name|\\w*name') %}
+<div class="form-group relation {{ 'row' if view_is_horizontal }}" name="@" relation-id="{{ related_model_schema.id_name }}" relation-title="{{ title_field_name }}">
+    <label class="{{ 'col-auto col-form-label' if view_is_horizontal }}">{{ '<span class="text-danger mr-1">*</span>' if field_schema.required }}{{ field_schema.title }}</label>
+    {% if view_is_horizontal %}
+    <div class="col">
+    {% endif %}
+    {% if field_schema.type == 'array' %}
+    {{ '{%' }} set selected_ids = {{ field_path }}|map(attribute='{{ related_model_schema.id_name }}')|list {{ '%}' }}
+    <select class="custom-select select2 data" name="" {{ 'required' if field_schema.required }} multiple>
+        <option value="">__(Choose)...</option>
+        {{ '{%' }} for {{ related_model.name_snake }} in {{ related_model.name_snake_plural }} {{ '%}' }}
+        <option value="{{ '{{' }} {{ related_model.name_snake }}.{{ related_model_schema.id_name }} {{ '}}' }}" {{ '{{' }} 'selected' if {{ related_model.name_snake }}.{{ related_model_schema.id_name }} in selected_ids {{ '}}' }}>{{ '{{' }} {{ related_model.name_snake }}.{{ title_field_name }} {{ '}}' }}</option>
+        {{ '{%' }} endfor {{ '%}' }}
+    </select>
+    {% else %}
+    <select class="custom-select select2" name="" {{ 'required' if field_schema.required }}>
+        <option value="">__(Choose)...</option>
+        {{ '{%' }} for {{ related_model.name_snake }} in {{ related_model.name_snake_plural }} {{ '%}' }}
+        <option value="{{ '{{' }} {{ related_model.name_snake }}.{{ related_model_schema.id_name }} {{ '}}' }}" {{ '{{' }} 'selected' if {{ field_path }}.{{ related_model_schema.id_name }} == {{ related_model.name_snake }}.{{ related_model_schema.id_name }} {{ '}}' }}>{{ '{{' }} {{ related_model.name_snake }}.{{ title_field_name }} {{ '}}' }}</option>
+        {{ '{%' }} endfor {{ '%}' }}
+    </select>
+    {% endif %}
+    {% if field_schema.description %}
+    <small class="mt-2 form-text text-muted">{{ field_schema.description }}</small>
+    {% endif %}
+    <div class="invalid-feedback">__(Please choose at least one ){{ field_schema.title }}__(!)</div>
+    {% if view_is_horizontal %}
+    </div>
+    {% endif %}
+</div>
+{% else %}
 <div class="form-group {{ field_schema.type }} {{ 'row' if view_is_horizontal }}" name="{{ field_name }}">
     <label class="{{ 'col-auto col-form-label' if view_is_horizontal }}">{{ '<span class="text-danger mr-1">*</span>' if field_schema.required }}{{ field_schema.title }}</label>
     {% if view_is_horizontal %}
@@ -54,3 +91,4 @@
     </div>
     {% endif %}
 </div>
+{% endif %}

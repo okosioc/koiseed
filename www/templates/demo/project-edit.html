@@ -236,7 +236,7 @@
     <div class="form-actions mb-4">
         <a class="btn btn-primary mr-2" onclick="project_edit_upcreate($(this));"><i class="fe fe-save mr-1"></i>__(Save)</a>
         {% if demo_project.id %}
-        <a href="project-list?id={{ demo_project.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        <a href="project-detail?id={{ demo_project.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
         {% endif %}
     </div>
 </div>
@@ -248,7 +248,7 @@
 <script src="/static/js/form.js?{{ version() }}"></script>
 <div class="modal fade search-modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
      id="search-demo-users"
-     relation-url="{{ request.path }}/search-demo-users"
+     relation-url="/demo/project-edit-search-demo-users"
      relation-key="demo_users"
      relation-title="name"
      relation-id="id">

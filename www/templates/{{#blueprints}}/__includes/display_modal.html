@@ -25,7 +25,7 @@
     <tbody>
         {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
         <tr class="" name="{{ '{{' }} loop.index0 {{ '}}' }}">
-            {% set target_url = generate_url(item_schema.py_type, field_name~'_item', 'read') if field_schema.is_relation else none %}
+            {% set target_url = generate_url(item_schema.py_type, field_name~'_item', ['read']) if field_schema.is_relation else none %}
             {% filter right(12) %}{{ display_table_columns(field_name~'_item', item_schema, fields, excludes.value, target_url) }}{% endfilter %}
         </tr>
         {{ '{%' }} else {{ '%}' }}

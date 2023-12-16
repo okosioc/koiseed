@@ -1,10 +1,10 @@
 {% from "__includes/macros.html" import generate_url, display_summary, display_inline, display_table_columns, display_list_group_items, display_format, display_field, display_layout with context %}
 {# * #}
-{# * global var to control code generation #}
+{# * global namespace to control code generation #}
 {# * - relations_needing_search is used in create/update/upcreate to assign out relation object #}
 {# * - relations_needing_async_load is used in read to load related objects asynchronously, e,g, load events for calendar format #}
 {# * #}
-{% set render_controls = namespace(formats=[], actions=[], is_read=false, is_form=false, is_query=false, relations_needing_search=[], relations_needing_async_load=[]) %}
+{% set render_controls = namespace(formats=[], actions=[], is_read=false, can_delete=false, is_form=false, is_query=false, relations_needing_search=[], relations_needing_async_load=[]) %}
 {# * #}
 {# * macro - iterate layout to get needed relations and etc, param layout is rows, param schema is alway a object's schema #}
 {# * #}
@@ -45,7 +45,7 @@
                 {% if column_schema.is_relation %}
                     {% set related_model_name = inner_schema.py_type %}
                     {# relations_needing_search is used in action form when searching related models #}
-                    {% if column_schema.format in ['media', 'timeline', 'modal'] and related_model_name not in render_controls.relations_needing_search %}
+                    {% if (column_schema.format is undefined or column_schema.format in ['media', 'timeline', 'modal']) and related_model_name not in render_controls.relations_needing_search %}
                         {% set render_controls.relations_needing_search = render_controls.relations_needing_search + [related_model_name] %}
                     {% endif %}
                     {# relations_needing_async_load is used in action read #}
@@ -63,31 +63,39 @@
 {% endmacro %}
 {# * #}
 {# * macro - calculate possible actions of current view #}
+{# * NOTE: we use json string instead of a dict for each action, the whole string will be printed directly in a jinja2 code block #}
 {# * #}
 {% macro calculate_actions(model) %}
     {% if render_controls.is_query %}
         {% for v in model.views if blueprint.name == v.blueprint and v.action in ['create', 'upcreate'] %}
-            {% set render_controls.actions = [{'icon': 'plus', 'title': v.params.title, 'view': v.name}] %}
+            {% set render_controls.actions = ["{'icon': 'plus', 'title': _('Create ')~'"~model.schema.title~"', 'view': '"~v.name~"'}"] %}
             {% break %}
         {% endfor %}
     {% elif render_controls.is_read %}
         {% for v in model.views if blueprint.name == v.blueprint and v.action in ['update', 'upcreate'] %}
-            {% set render_controls.actions = [{'icon': 'edit', 'title': v.params.title, 'view': v.name~'?'}] %}
+            {% set render_controls.actions = ["{'icon': 'edit', 'title': _('Update ')~'"~model.schema.title~"', 'view': '"~v.name~"?'}"] %}
             {% break %}
         {% endfor %}
+        {% if render_controls.can_delete %}
+            {% set render_controls.actions = render_controls.actions + ["{'icon': 'delete', 'cls': 'danger', 'title': _('Delete ')~'"~model.schema.title~"', 'href': 'javascript:delete_"~model.name_snake~"($(this))'}"] %}
+        {% endif %}
     {% endif %}
 {% endmacro %}
 {# * #}
 {# * main #}
 {# * #}
-{# core variables #}
+{# current template file is #views, pyseed will iterate every view in current blueprint, so a view will be putted into context when generating #}
+{# below global variables are accessable in this jinja2 template and all the included snippets #}
 {% set model = view.model %}
 {% set action = view.action %}
-{# reset and recalculate render controls #}
+{% set view_is_card = view.params.is_card or false %}
+{% set view_is_horizontal = view.params.is_horizontal or false %}
+{# calculate render controls #}
 {% set render_controls.formats = [] %}
 {% set render_controls.is_read = action == 'read' %}
 {% set render_controls.is_form = action in ['create', 'update', 'upcreate'] %}
 {% set render_controls.is_query = action == 'query' %}
+{% set render_controls.can_delete = view.params.can_delete or false %}
 {{- iterate_layout(view.rows, model.schema) -}}
 {{- calculate_actions(model) -}}
 {# render begins #}
@@ -97,7 +105,7 @@
 {{ '{%' }} set breadcrumb = {
     'subtitle': '{{ view.params.subtitle or '' }}',
     'title': title,
-    'actions': {{ render_controls.actions }},
+    'actions': [{{ render_controls.actions|join(', ') }}],
     'tabs': [],
 } {{ '%}' }}
 {{ '{% block title %}{{ title }}{% endblock %}' }}
@@ -160,7 +168,7 @@
 {% set title_field_name = related_columns|match('title|name|\\w*name') %}
 <div class="modal fade search-modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
      id="search-{{ related_model.name_kebab_plural }}"
-     relation-url="{{ '{{' }} request.path {{ '}}' }}/search-{{ related_model.name_kebab_plural }}"
+     relation-url="{{ '/'~blueprint.name if blueprint.name!='public' }}/{{ view.name }}-search-{{ related_model.name_kebab_plural }}"
      relation-key="{{ related_model.name_snake_plural }}"
      relation-title="{{ title_field_name }}"
      relation-id="{{ related_model_schema.id_name }}">
@@ -323,7 +331,7 @@
                 showSuccess(result.message);
                 showInfo('Refreshing...');
                 setTimeout(function () {
-                    {% set target = generate_url(model.schema.py_type, none, 'read') %}
+                    {% set target = generate_url(model.schema.py_type, none, ['read']) %}
                     {% if target == 'javascript:;' %}
                     location.href = "{{ '{{' }} request.path {{ '}}' }}?id=" + result.id;
                     {% else %}
@@ -354,7 +362,7 @@
 {% set related_model_schema = related_model.schema %}
     //
     function load_{{ related_model.name_snake_plural }}(params, successCallback){
-        var url = "{{ '/'~blueprint.name if blueprint.name!='public' }}/load-{{ related_model.name_kebab_plural }}";
+        var url = "{{ '/'~blueprint.name if blueprint.name!='public' }}/{{ view.name }}-load-{{ related_model.name_kebab_plural }}";
         // Post
         $.post(url, params, function (result) {
             if (result.error == 0) {
@@ -365,6 +373,44 @@
         }, "json");
     }
 {% endfor %}
+    {% if render_controls.can_delete %}
+    //
+    function delete_{{ model.name_snake }}(btn){
+        if (btn.is(".doing")) {
+            return;
+        }
+        var msg = "__(Are you sure to delete?)";
+        var con = window.confirm(msg);
+        if (!con) {
+            return false;
+        }
+        //
+        btn.addClass("doing");
+        var method = btn.is("input") ? "val" : "text";
+        var oldLabel = btn[method]();
+        btn[method](oldLabel + "...");
+        //
+        var url = "{{ '/'~blueprint.name if blueprint.name!='public' }}/{{ view.name }}-delete?id={{ '{{' }} {{ model.name_snake }}.{{ model.schema.id_name }} {{ '}}' }}";
+        $.post(url, {}, function (result) {
+            if (result.error == 0) {
+                showSuccess(result.message);
+                showInfo('Refreshing...');
+                setTimeout(function () {
+                    {% set target = generate_url(model.schema.py_type, none, ['query']) %}
+                    {% if target == 'javascript:;' %}
+                    location.href = "{{ '{{' }} request.path {{ '}}' }}";
+                    {% else %}
+                    location.href = "{{ target }}";
+                    {% endif %}
+                }, 2000);
+            } else {
+                showError(result.message);
+            }
+            btn.removeClass("doing");
+            btn[method](oldLabel);
+        }, "json");
+    }
+    {% endif %}
 </script>
 {% endif %}
 {{ '{% endblock %}' }}

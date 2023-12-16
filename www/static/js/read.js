@@ -5,9 +5,11 @@
 function install_read() {
     // fancybox
     // https://fancyapps.com/fancybox/getting-started/
-    Fancybox.bind("[data-fancybox]", {
-        //
-    });
+    if (window["Fancybox"]) {
+        Fancybox.bind("[data-fancybox]", {
+            //
+        });
+    }
 
     // editorjs
     // https://github.com/codex-team/editor.js

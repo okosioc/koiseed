@@ -134,6 +134,7 @@ def configure_uploads(app):
             'mimes_video': [m for m in mimes if m.startswith('video')],
             'max': f'{upload_max}mb',  # Config unit is megabyte
             'image_preview': app.config['UPLOAD_IMAGE_PREVIEW'],
+            'avatar_preview': app.config['UPLOAD_AVATAR_PREVIEW'],
             'video_poster': app.config['UPLOAD_VIDEO_POSTER'],
             'token': token
         }
@@ -239,8 +240,11 @@ def configure_template_filters(app):
 
     @app.template_filter()
     def keys(value):
-        """ Return keys of dict. """
-        return value.keys()
+        """ Return keys of dict or return first elements from list of tuple. """
+        if type(value) is list:  # list of tuple
+            return map(lambda x: x[0], value)
+        else:
+            return value.keys()
 
     @app.template_filter()
     def values(value):
@@ -357,18 +361,6 @@ def configure_template_filters(app):
             return 'warning'
         else:
             return 'secondary'  # something is done
-
-    @app.template_filter()
-    def thumbnail(value: str):
-        """ get thumbnail url of an image url. """
-        thumbnail_ops = getattr(current_app.config, 'UPLOAD_IMAGE_PREVIEW', '')
-        if value.startswith('?'):
-            return value + thumbnail_ops
-        elif value.startswith('_'):
-            ext = os.path.splitext(value)[1]
-            return value.replace(ext, thumbnail_ops + ext)
-        else:
-            return value
 
 
 def configure_template_functions(app):

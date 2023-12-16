@@ -1,7 +1,6 @@
 {# * #}
-{# * available context {view, model, action, render_controls, ...} #}
+{# * main #}
 {# * #}
-{% set view_is_card = view.params.is_card or False %}
 {% set has_search = True if 'has_search' not in view.params else view.params.has_search %}
 {% set result_view = view.params.result_view or 'table' %}
 {% set grid_type = view.params.grid_type or 'default' %}
@@ -95,7 +94,7 @@
 {{ '{%' }} if {{ model.name_snake_plural }} {{ '%}' }}
 <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
     {{ '{%' }} for {{ model.name_snake }} in {{ model.name_snake_plural }} {{ '%}' }}
-    {% set detail_url = generate_url(model.name, model.name_snake, 'read') %}
+    {% set detail_url = generate_url(model.name, model.name_snake, ['read']) %}
     {% set edit_url = generate_url(model.name, model.name_snake, ['update', 'upcreate']) %}
     {% set target_url = edit_url if detail_url=='javascript:;' else detail_url %}
     <div class="col">
@@ -171,7 +170,7 @@ TODO
                     <label class="custom-control-label" for="checkbox-{{ model.name_kebab }}-{{ '{{' }} {{ model.name_snake }}.{{ model.schema.id_name }} {{ '}}' }}"></label>
                 </div>
             </td>
-            {% set detail_url = generate_url(model.name, model.name_snake, 'read') %}
+            {% set detail_url = generate_url(model.name, model.name_snake, ['read']) %}
             {% set edit_url = generate_url(model.name, model.name_snake, ['update', 'upcreate']) %}
             {% set target_url = edit_url if detail_url=='javascript:;' else detail_url %}
             {% filter right(12) %}{{ display_table_columns(model.name_snake, schema, fields, row_target_url=target_url)}}{% endfilter %}

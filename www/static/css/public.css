@@ -1,26 +1,3 @@
-/* container-xxl */
-
-.container-xxl {
-    width: 100%;
-    padding-right: 12px;
-    padding-left: 12px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.navbar .container-xxl {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-}
-
-@media (min-width: 1400px) {
-    .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
-        max-width: 1320px;
-    }
-}
-
 /* gallery & carousel */
 
 .gallery {

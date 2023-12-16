@@ -11,7 +11,7 @@
     {% endblock %}
     <title>{% block title %}{% endblock %}</title>
     <link href="/static/img/favicon.ico" rel="shortcut icon"/>
-    <link href="/static/landkit/assets/fonts/feather/feather.css" rel="stylesheet"/>
+    <link href="/static/landkit/assets/fonts/Feather/feather.css" rel="stylesheet"/>
     <link href="/static/landkit/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet"/>
     <link href="/static/landkit/assets/libs/aos/dist/aos.css" rel="stylesheet"/>
     <link href="/static/landkit/assets/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet"/>
@@ -238,7 +238,7 @@
                 {% endfor %}
                 <li class="nav-item">
                     {% if current_user.is_authenticated %}
-                        <a class="nav-link" href="/dashboard">__(Home)</a>
+                        <a class="nav-link" href="/home">__(Home)</a>
                     {% else %}
                         <a class="nav-link" href="/login">__(Login/Signup)</a>
                     {% endif %}
