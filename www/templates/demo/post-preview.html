@@ -14,26 +14,9 @@
 <div id="div-post-preview">
     <div class="object" name="demo_post">
         <div class="row">
-            <div class="col-lg">
+            <div class="col-lg-4">
                 <div class="group" name="1" format="">
                     <div class="card"><div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <div class="field-group">
-                                <label class="text-gray-700">封面</label>
-                                <div class="field-control">
-                                    <div class="gallery">
-                                    {% if demo_post.cover %}
-                                    <a href=":;" data-fancybox="封面" data-src="{{ demo_post.cover }}" data-caption="{{ demo_post.cover|basename }}">
-                                        <img src="{{ demo_post.cover }}">
-                                    </a>
-                                    {% else %}
-                                    -
-                                    {% endif %}
-                                    </div>
-                                </div>
-                            </div>    </div>
-                    </div>
                     <div class="row">
                         <div class="col">
                             <div class="field-group">
@@ -70,12 +53,47 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="field-group">
+                                <label class="text-gray-700">封面</label>
+                                <div class="field-control">
+                                    <div class="gallery">
+                                    {% if demo_post.cover %}
+                                    <a href=":;" data-fancybox="封面" data-src="{{ demo_post.cover }}" data-caption="{{ demo_post.cover|basename }}">
+                                        <img src="{{ demo_post.cover }}">
+                                    </a>
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                    </div>
+                                </div>
+                            </div>    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="field-group">
+                                <label class="text-gray-700">是否推荐</label>
+                                <div class="field-control">
+                                    {{ '是' if demo_post.featured else '否' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="field-group">
+                                <label class="text-gray-700">状态</label>
+                                <div class="field-control">
+                                    {% if demo_post.status is not none %}<span class="text-{{ demo_post.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoPostStatus')[demo_post.status] }}{% else %}-{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     </div></div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg">
+            <div class="col-lg-8">
                 <div class="group" name="2" format="">
                     <div class="card"><div class="card-body">
                     <div class="row">

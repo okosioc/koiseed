@@ -205,6 +205,8 @@ class DemoProject(CacheModel):
         back_field_format=Format.GRID, back_field_title='参与项目',
     )
     activities: List[DemoActivity] = Field(required=False, format_=Format.TIMELINE, title='操作')  # 按照时间倒序
+    #
+    files: List[str] = Field(required=False, format_=Format.FILE, title='项目文件')
     # 其他
     update_time: datetime = Field(required=False, title='更新时间')
     create_time: datetime = Field(default=datetime.now, icon='clock', title='创建时间')
@@ -236,8 +238,9 @@ class DemoProject(CacheModel):
               status, value
               start, end
               percent,
-            members#4
-              avatar, name            
+            2#4,             3#8
+              members          files
+                avatar, name      
         ''',
     }
 
@@ -361,13 +364,13 @@ class DemoPost(CacheModel):
               status           
         ''',
         'www://demo/post-preview': '''#!read?extends=layout-dash-demo&title=文章预览
-            1
+            1#4,        2#8              
+              title       content      
+              subtitle                 
+              tags                     
               cover
-              title
-              subtitle
-              tags
-            2
-              content
+              featured                    
+              status   
         '''
     }
 

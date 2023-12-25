@@ -36,6 +36,11 @@
 
 /* editorjs */
 
+.rte-display-group .ce-header,
+.rte-input-group .ce-header {
+    padding: 0.5em 0 0.5rem;
+}
+
 .rte-display-group .cdx-block,
 .rte-input-group .cdx-block {
     padding: 0.5em 0;

@@ -158,6 +158,7 @@ def project_edit_upcreate():
         existing.end = req_demo_project.end
         existing.percent = req_demo_project.percent
         existing.members = req_demo_project.members
+        existing.files = req_demo_project.files
         #
         existing.update_time = datetime.now()
         existing.save()

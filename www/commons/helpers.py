@@ -142,17 +142,19 @@ def _generate_image_preview(path, preview_path, prefix, target_width, target_hei
     """ Generate a preview for given image path. """
     with Image.open(path) as image:
         width, height = image.size
-        tw, th = int(target_width), int(target_height)
         # fix width
         if not target_height:
             target_width = int(target_width)
             target_height = target_width * height // width
+            tw, th = target_width, target_height
         # fix height
         elif not target_width:
             target_height = int(target_height)
             target_width = target_height * width // height
+            tw, th = target_width, target_height
         else:
-            target_width, target_height = int(target_width), int(target_height)
+            tw, th = int(target_width), int(target_height)
+            target_width, target_height = tw, th
             # scale to fit, all the image will be shown, so there may be blank area in target canvas
             if not prefix and not suffix:
                 ratio = min(target_width / width, target_height / height)

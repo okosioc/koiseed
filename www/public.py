@@ -500,8 +500,8 @@ def upload_file():
 @public.route('/blog')
 def blog():
     """ 博客首页. """
-    featured_posts = Post.find({'status': PostStatus.PUBLISHED, 'featured': True}, sort=[('publish_time', -1)], limit=5)
-    lastest_posts = Post.find({'status': PostStatus.PUBLISHED}, sort=[('publish_time', -1)], limit=5)
+    featured_posts = list(Post.find({'status': PostStatus.PUBLISHED, 'featured': True}, sort=[('publish_time', -1)], limit=5))
+    lastest_posts = list(Post.find({'status': PostStatus.PUBLISHED}, sort=[('publish_time', -1)], limit=5))
     return render_template('public/blog.html', featured_posts=featured_posts, lastest_posts=lastest_posts, tags=POST_TAGS)
 
 

@@ -63,17 +63,16 @@
 .gallery a {
     display: block;
     position: relative;
-    height: 300px;
-    border: 1px solid #E3EBF6;
-    border-radius: 0.375rem;
-    padding: 0.25rem;
     margin: 0 1rem 1rem 0;
     float: left;
 }
 
 .gallery a img {
-    width: auto;
-    height: 100%;
+    max-width: 100%;
+    max-height: 300px;
+    border: 1px solid #E3EBF6;
+    border-radius: 0.375rem;
+    padding: 0.25rem;
 }
 
 .f-carousel .f-carousel__slide {
@@ -184,6 +183,11 @@ span.twitter-typeahead .tt-suggestion.tt-cursor {
 }
 
 /* editorjs */
+
+.rte-display-group .ce-header,
+.rte-input-group .ce-header {
+    padding: 0.5em 0 0.5rem;
+}
 
 .rte-display-group .cdx-block,
 .rte-input-group .cdx-block {
