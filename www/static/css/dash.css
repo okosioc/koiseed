@@ -308,21 +308,17 @@ span.twitter-typeahead .tt-suggestion.tt-cursor {
 }
 
 .card > .card-body > .list-group:first-child,
-.modal-content > .modal-body > .list-group:first-child {
-    margin-top: -0.75rem;
-}
-
-.card > .card-body > .list-group:last-child,
-.modal-content > .modal-body > .list-group:last-child {
-    margin-bottom: -0.75rem;
-}
-
 .card > .card-body > div > .list-group:first-child,
+.card > .card-body > div > div > fieldset > .list-group:first-child,
+.modal-content > .modal-body > .list-group:first-child,
 .modal-content > .modal-body > div > .list-group:first-child {
     margin-top: -0.75rem;
 }
 
+.card > .card-body > .list-group:last-child,
 .card > .card-body > div > .list-group:last-child,
+.card > .card-body > div > div > fieldset > .list-group:last-child,
+.modal-content > .modal-body > .list-group:last-child,
 .modal-content > .modal-body > div > .list-group:last-child {
     margin-bottom: -0.75rem;
 }

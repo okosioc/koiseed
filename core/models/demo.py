@@ -206,7 +206,7 @@ class DemoProject(CacheModel):
     )
     activities: List[DemoActivity] = Field(required=False, format_=Format.TIMELINE, title='操作')  # 按照时间倒序
     #
-    files: List[str] = Field(required=False, format_=Format.FILE, title='项目文件')
+    files: List[str] = Field(required=False, format_=Format.FILE, icon='file-plus', title='项目文件')
     # 其他
     update_time: datetime = Field(required=False, title='更新时间')
     create_time: datetime = Field(default=datetime.now, icon='clock', title='创建时间')
@@ -218,6 +218,7 @@ class DemoProject(CacheModel):
         'www://demo/project-list': '''#!query?extends=layout-dash-demo&title=项目管理&is_card=true&result_view=grid
             title, status, value, start, members, percent, create_time
         ''',
+        # NOTE: tasks is a back field created by the relation from DemoTask
         'www://demo/project-detail': '''#!read?extends=layout-dash-demo&title=项目详情
             1?is_card=false#4,  2?is_card=false#8
               1.1#summary         tasks                                   
@@ -238,9 +239,8 @@ class DemoProject(CacheModel):
               status, value
               start, end
               percent,
-            2#4,             3#8
-              members          files
-                avatar, name      
+            members#4,      2?title=相关文件#8
+              avatar, name    files
         ''',
     }
 

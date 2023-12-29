@@ -47,7 +47,8 @@ UPLOAD_ENDPOINT = '/upload'
 UPLOAD_FOLDER = 'uploads'
 UPLOAD_MIMES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif',
                 'video/quicktime', 'video/mp4', 'video/mpeg', 'video/webm',
-                'audio/mpeg', 'audio/x-wav', 'audio/webm']
+                'audio/mpeg', 'audio/x-wav', 'audio/webm',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
 UPLOAD_MAX = 50
 # starts with _ means inject this thumbnail ops before file extension
 # e.g,
