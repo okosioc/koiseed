@@ -17,7 +17,7 @@
                 <div class="col-lg-4">
                     <fieldset class="object relation" name="project" format="summary">
                         <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>所属项目</h4></div><div class="card-body">
-                        <div class="">
+                        <div class="card-body">
                             <div class="row text-center">
                                 <div class="col">
                                     <div name="title" format="text">
@@ -106,7 +106,7 @@
                         <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-check-square mr-2"></i>任务基本信息</h4></div><div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <div class="form-group" name="title">
+                                <div class="form-group string" name="title">
                                     <label class=""><span class="text-danger mr-1">*</span>任务标题</label>
                                     <input name="title" type="text" required class="form-control"
                                            value="{{ demo_task.title or '' }}">
@@ -116,7 +116,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string " name="status">
+                                <div class="form-group string" name="status">
                                     <label class=""><span class="text-danger mr-1">*</span>任务状态</label>
                                     <select class="custom-select select2" name="status" required>
                                         <option value="">__(Choose)...</option>
@@ -130,7 +130,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group" name="content">
+                                <div class="form-group string" name="content">
                                     <label class="">任务详情</label>
                                     <textarea name="content" rows="5" class="form-control autosize">{{ demo_task.content or '' }}</textarea>
                                     <div class="invalid-feedback">__(Invalid )任务详情__(!)</div>
@@ -139,7 +139,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group " name="start">
+                                <div class="form-group date" name="start">
                                     <label class="">开始日期</label>
                                     <input name="start" type="text" class="form-control date" 
                                            value="{{ demo_task.start or '' }}">
@@ -147,7 +147,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-group " name="end">
+                                <div class="form-group date" name="end">
                                     <label class="">结束日期</label>
                                     <input name="end" type="text" class="form-control date" 
                                            value="{{ demo_task.end or '' }}">

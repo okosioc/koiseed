@@ -20,7 +20,7 @@
                         <div class="card"><div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <div class="form-group" name="title">
+                                <div class="form-group string" name="title">
                                     <label class=""><span class="text-danger mr-1">*</span>标题</label>
                                     <input name="title" type="text" required class="form-control"
                                            value="{{ demo_post.title or '' }}">
@@ -30,7 +30,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group" name="subtitle">
+                                <div class="form-group string" name="subtitle">
                                     <label class="">副标题</label>
                                     <input name="subtitle" type="text" class="form-control"
                                            value="{{ demo_post.subtitle or '' }}">
@@ -41,7 +41,7 @@
                         <div class="row">
                             <div class="col">
                                 <fieldset class="array" name="tags" format="tag">
-                                    <div class="form-group array " name="tags">
+                                    <div class="form-group array" name="tags">
                                         <label class="">标签</label>
                                         <div class="tag-cloud-input-group" data-tags='{{ demo_post.tags_depends|tojson }}'>
                                             {% for value in demo_post.tags %}
@@ -58,7 +58,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string " name="cover">
+                                <div class="form-group string" name="cover">
                                     <label class="">封面</label>
                                     <div class="plupload-input-group image-input-group" >
                                         <a class="btn btn-outline-primary plupload" href="javascript:;" 
@@ -89,7 +89,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group " name="featured">
+                                <div class="form-group boolean" name="featured">
                                     <label class=""><span class="text-danger mr-1">*</span>是否推荐</label>
                                     <div class="custom-control custom-switch mt-2">
                                         <input type="checkbox" class="custom-control-input" name="featured"
@@ -102,7 +102,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string " name="status">
+                                <div class="form-group string" name="status">
                                     <label class=""><span class="text-danger mr-1">*</span>状态</label>
                                     <select class="custom-select select2" name="status" required>
                                         <option value="">__(Choose)...</option>
@@ -122,7 +122,7 @@
                         <div class="card"><div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <div class="form-group" name="content">
+                                <div class="form-group string" name="content">
                                     <label class=""><span class="text-danger mr-1">*</span>正文</label>
                                     <div class="rte-input-group" required>
                                         {% set rte_id = 'rte_'~randstr() %}

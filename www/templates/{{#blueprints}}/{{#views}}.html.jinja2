@@ -1,10 +1,13 @@
-{% from "__includes/macros.html" import generate_url, display_summary, display_inline, display_table_columns, display_list_group_items, display_format, display_field, display_layout with context %}
 {# * #}
 {# * global namespace to control code generation #}
 {# * - relations_needing_search is used in create/update/upcreate to assign out relation object #}
 {# * - relations_needing_async_load is used in read to load related objects asynchronously, e,g, load events for calendar format #}
 {# * #}
 {% set render_controls = namespace(formats=[], actions=[], is_read=false, can_delete=false, is_form=false, is_query=false, relations_needing_search=[], relations_needing_async_load=[]) %}
+{# * #}
+{# * common macros
+{# * #}
+{% from "__includes/macros.html" import generate_url, display_summary, display_inline, display_table_columns, display_list_group_items, display_format, display_tab, display_field, display_layout with context %}
 {# * #}
 {# * macro - iterate layout to get needed relations and etc, param layout is rows, param schema is alway a object's schema #}
 {# * #}

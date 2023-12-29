@@ -220,11 +220,11 @@ class DemoProject(CacheModel):
         ''',
         # NOTE: tasks is a back field created by the relation from DemoTask
         'www://demo/project-detail': '''#!read?extends=layout-dash-demo&title=项目详情
-            1?is_card=false#4,  2?is_card=false#8
-              1.1#summary         tasks                                   
-                title               title, status, user, start, create_time 
-                status            activities                  
-                value               user, title, content, time
+            1#4,              2#8
+              1.1#summary       tasks                                   
+                title             title, status, user, start, create_time 
+                status          activities                  
+                value             user, title, content, time
                 start         
                 members       
                 percent       

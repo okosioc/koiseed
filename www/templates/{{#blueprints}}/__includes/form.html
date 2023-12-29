@@ -21,11 +21,8 @@ UNSUPPORTED! {{ format_file }} does not exist!
 {# * each row will be rendered as a tab #}
 {# * #}
 {% macro render_tab(field_name, field_path, field_schema, field_layout, field_format, is_in_card) %}
-{% if not is_in_card %}
-<div class="card">
-{% endif %}
-<div class="{{ 'card-header' if not is_in_card }}">
-    <ul class="nav nav-tabs nav-tabs-lg {{ 'card-header-tabs' if not is_in_card }}">
+<div class="{{ 'card-header' if is_in_card }}">
+    <ul class="nav nav-tabs nav-tabs-lg {{ 'card-header-tabs' if is_in_card }}">
     {% for row in field_layout %}
         {% set tab_column = row[0] %}
         {# use column's title or first column's schema title #}
@@ -39,25 +36,22 @@ UNSUPPORTED! {{ format_file }} does not exist!
     {% endfor %}
     </ul>
 </div>
-<div class="{{ 'card-body' if not is_in_card  }}">
+<div class="{{ 'card-body' if is_in_card }}">
     <div class="tab-content">
     {% for row in field_layout %}
         <div class="tab-pane{{ ' active' if loop.first }}" id="tab-{{ field_name }}-{{ loop.index }}">
             {# use [row] as layout to render #}
-            {% filter right(12) %}{{ render_layout(field_name, field_path, field_schema, [row], true) }}{% endfilter %}
+            {% filter right(12) %}{{ render_layout(field_name, field_path, field_schema, [row], is_in_card) }}{% endfilter %}
         </div>
     {% endfor %}
     </div>
 </div>
-{% if not is_in_card %}
-</div>
-{% endif %}
 {% endmacro %}
 {# * #}
 {# * macro - render layout recrusively #}
 {# * NOTE: field_name/field_path/field_schema/field_layout/is_in_card may be used in __includes snippets, can not change their names #}
 {# * #}
-{% macro render_layout(field_name, field_path, field_schema, field_layout, is_in_card, is_view_level=false) %}
+{% macro render_layout(field_name, field_path, field_schema, field_layout, is_in_card, is_first_level=false) %}
 {# per row #}
 {% for row in field_layout %}
 <div class="row">
@@ -69,7 +63,7 @@ UNSUPPORTED! {{ format_file }} does not exist!
     {% set column_layout = column['rows'] %}
     {# column format overwrites schema format #}
     {% set column_format = column.format or column_schema.format %}
-    {% set column_class = 'col-lg' if is_view_level else 'col' %}
+    {% set column_class = 'col-lg' if is_first_level else 'col' %}
     {# column wrapper #}
     <div class="{{ (column_class~'-'~column.span|string) if column.span else column_class }}">
     {# blank column #}
@@ -96,10 +90,10 @@ UNSUPPORTED! {{ format_file }} does not exist!
                     {% if cn|replace('.','')|int(-1) != -1 %}
                         {# group is always rendered as card #}
                     {# normal column #}
-                    {% elif column_schema %}
-                        {% if column_schema.type == 'object' %}
+                    {% elif cs %}
+                        {% if cs.type == 'object' %}
                             {# ojbect is always rendered as card #}
-                        {% elif column_schema.type == 'array' and column_schema.format in ['table', 'modal', 'chart', 'media', 'timeline'] %}
+                        {% elif cs.type == 'array' and cs.format in ['table', 'modal', 'chart', 'media', 'timeline'] %}
                             {# NOTE: only above complex formats will be rendered as card #}
                         {% else %}
                             {% set render_controls.group_has_simple_column = true %}
@@ -107,22 +101,25 @@ UNSUPPORTED! {{ format_file }} does not exist!
                     {% endif %}
                 {% endfor %}
             {% endfor %}
-            {% set group_is_card = not render_controls.group_has_simple_column %}
+            {% set group_is_card = render_controls.group_has_simple_column %}
         {% endif %}
         {% set group_title = column.params.title %}
         {% set group_icon = column.params.icon or field_schema.icon %}
+        {# tab/summary formats has special card-body logic, so create a dummy div here #}
+        {% set group_card_body_class = '' if column_format in ['tab', 'summary'] else 'card-body' %}
         {% if group_is_card %}
-            <div class="card">{% if group_title %}<div class="card-header"><h4 class="card-header-title">{% if group_icon %}<i class="fe fe-{{ group_icon }} mr-2"></i>{% endif %}{{ group_title }}</h4></div>{% endif %}<div class="card-body">
+            <div class="card">{% if group_title %}<div class="card-header"><h4 class="card-header-title">{% if group_icon %}<i class="fe fe-{{ group_icon }} mr-2"></i>{% endif %}{{ group_title }}</h4></div>{% endif %}<div class="{{ group_card_body_class }}">
+            {# TODO: tab和summary不能先生成card-body #}
         {% endif %}
         {# tab format #}
         {% if column_format == 'tab' %}
-            {% filter right(12) %}{{ render_tab(field_name, field_path, field_schema, column_layout, column_format, group_is_card) }}{% endfilter %}
+            {% filter right(12) %}{{ render_tab(field_name, field_path, field_schema, column_layout, column_format, is_in_card or group_is_card) }}{% endfilter %}
         {# w/ format, i.e, summary #}
         {% elif column_format %}
-            {% filter right(12) %}{{ render_format(field_name, field_path, field_schema, column_layout, column_format, group_is_card) }}{% endfilter %}
+            {% filter right(12) %}{{ render_format(field_name, field_path, field_schema, column_layout, column_format, is_in_card or group_is_card) }}{% endfilter %}
         {# w/o format #}
         {% else %}
-            {% filter right(12) %}{{ render_layout(field_name, field_path, field_schema, column_layout, group_is_card) }}{% endfilter %}
+            {% filter right(12) %}{{ render_layout(field_name, field_path, field_schema, column_layout, is_in_card or group_is_card) }}{% endfilter %}
         {% endif %}
         {% if group_is_card %}
             </div></div>
@@ -146,11 +143,11 @@ UNSUPPORTED! {{ format_file }} does not exist!
         {% endif %}
         {# w/ format or relation #}
         {% if column_format or column_schema.is_relation %}
-            {% filter right(12) %}{{ render_format(column_name, column_path, column_schema, column_layout, column_format, object_is_card) }}{% endfilter %}
+            {% filter right(12) %}{{ render_format(column_name, column_path, column_schema, column_layout, column_format, is_in_card or object_is_card) }}{% endfilter %}
         {# w/o format #}
         {% else %}
             {{ '{%' }} set {{ column_name }} = {{ column_path }} {{ '%}' }}
-            {% filter right(12) %}{{ render_layout(column_name, column_name, column_schema, column_layout, object_is_card) }}{% endfilter %}
+            {% filter right(12) %}{{ render_layout(column_name, column_name, column_schema, column_layout, is_in_card or object_is_card) }}{% endfilter %}
         {% endif %}
         {% if object_is_card %}
             </div></div>
@@ -169,7 +166,7 @@ UNSUPPORTED! {{ format_file }} does not exist!
         {% endif %}
         {# w/ format or relation #}
         {% if column_format or column_schema.is_relation %}
-            {% filter right(12) %}{{ render_format(column_name, column_path, column_schema, column_layout, column_format, array_is_card) }}{% endfilter %}
+            {% filter right(12) %}{{ render_format(column_name, column_path, column_schema, column_layout, column_format, is_in_card or array_is_card) }}{% endfilter %}
         {# w/o format #}
         {% else %}
             {% set item_schema = column_schema['items'] %}
@@ -180,9 +177,9 @@ UNSUPPORTED! {{ format_file }} does not exist!
                         <div class="col">
                         {# simple types always have a format, this also handle objects that have format #}
                         {% if item_schema.format %}
-                            {% filter right(28) %}{{ render_format('-', column_name~'_item', item_schema, column_layout, array_is_card) }}{% endfilter %}
+                            {% filter right(28) %}{{ render_format('-', column_name~'_item', item_schema, column_layout, is_in_card or array_is_card) }}{% endfilter %}
                         {% elif item_schema.type == 'object' %}
-                            {% filter right(28) %}{{ render_layout('-', column_name~'_item', item_schema, column_layout, array_is_card) }}{% endfilter %}
+                            {% filter right(28) %}{{ render_layout('-', column_name~'_item', item_schema, column_layout, is_in_card or array_is_card) }}{% endfilter %}
                         {% else %}
                             UNSUPPORTED! {{ item_schema.type }} with format {{ item_schema.format }} can not in an array!
                         {% endif %}

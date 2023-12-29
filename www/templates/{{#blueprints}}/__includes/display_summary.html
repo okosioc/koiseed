@@ -1,7 +1,4 @@
-{% if not is_in_card %}
-<div class="card">
-{% endif %}
-{# a summary can be display in modal or card #}
+{# a summary can be display in modal or card or query grid result #}
 {% if field_schema.type == 'object' %}
 {% set fields = field_layout|fields or field_schema['columns'] %}
 {% set first_field_name = fields[0] %}
@@ -18,7 +15,7 @@
     {# TODO: Support image object and multi images #}
     <img src="{{ '{{' }} {{ field_path }}.{{ first_field_name }} {{ '}}' }}" class="card-img-top" alt="...">
 </a>
-<div class="{{ 'card-body' if not is_in_card }}">
+<div class="{{ 'card-body' if is_in_card }}">
     <div class="row align-items-center">
         <div class="col">
             <h4 class="{{ 'mb-0' if not subtitle_field_name }}">
@@ -51,7 +48,7 @@
 </div>
 {# first + list #}
 {% else %}
-<div class="{{ 'card-body' if not is_in_card }}">
+<div class="{{ 'card-body' if is_in_card }}">
     {% if first_field_schema.format in ['avatar'] %}
     {% set excludes = [first_field_name, title_field_name] %}
     <div class="row text-center">
@@ -101,7 +98,4 @@
 {% endif %}
 {% else %}
 UNSUPPORTED! {{ field_schema.format }} format do not support {{ field_schema.type }}!
-{% endif %}
-{% if not is_in_card %}
-</div>
 {% endif %}

@@ -122,7 +122,9 @@
         UNSUPPORTED! The format of first field should be image!
         {% endif %}
         {% else %}
-        {% filter right(8) %}{{ display_summary(model.name_snake, model.name_snake, schema, layout, false, target_url) }}{% endfilter %}
+        <div class="card">
+            {% filter right(12) %}{{ display_summary(model.name_snake, model.name_snake, schema, layout, true, target_url) }}{% endfilter %}
+        </div>
         {% endif %}
     </div>
     {{ '{%' }} endfor {{ '%}' }}

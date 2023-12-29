@@ -20,7 +20,7 @@
                         <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>项目基本信息</h4></div><div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <div class="form-group" name="title">
+                                <div class="form-group string" name="title">
                                     <label class=""><span class="text-danger mr-1">*</span>项目名称</label>
                                     <input name="title" type="text" required class="form-control"
                                            value="{{ demo_project.title or '' }}">
@@ -30,7 +30,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group" name="description">
+                                <div class="form-group string" name="description">
                                     <label class="">项目介绍</label>
                                     <textarea name="description" rows="5" class="form-control autosize">{{ demo_project.description or '' }}</textarea>
                                     <div class="invalid-feedback">__(Invalid )项目介绍__(!)</div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string " name="status">
+                                <div class="form-group string" name="status">
                                     <label class=""><span class="text-danger mr-1">*</span>项目状态</label>
                                     <select class="custom-select select2" name="status" required>
                                         <option value="">__(Choose)...</option>
@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-group" name="value">
+                                <div class="form-group number" name="value">
                                     <label class=""><span class="text-danger mr-1">*</span>项目价值</label>
                                     <div class="input-group input-group-merge" required>
                                     <input name="value" type="text" required class="form-control form-control-appended"
@@ -64,7 +64,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group " name="start">
+                                <div class="form-group date" name="start">
                                     <label class=""><span class="text-danger mr-1">*</span>开始日期</label>
                                     <input name="start" type="text" class="form-control date" required
                                            value="{{ demo_project.start or '' }}">
@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-group " name="end">
+                                <div class="form-group date" name="end">
                                     <label class=""><span class="text-danger mr-1">*</span>结束日期</label>
                                     <input name="end" type="text" class="form-control date" required
                                            value="{{ demo_project.end or '' }}">
@@ -82,7 +82,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group" name="percent">
+                                <div class="form-group number" name="percent">
                                     <label class=""><span class="text-danger mr-1">*</span>项目进度</label>
                                     <div class="input-group input-group-merge" required>
                                     <input name="percent" type="text" required class="form-control form-control-appended"
@@ -146,7 +146,7 @@
                                                     <input name="id" type="text" value="{{ members_item.id or '' }}">
                                                 </div>
                                             </fieldset>
-                                            <div class="">
+                                            <div class="card-body">
                                                 <div class="row text-center">
                                                     <div class="col">
                                                         <div name="avatar" format="avatar">
@@ -236,7 +236,7 @@
                         <div class="row">
                             <div class="col">
                                 <fieldset class="array" name="files" format="file">
-                                    <div class="form-group array " name="files">
+                                    <div class="form-group array" name="files">
                                         <label class="">项目文件</label>
                                         <div class="plupload-input-group file-input-group" >
                                             <a class="btn btn-outline-primary plupload" href="javascript:;" multiple
