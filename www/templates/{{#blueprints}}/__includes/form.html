@@ -78,7 +78,7 @@ UNSUPPORTED! {{ format_file }} does not exist!
         {# group card logic #}
         {# 1. group is card by default and do NOT draw cards inside a card #}
         {# 2. if one of its columns is simple field, current group is rendered as card #}
-        {% set group_is_card = true and not is_in_card %}
+        {% set group_is_card = not is_in_card %}
         {% if group_is_card %}
             {# NOTE: render_controls is a global var(namespace) defined in {{views}}.html.jinja2, we need to use namespace to set some value in a loop #}
             {% set render_controls.group_has_simple_column = false %}
@@ -109,7 +109,6 @@ UNSUPPORTED! {{ format_file }} does not exist!
         {% set group_card_body_class = '' if column_format in ['tab', 'summary'] else 'card-body' %}
         {% if group_is_card %}
             <div class="card">{% if group_title %}<div class="card-header"><h4 class="card-header-title">{% if group_icon %}<i class="fe fe-{{ group_icon }} mr-2"></i>{% endif %}{{ group_title }}</h4></div>{% endif %}<div class="{{ group_card_body_class }}">
-            {# TODO: tab和summary不能先生成card-body #}
         {% endif %}
         {# tab format #}
         {% if column_format == 'tab' %}
@@ -137,7 +136,7 @@ UNSUPPORTED! {{ format_file }} does not exist!
         <fieldset class="object{{ ' relation' if column_schema.is_relation }}" name="{{ column_name }}" format="{{ column_format }}">
         {# object card logic #}
         {# 1. object is card by default and do NOT draw cards inside a card #}
-        {% set object_is_card = true and not is_in_card %}
+        {% set object_is_card = not is_in_card %}
         {% if object_is_card %}
             <div class="card"><div class="card-header"><h4 class="card-header-title">{% if column_schema.icon %}<i class="fe fe-{{ column_schema.icon }} mr-2"></i>{% endif %}{{ column_schema.title }}</h4></div><div class="card-body">
         {% endif %}

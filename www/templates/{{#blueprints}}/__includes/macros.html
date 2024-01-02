@@ -191,7 +191,7 @@
 <div class="object{{ ' relation' if field_schema.is_relation }}" name="{{ field_name }}" format="{{ field_format }}">
 {# object card logic #}
 {# 1. object is card by default and do NOT draw cards inside a card #}
-{% set object_is_card = true and not is_in_card %}
+{% set object_is_card = not is_in_card %}
 {% if object_is_card %}
     <div class="card"><div class="card-header"><h4 class="card-header-title">{% if field_schema.icon %}<i class="fe fe-{{ field_schema.icon }} mr-2"></i>{% endif %}{{ field_schema.title }}</h4></div><div class="card-body">
 {% endif %}
@@ -249,7 +249,16 @@
 </div>
 {# simple field, always having a format #}
 {% else %}
-{% filter right(0) %}{{ display_format(field_name, field_path, field_schema, field_layout, field_format, is_in_card) }}{% endfilter %}
+{# simpe field card logic #}
+{# 1. metric is card by default and do NOT draw cards inside a card #}
+{% set simple_is_card = not is_in_card and field_format in ['metric'] %}
+{% if simple_is_card %}
+<div class="card"><div class="card-body">
+{% endif %}
+{% filter right(0) %}{{ display_format(field_name, field_path, field_schema, field_layout, field_format, is_in_card or simple_is_card) }}{% endfilter %}
+{% if simple_is_card %}
+</div></div>
+{% endif %}
 {% endif %}
 {% endmacro %}
 {# * #}
@@ -282,7 +291,7 @@
         {# group card logic #}
         {# 1. group is card by default and do NOT draw cards inside a card #}
         {# 2. if one of its columns is simple field, current group is rendered as card #}
-        {% set group_is_card = true and not is_in_card %}
+        {% set group_is_card = not is_in_card %}
         {% if group_is_card %}
             {# NOTE: render_controls is a global var(namespace) defined in {{views}}.html.jinja2, we need to use namespace to set some value in a loop #}
             {% set render_controls.group_has_simple_column = false %}
