@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-lg-4">
                     <fieldset class="object relation" name="project" format="summary">
-                        <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>所属项目</h4></div><div class="card-body">
+                        <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>所属项目</h4></div>
                         <div class="card-body">
                             <div class="row text-center">
                                 <div class="col">
@@ -98,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        </div></div>
+                        </div>
                     </fieldset>
                 </div>
                 <div class="col-lg-8">
@@ -106,7 +106,7 @@
                         <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-check-square mr-2"></i>任务基本信息</h4></div><div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string" name="title">
+                                <div class="form-group string-text" name="title">
                                     <label class=""><span class="text-danger mr-1">*</span>任务标题</label>
                                     <input name="title" type="text" required class="form-control"
                                            value="{{ demo_task.title or '' }}">
@@ -116,9 +116,9 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string" name="status">
+                                <div class="form-group string-select" name="status">
                                     <label class=""><span class="text-danger mr-1">*</span>任务状态</label>
-                                    <select class="custom-select select2" name="status" required>
+                                    <select class="custom-select select2" required>
                                         <option value="">__(Choose)...</option>
                                         {% for value, label in enum_titles('DemoTaskStatus')|items %}
                                         <option value="{{ value }}" {{ 'selected' if value==demo_task.status }}>{{ label }}</option>
@@ -130,7 +130,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string" name="content">
+                                <div class="form-group string-textarea" name="content">
                                     <label class="">任务详情</label>
                                     <textarea name="content" rows="5" class="form-control autosize">{{ demo_task.content or '' }}</textarea>
                                     <div class="invalid-feedback">__(Invalid )任务详情__(!)</div>
@@ -139,7 +139,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group date" name="start">
+                                <div class="form-group date-date" name="start">
                                     <label class="">开始日期</label>
                                     <input name="start" type="text" class="form-control date" 
                                            value="{{ demo_task.start or '' }}">
@@ -147,7 +147,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="form-group date" name="end">
+                                <div class="form-group date-date" name="end">
                                     <label class="">结束日期</label>
                                     <input name="end" type="text" class="form-control date" 
                                            value="{{ demo_task.end or '' }}">
@@ -158,9 +158,9 @@
                         <div class="row">
                             <div class="col">
                                 <fieldset class="object relation" name="user" format="select">
-                                    <div class="form-group relation " name="@" relation-id="id" relation-title="name">
+                                    <div class="form-group object-select relation" name="@">
                                         <label class=""><span class="text-danger mr-1">*</span>负责人</label>
-                                        <select class="custom-select select2" name="" required>
+                                        <select class="custom-select select2" relation-id="id" relation-title="name" required>
                                             <option value="">__(Choose)...</option>
                                             {% for demo_user in demo_users %}
                                             <option value="{{ demo_user.id }}" {{ 'selected' if demo_task.user.id == demo_user.id }}>{{ demo_user.name }}</option>

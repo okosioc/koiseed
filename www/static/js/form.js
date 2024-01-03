@@ -571,25 +571,6 @@ function _install_components(container) {
             })
         });
 
-        // Time range
-        formGroup.find(".time-range-input-group").each(function (i, n) {
-            var start = $(n).find(".time-start").timepicker({
-                timeFormat: "H:i"
-            });
-            var end = $(n).find(".time-end").timepicker({
-                timeFormat: "H:i"
-            });
-            start.change(function () {
-                var val = $(this).val();
-                if (!my_validateHhMm(val)) {
-                    return false;
-                }
-                var tokens = val.split(":");
-                var nextHour = (parseInt(tokens[0]) + 1).toString().padStart(2, "0");
-                end.val(nextHour + ":" + tokens[1]);
-            });
-        });
-
         // Cascador
         formGroup.find('.cascader-input-group').each(function (i, n) {
             var $cascaderInput = $(n).find('.cascader');
@@ -1032,7 +1013,8 @@ function install_quill(div) {
 function _process(param, field, path) {
     debug("Try to process path " + path + " with " + field.attr("class"));
     // object
-    if (field.is(".object") || field.is(".group")) {
+    if (field.is("fieldset.object") || field.is("fieldset.group")) {
+        // skip card
         var card = field.children(".card");
         if (card.length) {
             // .card-body or .table-responsive or other wrapper in .card
@@ -1042,13 +1024,8 @@ function _process(param, field, path) {
             "> .form-group, " +
             "> .form-row .form-group, " +
             "> .row  > div > .form-group, " +
-            "> .row  > div > .row  > div > .form-group, " +
-            "> .row  > div > .card > div > .row  > div > .form-group, " +
             "> fieldset, " +
-            "> .row  > div > fieldset, " +
-            "> .row  > div > .card > div > fieldset, " +
-            "> .row  > div > .card > div > .row  > div > fieldset, " +
-            "> .tab-content > .tab-pane > .row > div > fieldset"
+            "> .row  > div > fieldset"
         ).each(function (i, n) {
             if ($(n).is("fieldset.group")) {
                 _process(param, $(n), path);
@@ -1065,7 +1042,13 @@ function _process(param, field, path) {
         });
     }
     // array
-    else if (field.is(".array")) {
+    else if (field.is("fieldset.array")) {
+        // skip card
+        var card = field.children(".card");
+        if (card.length) {
+            // .card-body or .table-responsive or other wrapper in .card
+            field = card.children("div");
+        }
         var modals = field.find(".modals"),  // Array in modal/timeline/media format, using modal for really input
             items = field.find('.array-item[name]'), // Array in table/grid format and non-format
             select = field.find("select"),
@@ -1150,8 +1133,8 @@ function _process(param, field, path) {
             var badges = tagCloudInputGroup.children(".badge");
             if (badges.length) {
                 if (field.is(".relation")) {
-                    var id = tagCloudInputGroup.parent(".form-group").attr("relation-id");
-                    var title = tagCloudInputGroup.parent(".form-group").attr("relation-title");
+                    var id = tagCloudInputGroup.attr("relation-id");
+                    var title = tagCloudInputGroup.attr("relation-title");
                     $.each(badges, function (i, n) {
                         param[path.replace("@", "") + "[" + i + "]." + id] = $(n).attr("data-id");
                         param[path.replace("@", "") + "[" + i + "]." + title] = $.trim($(n).text());
@@ -1196,7 +1179,6 @@ function _process(param, field, path) {
         var radioInputGroup = field.find(".radio-input-group"),
             pluploadInputGroup = field.find(".plupload-input-group"),
             rteInputGroup = field.find(".rte-input-group"),
-            timeRangeInputGroup = field.find(".time-range-input-group"),
             rangeInputGroup = field.find(".range-input-group"),
             relationInputGroup = field.find(".relation-input-group"),
             inputGroup = field.find(".input-group"),
@@ -1258,34 +1240,6 @@ function _process(param, field, path) {
                     }
                 }
             }
-        } else if (timeRangeInputGroup.length) {
-            var inputStart = timeRangeInputGroup.find("input.time-start"), start = inputStart.val().trim(),
-                inputEnd = timeRangeInputGroup.find("input.time-end"), end = inputEnd.val().trim();
-            timeRangeInputGroup.removeClass("in-valid is-invalid");
-            inputStart.removeClass("in-valid is-invalid");
-            inputEnd.removeClass("in-valid is-invalid");
-            if (start.length || end.length) {
-                param[path.replace("@", inputStart.attr("name"))] = start;
-                param[path.replace("@", inputEnd.attr("name"))] = end;
-                param[path] = start + "~" + end; // Path with placeholder for debug
-                if (!my_validateHhMm(start) || !my_validateHhMm(end) || start >= end) {
-                    timeRangeInputGroup.addClass("is-invalid");
-                    inputStart.addClass("is-invalid");
-                    inputEnd.addClass("is-invalid");
-                    param["valid"] = false;
-                } else {
-                    timeRangeInputGroup.addClass("is-valid");
-                    inputStart.addClass("is-valid");
-                    inputEnd.addClass("is-valid");
-                }
-            } else {
-                if (timeRangeInputGroup.is("[required]")) {
-                    timeRangeInputGroup.addClass("is-invalid");
-                    inputStart.addClass("is-invalid");
-                    inputEnd.addClass("is-invalid");
-                    param["valid"] = false;
-                }
-            }
         } else if (rangeInputGroup.length) {
             rangeInputGroup.removeClass("in-valid is-invalid");
             var value = rangeInputGroup.find(".range-value").text().trim();
@@ -1302,14 +1256,10 @@ function _process(param, field, path) {
             relationInputGroup.removeClass("is-valid is-invalid");
             var badge = relationInputGroup.children(".badge");
             if (badge.length) {
-                if (field.is(".relation")) {
-                    var id = field.attr("relation-id");
-                    var title = field.attr("relation-title");
-                    param[path.replace("@", id)] = badge.attr("data-id");
-                    param[path.replace("@", title)] = $.trim(badge.text());
-                } else {
-                    param[path] = $.trim(badge.text());
-                }
+                var id = relationInputGroup.attr("relation-id");
+                var title = relationInputGroup.attr("relation-title");
+                param[path.replace("@", id)] = badge.attr("data-id");
+                param[path.replace("@", title)] = $.trim(badge.text());
             } else {
                 // Manually validate required
                 if (relationInputGroup.is("[required]")) {
@@ -1362,10 +1312,11 @@ function _process(param, field, path) {
         } else if (selectInput.length) {
             selectInput.removeClass("is-invalid is-valid");
             var val = selectInput.val();
+            debug(val, field.is(".relation"))
             if (val.length) {
                 if (field.is(".relation")) {
-                    var id = field.attr("relation-id");
-                    var title = field.attr("relation-title");
+                    var id = selectInput.attr("relation-id");
+                    var title = selectInput.attr("relation-title");
                     param[path.replace("@", id)] = val;
                     param[path.replace("@", title)] = selectInput.children("option[value=" + val + "]").text();
                 } else {

@@ -1,14 +1,1 @@
-<div class="form-group {{ field_schema.type }}{{ ' row' if view_is_horizontal }}" name="{{ field_name }}">
-    <label class="{{ 'col-auto col-form-label' if view_is_horizontal }}">{{ '<span class="text-danger mr-1">*</span>' if field_schema.required }}{{ field_schema.title }}</label>
-    {% if view_is_horizontal %}
-    <div class="col">
-    {% endif %}
-    <textarea name="{{ field_name }}" rows="5"{{ ' required' if field_schema.required }} class="form-control autosize">{{ '{{' }} {{ field_path }} or '' {{ '}}' }}</textarea>
-    {% if field_schema.description %}
-    <small class="mt-2 form-text text-muted">{{ field_schema.description }}</small>
-    {% endif %}
-    <div class="invalid-feedback">__(Invalid ){{ field_schema.title }}__(!)</div>
-    {% if view_is_horizontal %}
-    </div>
-    {% endif %}
-</div>
+<textarea name="{{ field_name }}" rows="5"{{ ' required' if field_schema.required }} class="form-control autosize">{{ '{{' }} {{ field_path }} or '' {{ '}}' }}</textarea>
