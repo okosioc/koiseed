@@ -1,18 +1,21 @@
-{% macro render_image(hiddens) %}
-        <div class="image uploaded" style="width:auto;">
-            <img data-src="{{ caller('url') }}">
-            <div class="btns">
-                <a href="{{ caller('url') }}" target="_blank">i</a>
-                <a href="javascript:;" onclick="$(this).closest('.image').remove();">x</a>
-            </div>
-            {% for k in hiddens %}
-            <input type="hidden" name="{{ k }}" value="{{ caller(k) }}">
-            {% endfor %}
-        </div>
+{% macro render_image() %}
+<div class="image uploaded" style="width:auto;">
+    <img data-src="{{ '{{' }} image_obj['url'] {{ '}}' }}">
+    <div class="btns">
+        <a href="{{ '{{' }} image_obj['url'] {{ '}}' }}" target="_blank">i</a>
+        <a href="javascript:;" onclick="$(this).closest('.image').remove();">x</a>
+    </div>
+    {% for k in hiddens %}
+    <input type="hidden" name="{{ k }}" value="{{ '{{' }} image_obj['{{ k }}'] {{ '}}' }}">
+    {% endfor %}
+</div>
 {% endmacro %}
 {# array of string/object #}
 {% if field_schema.type == 'array' %}
     {% set hiddens = field_schema['items'].properties|keys if field_schema['items'].type == 'object' else ['url'] %}
+{# object #}
+{% elif field_schema.type == 'object' %}
+    {% set hiddens = field_schema.properties|keys %}
 {# string #}
 {% elif field_schema.type == 'string' %}
     {% set hiddens = ['url'] %}
@@ -25,24 +28,31 @@
        data-preview='{"image":"{{ '{{' }} upload_config.image_preview {{ '}}' }}", "video":"{{ '{{' }} upload_config.video_poster {{ '}}' }}"}'
        data-filters='{"mime_types":"{{ '{{' }} upload_config.mimes_image|join(", ") {{ '}}' }}"}'
        data-hiddens="{{ hiddens|join(',') }}">__(Choose Image)...</a>
-    <small class="mt-2 form-text text-muted">{{ '__(Support multiple uploads;)' if field_schema.type == 'array' }}__(Availabe formats: ){{ '{{' }} upload_config.mimes_image|join(', ') {{ '}}' }}</small>
+    <small class="mt-2 form-text text-muted">{{ '__(Support multiple uploads; )' if field_schema.type == 'array' }}__(Availabe formats: ){{ '{{' }} upload_config.mimes_image|join(', ') {{ '}}' }}</small>
     <div class="plupload-input-result image-input-result mt-1 clearfix">
     {% if field_schema.type == 'array' %}
     {% if field_schema['items'].type == 'object' %}
-        {{ '{%' }} for e in {{ field_path }} {{ '%}' }}
-        {% call(k) render_image(hiddens) %}{{ '{{' }} e['{{ k }}'] or '' {{ '}}' }}{% endcall %}
+        {{ '{%' }} for image_obj in {{ field_path }} {{ '%}' }}
+        {% filter right(8) %}{{ render_image() }}{% endfilter %}
         {{ '{%' }} endfor {{ '%}' }}
     {% else %}
         {{ '{%' }} for e in {{ field_path }} {{ '%}' }}
         {{ '{%' }} set image_obj = {'url': e} {{ '%}' }}
-        {% call(k) render_image(hiddens) %}{{ '{{' }} image_obj['{{ k }}'] {{ '}}' }}{% endcall %}
+        {% filter right(8) %}{{ render_image() }}{% endfilter %}
         {{ '{%' }} endfor {{ '%}' }}
     {% endif %}
     {% else %}
-        {{ '{%' }} if {{ field_path }} {{ '%}' }}
-        {{ '{%' }} set image_obj = {'url': {{ field_path }}} {{ '%}' }}
-        {% call(k) render_image(hiddens) %}{{ '{{' }} image_obj['{{ k }}'] {{ '}}' }}{% endcall %}
+    {% if field_schema.type == 'object' %}
+        {{ '{%' }} set image_obj = {{ field_path }} {{ '%}' }}
+        {{ '{%' }} if image_obj.url {{ '%}' }}
+        {% filter right(8) %}{{ render_image() }}{% endfilter %}
         {{ '{%' }} endif {{ '%}' }}
+    {% else %}
+        {{ '{%' }} if {{ field_path }} {{ '%}' }}
+        {{ '{%' }} set image_obj = {'url': {{ field_path }} } {{ '%}' }}
+        {% filter right(8) %}{{ render_image() }}{% endfilter %}
+        {{ '{%' }} endif {{ '%}' }}
+    {% endif %}
     {% endif %}
     </div>
 </div>

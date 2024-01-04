@@ -247,14 +247,14 @@
                                                data-max="{{ upload_config.max }}"
                                                data-preview=''
                                                data-filters='{"mime_types":"{{ upload_config.mimes|join(", ") }}"}'
-                                               data-hiddens="url">选择文件...</a>
-                                            <small class="mt-2 form-text text-muted">可上传多个文件；支持的文件格式有 {{ upload_config.mimes|join(', ') }}</small>
+                                               data-hiddens="url">__(Choose File)...</a>
+                                            <small class="mt-2 form-text text-muted">__(Support multiple uploads; )__(Availabe formats: ){{ upload_config.mimes|join(', ') }}</small>
                                             <div class="plupload-input-result file-input-result mt-1 clearfix">
                                                 {% for e in demo_project.files %}
                                                 {% set file_obj = {'url': e } %}
                                                 <div class="file uploaded d-flex justify-content-start align-items-center">
-                                                    <div class="mr-3">{{ file_obj['name'] }}</div>
-                                                    <div><a class="mr-2" href="{{ file_obj['url'] }}" target="_blank">i</a><a href="javascript:;" onclick="$(this).closest('.file').remove();">x</a></div>
+                                                    <div class="mr-3">{{ file_obj['url']|basename }}</div>
+                                                    <div><a class="mr-3" href="{{ file_obj['url'] }}" target="_blank">i</a><a href="javascript:;" onclick="$(this).closest('.file').remove();">x</a></div>
                                                     <input type="hidden" name="url" value="{{ file_obj['url'] }}">
                                                 </div>
                                                 {% endfor %}

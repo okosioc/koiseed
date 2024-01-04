@@ -524,13 +524,12 @@ function prepare_form(callback) {
 function _install_components(container) {
     container.find(".form-group").each(function (fgi, fgn) {
         var formGroup = $(fgn);
-
         // Skip form-groups in template
         if (formGroup.closest(".array-item").is(".template")) {
-            return false;
+            return true;
         }
         if (formGroup.closest(".modal").is(".template")) {
-            return false;
+            return true;
         }
 
         // Lazy load images
@@ -758,12 +757,14 @@ function _install_components(container) {
         formGroup.find(".plupload").each(function (i, n) {
             // Install
             install_plupload($(n));
-            // Sortable for plupload-input-result
-            var result = $(n).closest(".plupload-input-group").find(".plupload-input-result")[0];
-            new Sortable(result, {
-                animation: 150,
-                ghostClass: 'blue-background-class'
-            });
+            // Sortable for image plupload-input-result
+            var result = $(n).closest(".plupload-input-group").find(".image-input-result")[0];
+            if (result) {
+                new Sortable(result, {
+                    animation: 150,
+                    ghostClass: 'blue-background-class'
+                });
+            }
         });
 
         // Rte
@@ -884,7 +885,7 @@ function install_plupload(btn) {
     uploader.bind('Error', function (up, err) {
         // Errors may happen before FilesAdded event, e.g, "File size error.", so need to check if any wrap div here
         if (err.file && $("#" + err.file.id).length) {
-            var html = '<small class="text-danger">' + err.file.name + (isImageResult ? '<br>' : '') + err.message + ' (' + err.code + ')</small>';
+            var html = '<small class="text-danger">' + err.file.name + (isImageResult ? '<br>' : ' ') + err.message + ' (' + err.code + ')</small>';
             $("#" + err.file.id).removeClass("uploading").addClass("error").html(html);
         } else {
             showError("Failed when uploading, " + err.message + " (" + err.code + ")");
@@ -917,7 +918,7 @@ function install_plupload(btn) {
                 uploaded.append(btns);
             } else {
                 uploaded.find(".flex-grow-1").remove();
-                var btns = '<div><a class="mr-2" href="' + d.url + '" target="_blank">i</a><a href="javascript:;" onclick="$(this).closest(\'.file\').remove();">x</a></div>';
+                var btns = '<div><a class="mr-3" href="' + d.url + '" target="_blank">i</a><a href="javascript:;" onclick="$(this).closest(\'.file\').remove();">x</a></div>';
                 uploaded.append(btns);
             }
             $.each(hiddens.split(','), function (i, k) {

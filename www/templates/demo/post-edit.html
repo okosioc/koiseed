@@ -71,7 +71,7 @@
                                         <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ upload_config.mimes_image|join(', ') }}</small>
                                         <div class="plupload-input-result image-input-result mt-1 clearfix">
                                             {% if demo_post.cover %}
-                                            {% set image_obj = {'url': demo_post.cover} %}
+                                            {% set image_obj = {'url': demo_post.cover } %}
                                             <div class="image uploaded" style="width:auto;">
                                                 <img data-src="{{ image_obj['url'] }}">
                                                 <div class="btns">
