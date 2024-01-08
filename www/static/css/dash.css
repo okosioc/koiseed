@@ -252,8 +252,8 @@ span.twitter-typeahead .tt-suggestion.tt-cursor {
 .card > .card-body > .row:last-child > [class*=col-] > .object > .form-group,
 .card > .card-body > .row:last-child > .col > .array > .form-group,
 .card > .card-body > .row:last-child > [class*=col-] > .array > .form-group,
-.modal-content > .modal-body > .row:last-child > .col > .form-group,
-.modal-content > .modal-body > .row:last-child > [class*=col-] > .form-group {
+.modal-content > .modal-body > fieldset > .row:last-child > .col > .form-group,
+.modal-content > .modal-body > fieldset > .row:last-child > [class*=col-] > .form-group {
     margin-bottom: 0;
 }
 
@@ -268,42 +268,18 @@ span.twitter-typeahead .tt-suggestion.tt-cursor {
 .card > .card-body > .row:last-child > [class*=col-] > .object > .field-group,
 .card > .card-body > .row:last-child > .col > .array > .field-group,
 .card > .card-body > .row:last-child > [class*=col-] > .array > .field-group,
-.modal-content > .modal-body > .row:last-child > .col > .field-group,
-.modal-content > .modal-body > .row:last-child > [class*=col-] > .field-group {
-    margin-bottom: 0;
-}
-
-.card > .card-body > .row:last-child > .form-group,
-.card > .card-body > .row:last-child > .object > .form-group,
-.card > .card-body > .row:last-child > .array > .form-group,
-.modal-content > .modal-body > .row:last-child > .form-group {
-    margin-bottom: 0;
-}
-
-.card > .card-body > .row:last-child > .field-group,
-.card > .card-body > .row:last-child > .object > .field-group,
-.card > .card-body > .row:last-child > .array > .field-group,
-.modal-content > .modal-body > .row:last-child > .field-group {
-    margin-bottom: 0;
-}
-
-.card > .card-body > .row:last-child.form-group,
-.modal-content > .modal-body > .row:last-child.form-group {
-    margin-bottom: 0;
-}
-
-.card > .card-body > .row:last-child.field-group,
-.modal-content > .modal-body > .row:last-child.field-group {
+.modal-content > .modal-body > div > .row:last-child > .col > .field-group,
+.modal-content > .modal-body > div > .row:last-child > [class*=col-] > .field-group {
     margin-bottom: 0;
 }
 
 .card > .card-body > .form-group:last-child,
-.modal-content > .modal-body > .form-group:last-child {
+.modal-content > .modal-body > div > .form-group:last-child {
     margin-bottom: 0;
 }
 
 .card > .card-body > .field-group:last-child,
-.modal-content > .modal-body > .field-group:last-child {
+.modal-content > .modal-body > div > .field-group:last-child {
     margin-bottom: 0;
 }
 

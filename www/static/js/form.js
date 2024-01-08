@@ -112,7 +112,6 @@ function array_action_save_modal(btn) {
     var modal = btn.closest(".modal");
     var param = {"valid": true}, fieldset = modal.find(".modal-body > fieldset"), fieldset_name = fieldset.attr("name");
     _process(param, fieldset, fieldset_name);
-    debug(param);
     if (!param["valid"]) {
         showError('检测到不正确的数据, 请更正后重试!');
         return false;
@@ -122,7 +121,7 @@ function array_action_save_modal(btn) {
     $.each(param, function (k, v) {
         object[k.replace(fieldset_name + '.', '')] = v;
     })
-    debug(object);
+    debug("convert legacy post params to object", object);
     var items = btn.closest("fieldset.array").find(".array-item[name]");
     var item = null;
     if (modal.is(".adding")) { // Adding
@@ -371,7 +370,7 @@ function render_template_using_object(template, object, relation_key, relation_i
         //
         var value = object[name];
         // debug(`Try to update field with name ${name} format ${format}: ${value}`);
-        //
+        // Parse string value
         function parse_value(v) {
             if (enum_type) {
                 if (v) {
@@ -384,16 +383,19 @@ function render_template_using_object(template, object, relation_key, relation_i
                     v = v.substr(0, 19); //
                 }
             } else if (["text", "int", "float"].includes(format)) {
+                // if field is html, then we need to clone it and replace some value
                 var content = field.children();
                 if (content.length > 0) { // If is html template
                     content = content.clone(true);
                     if (content.is(".avatar")) {
                         var title = content.find(".avatar-title");
                         if (v) {
+                            // display first char
                             title.text(v[0]);
                         } else {
                             title.text("");
                         }
+                        return content;
                     } else if (content.is(".progress")) {
                         var bar = content.find(".progress-bar");
                         if (v) {
@@ -401,10 +403,8 @@ function render_template_using_object(template, object, relation_key, relation_i
                         } else {
                             bar.css("width", "0%").attr("aria-valuenow", "0");
                         }
-                    } else {
-                        content.text("UNSUPPORTED!");
+                        return content;
                     }
-                    return content;
                 }
             } else if (['avatar', 'image'].includes(format)) {
                 var content = field.children().clone(true);
@@ -428,6 +428,7 @@ function render_template_using_object(template, object, relation_key, relation_i
                 }
                 return content;
             }
+            // Return oringal value
             return v || "-";
         }
 
@@ -739,7 +740,7 @@ function _install_components(container) {
         formGroup.find("select.select2").each(function (i, n) {
             var change_event = n.getAttribute("data-onchange");
             var option = {
-                containerCssClass: n.getAttribute("class").replace("select2", ""), // Remove class select2 as it impacts display
+                containerCssClass: n.getAttribute("class").replace("select2", "").replace("select2-hidden-accessible", ""), // Remove class select2 as it impacts display
                 //dropdownAutoWidth: true,
                 dropdownCssClass: n.classList.contains("custom-select-sm") || n.classList.contains("form-control-sm") ? "dropdown-menu dropdown-menu-sm show" : "dropdown-menu show",
                 dropdownParent: n.closest('.modal-body') || document.body,
@@ -1313,7 +1314,6 @@ function _process(param, field, path) {
         } else if (selectInput.length) {
             selectInput.removeClass("is-invalid is-valid");
             var val = selectInput.val();
-            debug(val, field.is(".relation"))
             if (val.length) {
                 if (field.is(".relation")) {
                     var id = selectInput.attr("relation-id");

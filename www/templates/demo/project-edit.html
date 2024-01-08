@@ -100,145 +100,147 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4">
-                    <fieldset class="array relation" name="members" format="media">
-                        <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-users mr-2"></i>项目成员</h4></div><div class="card-body">
-                        <div class="form-group array-media relation" name="@">
-                            <ul class="array-items list-group list-group-flush">
-                                {% for members_item in demo_project.members + [new_model('DemoUser')] %}
-                                <li class="array-item list-group-item {{ 'template' if loop.last }}" name="-">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto" name="avatar" format="avatar">
-                                            <a href="javascript:;" class="avatar ">
-                                                <img src="{{ members_item.avatar or '' }}" alt="..." class="avatar-img rounded-circle {{ 'd-none' if not members_item.avatar }}">
-                                                <span fallback=name class="avatar-title rounded-circle bg-primary {{ 'd-none' if members_item.avatar }}">{{ members_item.name|first|upper if members_item.name is not none }}</span>
-                                            </a>
-                                        </div>
-                                        <div class="col ml-n2">
-                                            <p name="name" format="text" class="mb-1">{{ members_item.name or '' }}</p>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a class="btn pl-0 py-0" onclick="array_action_show_modal($(this));"><i class="fe fe-eye"></i></a>
-                                            <a class="btn pl-0 py-0" onclick="array_action_delete_modal($(this));" data-title="用户"><i class="fe fe-delete"></i></a>
-                                        </div>
-                                    </div>
-                                </li>
-                                {% endfor %}
-                                <li class="array-item list-group-item pb-0" style="{{ 'display:none' if demo_project.members }}">
-                                    <div class="row align-items-center">
-                                        <div class="col"><div class="alert alert-light mb-0"><i class="fe fe-alert-circle mr-2"></i>没有用户！</div></div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="modals">
-                                {% for members_item in demo_project.members + [new_model('DemoUser')] %}
-                                <div class="modal fade {{ 'template' if loop.last }}" name="-" data-backdrop="static" data-keyboard="false" tabindex="-1">
-                                    <div class="modal-dialog modal-xl">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title"><i class="fe fe-user mr-2"></i>用户详情</h5>
-                                                <button type="button" class="close" aria-label="Close" onclick="array_action_cancel_modal($(this));">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <fieldset class="object d-none" name="-">
-                                                    <div class="form-group" name="id">
-                                                        <input name="id" type="text" value="{{ members_item.id or '' }}">
+                <div class="col-lg-6">
+                    <fieldset class="group" name="2" format="">
+                        <div class="row">
+                            <div class="col">
+                                <fieldset class="array relation" name="members" format="media">
+                                    <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-users mr-2"></i>项目成员</h4></div><div class="card-body">
+                                    <div class="form-group array-media relation" name="@">
+                                        <ul class="array-items list-group list-group-flush">
+                                            {% for members_item in demo_project.members + [new_model('DemoUser')] %}
+                                            <li class="array-item list-group-item {{ 'template' if loop.last }}" name="-">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto" name="avatar" format="avatar">
+                                                        <a href="javascript:;" class="avatar ">
+                                                            <img src="{{ members_item.avatar or '' }}" alt="..." class="avatar-img rounded-circle {{ 'd-none' if not members_item.avatar }}">
+                                                            <span fallback=name class="avatar-title rounded-circle bg-primary {{ 'd-none' if members_item.avatar }}">{{ members_item.name|first|upper if members_item.name is not none }}</span>
+                                                        </a>
                                                     </div>
-                                                </fieldset>
-                                                <div class="card-body">
-                                                    <div class="row text-center">
-                                                        <div class="col">
-                                                            <div name="avatar" format="avatar">
-                                                                <a href="user-profile?id={{ members_item.id }}" class="avatar avatar-xl mt-2 mb-4">
-                                                                    <img src="{{ members_item.avatar or '' }}" alt="..." class="avatar-img rounded-circle {{ 'd-none' if not members_item.avatar }}">
-                                                                    <span fallback=name class="avatar-title rounded-circle bg-primary {{ 'd-none' if members_item.avatar }}">{{ members_item.name|first|upper if members_item.name is not none }}</span>
-                                                                </a>
-                                                            </div>
-                                                            <div class="mb-4">
-                                                                <span class="h3 text-primary" name="name" foramt="text">{{ members_item.name or '-' }}</span>
-                                                            </div>
-                                                        </div>
+                                                    <div class="col ml-n2">
+                                                        <p name="name" format="text" class="mb-1">{{ members_item.name or '' }}</p>
                                                     </div>
-                                                    <div class="list-group list-group-flush border-top">
-                                                        <div class="list-group-item">
-                                                            <div class="row align-items-center">
-                                                                <div class="col">
-                                                                    <span><i class="fe fe-circle mr-2"></i>用户状态</span>
+                                                    <div class="col-auto">
+                                                        <a class="btn pl-0 py-0" onclick="array_action_show_modal($(this));"><i class="fe fe-eye"></i></a>
+                                                        <a class="btn pl-0 py-0" onclick="array_action_delete_modal($(this));" data-title="用户"><i class="fe fe-delete"></i></a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {% endfor %}
+                                            <li class="array-item list-group-item pb-0" style="{{ 'display:none' if demo_project.members }}">
+                                                <div class="row align-items-center">
+                                                    <div class="col"><div class="alert alert-light mb-0"><i class="fe fe-alert-circle mr-2"></i>没有用户！</div></div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="modals">
+                                            {% for members_item in demo_project.members + [new_model('DemoUser')] %}
+                                            <div class="modal fade {{ 'template' if loop.last }}" name="-" data-backdrop="static" data-keyboard="false" tabindex="-1">
+                                                <div class="modal-dialog modal-xl">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"><i class="fe fe-user mr-2"></i>用户详情</h5>
+                                                            <button type="button" class="close" aria-label="Close" onclick="array_action_cancel_modal($(this));">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <fieldset class="object d-none" name="-">
+                                                                <div class="form-group" name="id">
+                                                                    <input name="id" type="text" value="{{ members_item.id or '' }}">
                                                                 </div>
-                                                                <div class="col-auto text-muted" name="status" format="select" enum="DemoUserStatus">
-                                                                    {% if members_item.status is not none %}<span class="text-{{ members_item.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoUserStatus')[members_item.status] }}{% else %}-{% endif %}
+                                                            </fieldset>
+                                                            <div class="card-body">
+                                                                <div class="row text-center">
+                                                                    <div class="col">
+                                                                        <div name="avatar" format="avatar">
+                                                                            <a href="user-profile?id={{ members_item.id }}" class="avatar avatar-xl mt-2 mb-4">
+                                                                                <img src="{{ members_item.avatar or '' }}" alt="..." class="avatar-img rounded-circle {{ 'd-none' if not members_item.avatar }}">
+                                                                                <span fallback=name class="avatar-title rounded-circle bg-primary {{ 'd-none' if members_item.avatar }}">{{ members_item.name|first|upper if members_item.name is not none }}</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="mb-4">
+                                                                            <span class="h3 text-primary" name="name" foramt="text">{{ members_item.name or '-' }}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="list-group list-group-flush border-top">
+                                                                    <div class="list-group-item">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col">
+                                                                                <span><i class="fe fe-circle mr-2"></i>用户状态</span>
+                                                                            </div>
+                                                                            <div class="col-auto text-muted" name="status" format="select" enum="DemoUserStatus">
+                                                                                {% if members_item.status is not none %}<span class="text-{{ members_item.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoUserStatus')[members_item.status] }}{% else %}-{% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="list-group-item">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col">
+                                                                                <span><i class="fe fe-box mr-2"></i>用户角色</span>
+                                                                            </div>
+                                                                            <div class="col-auto text-muted" name="roles" format="select" enum="DemoUserRole">
+                                                                                {% for roles_item in members_item.roles %}
+                                                                                {{ ' ' if not loop.fist }}{% if roles_item is not none %}{{ enum_titles('DemoUserRole')[roles_item] }}{% else %}-{% endif %}
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="list-group-item">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col">
+                                                                                <span><i class="fe fe-mail mr-2"></i>登录邮箱</span>
+                                                                            </div>
+                                                                            <div class="col-auto text-muted" name="email" format="text" enum="">
+                                                                                {{ members_item.email or '-' }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="list-group-item">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col">
+                                                                                <span><i class="fe fe-phone mr-2"></i>手机号</span>
+                                                                            </div>
+                                                                            <div class="col-auto text-muted" name="phone" format="text" enum="">
+                                                                                {{ members_item.phone or '-' }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="list-group-item">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col">
+                                                                                <span><i class="fe fe-clock mr-2"></i>创建时间</span>
+                                                                            </div>
+                                                                            <div class="col-auto text-muted" name="create_time" format="datetime" enum="">
+                                                                                {{ members_item.create_time|datetime if members_item.create_time is not none else '-' }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="list-group-item">
-                                                            <div class="row align-items-center">
-                                                                <div class="col">
-                                                                    <span><i class="fe fe-box mr-2"></i>用户角色</span>
-                                                                </div>
-                                                                <div class="col-auto text-muted" name="roles" format="select" enum="DemoUserRole">
-                                                                    {% for roles_item in members_item.roles %}
-                                                                    {{ ' ' if not loop.fist }}{% if roles_item is not none %}{{ enum_titles('DemoUserRole')[roles_item] }}{% else %}-{% endif %}
-                                                                    {% endfor %}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="list-group-item">
-                                                            <div class="row align-items-center">
-                                                                <div class="col">
-                                                                    <span><i class="fe fe-mail mr-2"></i>登录邮箱</span>
-                                                                </div>
-                                                                <div class="col-auto text-muted" name="email" format="text" enum="">
-                                                                    {{ members_item.email or '-' }}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="list-group-item">
-                                                            <div class="row align-items-center">
-                                                                <div class="col">
-                                                                    <span><i class="fe fe-phone mr-2"></i>手机号</span>
-                                                                </div>
-                                                                <div class="col-auto text-muted" name="phone" format="text" enum="">
-                                                                    {{ members_item.phone or '-' }}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="list-group-item">
-                                                            <div class="row align-items-center">
-                                                                <div class="col">
-                                                                    <span><i class="fe fe-clock mr-2"></i>创建时间</span>
-                                                                </div>
-                                                                <div class="col-auto text-muted" name="create_time" format="datetime" enum="">
-                                                                    {{ members_item.create_time|datetime if members_item.create_time is not none else '-' }}
-                                                                </div>
-                                                            </div>
+                                                        <div class="modal-footer py-3">
+                                                            <button type="button" class="btn btn-light" onclick="array_action_cancel_modal($(this));">__(Cancel)</button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer py-3">
-                                                <button type="button" class="btn btn-light" onclick="array_action_cancel_modal($(this));">__(Cancel)</button>
-                                            </div>
+                                            {% endfor %}
                                         </div>
+                                        <div class="array-actions mt-4">
+                                            <a class="btn btn-outline-primary mr-2" relation-key="demo-users" relation-return="many" onclick="relation_action_show_search_modal($(this));" data-title="用户"><i class="fe fe-search mr-1"></i>添加用户...</a>
+                                        </div>
+                                        <div class="invalid-feedback">__(Invalid )项目成员__(!)</div>
                                     </div>
-                                </div>
-                                {% endfor %}
+                                    </div></div>
+                                </fieldset>
                             </div>
-                            <div class="array-actions mt-4">
-                                <a class="btn btn-outline-primary mr-2" relation-key="demo-users" relation-return="many" onclick="relation_action_show_search_modal($(this));" data-title="用户"><i class="fe fe-search mr-1"></i>添加用户...</a>
-                            </div>
-                            <div class="invalid-feedback">__(Invalid )项目成员__(!)</div>
                         </div>
-                        </div></div>
-                    </fieldset>
-                </div>
-                <div class="col-lg-8">
-                    <fieldset class="group" name="2" format="">
-                        <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>相关文件</h4></div><div class="card-body">
                         <div class="row">
                             <div class="col">
                                 <fieldset class="array" name="files" format="file">
+                                    <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-file-plus mr-2"></i>项目文件</h4></div><div class="card-body">
                                     <div class="form-group array-file" name="files">
                                         <div class="plupload-input-group file-input-group" >
                                             <a class="btn btn-outline-primary plupload" href="javascript:;" multiple
@@ -262,8 +264,116 @@
                                         </div>
                                         <div class="invalid-feedback">__(Please upload )项目文件__(!)</div>
                                     </div>
+                                    </div></div>
                                 </fieldset>
                             </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-lg-6">
+                    <fieldset class="array" name="activities" format="timeline">
+                        <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-activity mr-2"></i>操作</h4></div><div class="card-body">
+                        <div class="form-group array-timeline" name="activities">
+                            <ul class="array-items list-group list-group-flush list-group-activity">
+                                {% for activities_item in demo_project.activities + [new_model('DemoActivity')] %}
+                                <li class="array-item list-group-item {{ 'template' if loop.last }}" name="-">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto" name="user.name" format="text">
+                                            <a href="javascript:;" class="avatar avatar-sm">
+                                                <span class="avatar-title bg-primary-soft rounded-circle text-primary">{{ activities_item.user.name|first|upper if activities_item.user.name is not none }}</span>
+                                            </a>
+                                        </div>
+                                        <div class="col ml-n2">
+                                            <p name="title" format="text" class="mb-1">{{ activities_item.title|safe if activities_item.title is not none }}</p>
+                                            <p name="content" format="textarea" class="small text-gray-700 mb-1">{{ activities_item.content or '' }}</p>
+                                            <p class="small text-muted mb-0"><i class="fe fe-clock mr-2"></i>{{ activities_item.time|timesince if activities_item.time is not none }}</p>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a class="btn pl-0 py-0" onclick="array_action_show_modal($(this));"><i class="fe fe-eye"></i></a>
+                                            <a class="btn pl-0 py-0" onclick="array_action_delete_modal($(this));" data-title="操作"><i class="fe fe-delete"></i></a>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                                <li class="array-item list-group-item pb-0" style="{{ 'display:none' if demo_project.activities }}">
+                                    <div class="row align-items-center">
+                                        <div class="col"><div class="alert alert-light mb-0"><i class="fe fe-alert-circle mr-2"></i>没有操作！</div></div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="modals">
+                                {% for activities_item in demo_project.activities + [new_model('DemoActivity')] %}
+                                <div class="modal fade {{ 'template' if loop.last }}" name="-" data-backdrop="static" data-keyboard="false">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"><i class="fe fe-activity mr-2"></i>操作详情</h5>
+                                                <button type="button" class="close" aria-label="Close" onclick="array_action_cancel_modal($(this));">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <fieldset class="object" name="-">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <fieldset class="object relation" name="user" format="select">
+                                                                <div class="form-group object-select relation" name="@">
+                                                                    <label class=""><span class="text-danger mr-1">*</span>操作人</label>
+                                                                    <select id="select2-{{ loop.index }}" class="custom-select select2" relation-id="id" relation-title="name" required>
+                                                                        <option value="">__(Choose)...</option>
+                                                                        {% for demo_user in demo_users %}
+                                                                        <option value="{{ demo_user.id }}" {{ 'selected' if activities_item.user.id == demo_user.id }}>{{ demo_user.name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                    <div class="invalid-feedback">__(Please choose at least one )操作人__(!)</div>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group string-text" name="title">
+                                                                <label class=""><span class="text-danger mr-1">*</span>操作标题</label>
+                                                                <input name="title" type="text" required class="form-control"
+                                                                       value="{{ activities_item.title or '' }}">
+                                                                <div class="invalid-feedback">__(Invalid )操作标题__(!)</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group string-textarea" name="content">
+                                                                <label class="">操作详情</label>
+                                                                <textarea name="content" rows="5" class="form-control autosize">{{ activities_item.content or '' }}</textarea>
+                                                                <div class="invalid-feedback">__(Invalid )操作详情__(!)</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group date-datetime" name="time">
+                                                                <label class=""><span class="text-danger mr-1">*</span>操作时间</label>
+                                                                <input name="time" type="text" class="form-control date-time" required
+                                                                       value="{{ activities_item.time or '' }}">
+                                                                <div class="invalid-feedback">__(Invalid )操作时间__(!)</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="modal-footer py-3">
+                                                <button type="button" class="btn btn-light" onclick="array_action_cancel_modal($(this));">__(Cancel)</button>
+                                                <button type="button" class="btn btn-primary" onclick="array_action_save_modal($(this));">__(Confirm)</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="array-actions mt-4">
+                                <a class="btn btn-outline-primary mr-2" onclick="array_action_add_modal($(this));"><i class="fe fe-plus mr-1"></i>__(Add )操作...</a>
+                            </div>
+                            <div class="invalid-feedback">__(Invalid )操作__(!)</div>
                         </div>
                         </div></div>
                     </fieldset>

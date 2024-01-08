@@ -125,10 +125,8 @@
                     {# group is always rendered as card #}
                 {# normal column #}
                 {% elif cs %}
-                    {% if cs.type == 'object' %}
-                        {# ojbect is always rendered as card #}
-                    {% elif cs.type == 'array' and cs.format in ['table', 'modal', 'chart', 'media', 'timeline'] %}
-                        {# NOTE: only above complex formats will be rendered as card #}
+                    {% if cs.type in ['object', 'array'] %}
+                        {# ojbect/array is always rendered as card #}
                     {% else %}
                         {% set render_controls.group_has_simple_column = true %}
                     {% endif %}
@@ -195,8 +193,8 @@
     {% elif column_schema.type == 'array' %}
         <fieldset class="array{{ ' relation' if column_schema.is_relation }}" name="{{ column_name }}" format="{{ column_format }}">
         {# array card logic #}
-        {# 1. array in formats(table/modal/chart/media/timeline) is card by default and do NOT draw cards inside a card #}
-        {% set array_is_card = not is_in_card and column_format in ['table', 'modal', 'chart', 'media', 'timeline'] %}
+        {# 1. array is card by default and do NOT draw cards inside a card #}
+        {% set array_is_card = not is_in_card %}
         {% set array_show_label = true %}
         {# below formats use .table-responsive(w/o x-padding) instead of .card-body #}
         {% set array_card_body_class = 'table-responsive' if column_format in ['table', 'modal', 'chart'] else 'card-body' %}
