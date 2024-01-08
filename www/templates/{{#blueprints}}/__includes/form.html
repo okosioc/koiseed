@@ -18,13 +18,13 @@
     {% if view_is_horizontal %}
     <div class="col">
     {% endif %}
-{% if exists(format_file) %}
+    {% if exists(format_file) %}
     {% filter right(4) %}{% include format_file %}{% endfilter %}
-{% elif field_schema.is_relation %}
+    {% elif field_schema.is_relation %}
     {% filter right(4) %}{% include '__includes/input_relation.html' %}{% endfilter %}
-{% else %}
+    {% else %}
     UNSUPPORTED! {{ format_file }} does not exist!
-{% endif %}
+    {% endif %}
     {% if field_schema.description %}
     <small class="mt-2 form-text text-muted">{{ field_schema.description }}</small>
     {% endif %}

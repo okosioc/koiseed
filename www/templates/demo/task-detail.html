@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-lg-4">
                 <div class="object relation" name="project" format="summary">
-                    <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>所属项目</h4></div><div class="card-body">
+                    <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>所属项目</h4></div>
                     <div class="card-body">
                         <div class="row text-center">
                             <div class="col">
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                     </div>
-                    </div></div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-8">
@@ -105,7 +105,7 @@
                     <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-check-square mr-2"></i>任务基本信息</h4></div><div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group string-text">
                                 <label class="text-gray-700">任务标题</label>
                                 <div class="field-control">
                                     {{ demo_task.title or '-' }}
@@ -115,7 +115,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group string-select">
                                 <label class="text-gray-700">任务状态</label>
                                 <div class="field-control">
                                     {% if demo_task.status is not none %}<span class="text-{{ demo_task.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoTaskStatus')[demo_task.status] }}{% else %}-{% endif %}
@@ -125,7 +125,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group string-textarea">
                                 <label class="text-gray-700">任务详情</label>
                                 <div class="field-control">
                                     <div>{{ demo_task.content if demo_task.content is not none else '-' }}</div>
@@ -135,7 +135,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group date-date">
                                 <label class="text-gray-700">开始日期</label>
                                 <div class="field-control">
                                     {{ demo_task.start|date if demo_task.start is not none else '-' }}
@@ -143,7 +143,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group date-date">
                                 <label class="text-gray-700">结束日期</label>
                                 <div class="field-control">
                                     {{ demo_task.end|date if demo_task.end is not none else '-' }}
@@ -154,8 +154,8 @@
                     <div class="row">
                         <div class="col">
                             <div class="object relation" name="user" format="select">
-                                <div class="field-group ">
-                                    <label class="text-gray-700 ">负责人</label>
+                                <div class="field-group object-select relation">
+                                    <label class="text-gray-700">负责人</label>
                                     <div class="field-control">
                                         {% if demo_task.user %}
                                         <span class="font-size-base badge badge-soft-secondary mr-2">{{ demo_task.user.name if demo_task.user.name is not none }}</span>
@@ -169,7 +169,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group date-datetime">
                                 <label class="text-gray-700">创建时间</label>
                                 <div class="field-control">
                                     {{ demo_task.create_time|datetime if demo_task.create_time is not none else '-' }}

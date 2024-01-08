@@ -303,7 +303,7 @@
                             </ul>
                             <div class="modals">
                                 {% for activities_item in demo_project.activities + [new_model('DemoActivity')] %}
-                                <div class="modal fade {{ 'template' if loop.last }}" name="-" data-backdrop="static" data-keyboard="false">
+                                <div class="modal fade {{ 'template' if loop.last }}" name="-" data-backdrop="static" data-keyboard="false" tabindex="-1">
                                     <div class="modal-dialog modal-xl">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -319,7 +319,7 @@
                                                             <fieldset class="object relation" name="user" format="select">
                                                                 <div class="form-group object-select relation" name="@">
                                                                     <label class=""><span class="text-danger mr-1">*</span>操作人</label>
-                                                                    <select id="select2-{{ loop.index }}" class="custom-select select2" relation-id="id" relation-title="name" required>
+                                                                    <select class="custom-select select2" relation-id="id" relation-title="name" required>
                                                                         <option value="">__(Choose)...</option>
                                                                         {% for demo_user in demo_users %}
                                                                         <option value="{{ demo_user.id }}" {{ 'selected' if activities_item.user.id == demo_user.id }}>{{ demo_user.name }}</option>

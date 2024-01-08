@@ -19,7 +19,7 @@
                     <div class="card"><div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group string-text">
                                 <label class="text-gray-700">标题</label>
                                 <div class="field-control">
                                     {{ demo_post.title or '-' }}
@@ -29,7 +29,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group string-text">
                                 <label class="text-gray-700">副标题</label>
                                 <div class="field-control">
                                     {{ demo_post.subtitle or '-' }}
@@ -40,7 +40,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="array" name="tags" format="tag">
-                                <div class="field-group">
+                                <div class="field-group array-tag">
                                     <label class="text-gray-700">标签</label>
                                     <div class="field-control">
                                         {% for value in demo_post.tags %}
@@ -55,7 +55,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group string-image">
                                 <label class="text-gray-700">封面</label>
                                 <div class="field-control">
                                     <div class="gallery">
@@ -68,11 +68,12 @@
                                     {% endif %}
                                     </div>
                                 </div>
-                            </div>    </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group boolean-switch">
                                 <label class="text-gray-700">是否推荐</label>
                                 <div class="field-control">
                                     {{ '是' if demo_post.featured else '否' }}
@@ -82,7 +83,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
+                            <div class="field-group string-select">
                                 <label class="text-gray-700">状态</label>
                                 <div class="field-control">
                                     {% if demo_post.status is not none %}<span class="text-{{ demo_post.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoPostStatus')[demo_post.status] }}{% else %}-{% endif %}
@@ -98,8 +99,7 @@
                     <div class="card"><div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <div class="field-group">
-                                <label class="text-gray-700">正文</label>
+                            <div class="field-group string-rte">
                                 <div class="field-control">
                                     <div class="rte-display-group">
                                         {% set rte_id = 'rte_'~randstr() %}
