@@ -230,7 +230,8 @@ class DemoProject(CacheModel):
                 percent       
                 create_time   
               members                         
-                avatar, name     
+                avatar, name
+              files       
         ''',
         'www://demo/project-edit': '''#!upcreate?extends=layout-dash-demo&title=项目编辑
             1?title=项目基本信息

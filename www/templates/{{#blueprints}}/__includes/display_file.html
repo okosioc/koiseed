@@ -1,7 +1,28 @@
 {% if field_schema.type == 'object' %}
 <div class="field-control">
-    <a href="{{ '{{' }} {{ field_path }}.url {{ '}}' }}"><i class="fe fe-download mr-2"></i>{{ '{{' }} {{ field_path }}.name {{ '}}' }}</a>
+    <a href="{{ '{{' }} {{ field_path }}.url {{ '}}' }}" target="_blank"><i class="fe fe-download mr-2"></i>{{ '{{' }} {{ field_path }}.name {{ '}}' }}</a>
+</div>
+{% elif field_schema.type == 'array' %}
+<div class="field-control">
+    {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
+    {% if field_schema['items'].type == 'object' %}
+        {% set file_url = field_name~'_item.url' %}
+        {% set file_name = field_name~'_item.name' %}
+    {% else %}
+        {% set file_url = field_name~'_item' %}
+        {% set file_name = file_url~'|basename' %}
+    {% endif %}
+    <a href="{{ '{{' }} {{ file_url }} {{ '}}' }}" target="_blank"><i class="fe fe-download mr-2"></i>{{ '{{' }} {{ file_name }} {{ '}}' }}</a><br>
+    {{ '{% else %}' }}
+    -
+    {{ '{%' }} endfor {{ '%}' }}
 </div>
 {% else %}
-UNSUPPORTED! {{ field_schema.format }} format do not support {{ field_schema.type }}!
+<div class="field-control">
+    {{ '{% if' }} {{ field_path }} {{ '%}' }}
+    <a href="{{ '{{' }} {{ field_path }} {{ '}}' }}" target="_blank"><i class="fe fe-download mr-2"></i>{{ '{{' }} {{ field_path }}|basename {{ '}}' }}</a>
+    {{ '{% else %}' }}
+    -
+    {{ '{% endif %}' }}
+</div>
 {% endif %}
