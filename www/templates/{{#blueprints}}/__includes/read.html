@@ -6,7 +6,7 @@
     <div class="card"><div class="card-body">
     {% endif %}
     <div class="object" name="{{ model.name_snake }}">
-        {% filter right(8) %}{{ display_layout(model.name_snake, model.name_snake, model.schema, view.rows, view_is_card, true) }}{% endfilter %}
+        {% filter right(8) %}{{ render_layout(false, model.name_snake, model.name_snake, model.schema, view.rows, view_is_card, true) }}{% endfilter %}
     </div>
     {% if view_is_card %}
     </div></div>

@@ -15,7 +15,7 @@
                 </div>
                 <fieldset class="object" name="-">
                     {# grid is card, so is_in_card is true #}
-                    {% filter right(20) %}{{ render_layout('-', field_name+'_item', item_schema, field_layout, true) }}{% endfilter %}
+                    {% filter right(20) %}{{ render_layout(true, '-', field_name+'_item', item_schema, field_layout, true) }}{% endfilter %}
                 </fieldset>
             </div>
         </div>

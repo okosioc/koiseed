@@ -304,6 +304,8 @@ span.twitter-typeahead .tt-suggestion.tt-cursor {
     margin-bottom: 0;
 }
 
+.card > .table-responsive:last-child > .form-group,
+.card > .table-responsive:last-child > .field-group,
 .card > .table-responsive:last-child table {
     margin-bottom: 0;
 }
