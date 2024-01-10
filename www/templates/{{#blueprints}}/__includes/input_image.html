@@ -26,9 +26,9 @@
        data-upload="{{ '{{ upload_config.endpoint }}' }}"
        data-max="{{ '{{ upload_config.max }}' }}"
        data-preview='{"image":"{{ '{{' }} upload_config.image_preview {{ '}}' }}", "video":"{{ '{{' }} upload_config.video_poster {{ '}}' }}"}'
-       data-filters='{"mime_types":"{{ '{{' }} upload_config.mimes_image|join(", ") {{ '}}' }}"}'
+       data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ '{{' }} upload_config.image_exts|join(",") {{ '}}' }}"}]}'
        data-hiddens="{{ hiddens|join(',') }}">__(Choose Image)...</a>
-    <small class="mt-2 form-text text-muted">{{ '__(Support multiple uploads; )' if field_schema.type == 'array' }}__(Availabe formats: ){{ '{{' }} upload_config.mimes_image|join(', ') {{ '}}' }}</small>
+    <small class="mt-2 form-text text-muted">{{ '__(Support multiple uploads; )' if field_schema.type == 'array' }}__(Availabe formats: ){{ '{{' }} upload_config.image_exts|join('/') {{ '}}' }}</small>
     <div class="plupload-input-result image-input-result mt-1 clearfix">
     {% if field_schema.type == 'array' %}
     {% if field_schema['items'].type == 'object' %}

@@ -3,7 +3,7 @@
 {% set fields = field_layout|fields or item_schema['columns'] %}
 {% set title_field_name = fields|match('title|name|\\w*name') %}
 {% set excludes = namespace(value=[]) %}
-<table class="table table-striped {{ 'border-bottom mb1' if field_schema.is_back_relation and field_schema.ownership == 'own' }}">
+<table class="table table-striped{{ ' border-bottom mb1' if field_schema.is_back_relation and field_schema.ownership == 'own' }}">
     <thead>
         <tr>
             {% for field_name in fields %}

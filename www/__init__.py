@@ -122,6 +122,23 @@ def configure_uploads(app):
     elif is_qiniu:
         qiniu.init_app(app)
 
+    def get_exts(mimes, prefix=None):
+        """ Get exts from mimes. """
+        exts = []
+        for m in mimes:
+            # filter image/* or video/*, etc
+            if prefix and not m.startswith(prefix):
+                continue
+            # filter special mimes, e.g, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/svg+xml
+            # these mimes do not contain any ext
+            # however, we need to add invalid mimes with correct ext such as application/xlsx, so that file upload control in web page can select those files with .xlsx ext
+            if '.' in m or '-' in m or '+' in m:
+                continue
+            #
+            exts.append(m.split('/')[1])
+        #
+        return exts
+
     @app.context_processor
     def inject_upload_config():
         """ Can use upload_config directly in template. """
@@ -130,8 +147,11 @@ def configure_uploads(app):
         uc = {
             'endpoint': endpoint,
             'mimes': mimes,
-            'mimes_image': [m for m in mimes if m.startswith('image')],
-            'mimes_video': [m for m in mimes if m.startswith('video')],
+            'exts': get_exts(mimes),
+            'image_mimes': [m for m in mimes if m.startswith('image')],
+            'image_exts': get_exts(mimes, 'image'),
+            'video_mimes': [m for m in mimes if m.startswith('video')],
+            'video_exts': get_exts(mimes, 'video'),
             'max': f'{upload_max}mb',  # Config unit is megabyte
             'image_preview': app.config['UPLOAD_IMAGE_PREVIEW'],
             'avatar_preview': app.config['UPLOAD_AVATAR_PREVIEW'],

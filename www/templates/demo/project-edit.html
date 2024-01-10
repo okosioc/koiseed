@@ -248,9 +248,9 @@
                                                data-upload="{{ upload_config.endpoint }}"
                                                data-max="{{ upload_config.max }}"
                                                data-preview=''
-                                               data-filters='{"mime_types":"{{ upload_config.mimes|join(", ") }}"}'
+                                               data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ upload_config.exts|join(",") }}"}]}'
                                                data-hiddens="url">__(Choose File)...</a>
-                                            <small class="mt-2 form-text text-muted">__(Support multiple uploads; )__(Availabe formats: ){{ upload_config.mimes|join(', ') }}</small>
+                                            <small class="mt-2 form-text text-muted">__(Support multiple uploads; )__(Availabe formats: ){{ upload_config.exts|join('/') }}</small>
                                             <div class="plupload-input-result file-input-result mt-1 clearfix">
                                                 {% for e in demo_project.files %}
                                                 {% set file_obj = {'url': e } %}

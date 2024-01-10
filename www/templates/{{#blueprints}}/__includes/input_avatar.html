@@ -8,9 +8,9 @@ UNSUPPORTED! {{ field_schema.format }} format do not support {{ field_schema.typ
        data-max="{{ '{{ upload_config.max }}' }}"
        data-preview='{"image":"{{ '{{' }} upload_config.avatar_preview {{ '}}' }}","video":""}'
        data-suffix='{"image":"{{ '{{' }} upload_config.avatar_preview {{ '}}' }}","video":""}'
-       data-filters='{"mime_types":"{{ '{{' }} upload_config.mimes_image|join(", ") {{ '}}' }}"}'
+       data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ '{{' }} upload_config.image_exts|join(",") {{ '}}' }}"}]}'
        data-hiddens="url">__(Choose Image)...</a>
-    <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ '{{' }} upload_config.mimes_image|join(', ') {{ '}}' }}</small>
+    <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ '{{' }} upload_config.image_exts|join('/') {{ '}}' }}</small>
     <div class="plupload-input-result image-input-result mt-1 clearfix">
         {{ '{%' }} if {{ field_path }} {{ '%}' }}
         <div class="image uploaded" style="width: auto">

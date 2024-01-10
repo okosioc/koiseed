@@ -48,8 +48,10 @@ class QiniuSupport(object):
             # Config unit is megabyte
             'fsizeLimit': self.app.config['UPLOAD_MAX'] * 1024 * 1024,
             'mimeLimit': ';'.join(self.app.config['UPLOAD_MIMES']),
-            # Please keep ext in the last position because some callback/render logic depend on it
-            'saveKey': '${year}${mon}${day}/${etag}${ext}',
+            # Keep file name but may encounter name conflict
+            'saveKey': '${year}${mon}${day}${hour}${min}${sec}/${fname}',
+            # Use etag as file name, please note we need ext to get file extension
+            # 'saveKey': '${year}${mon}${day}/${etag}${ext}',
             'returnBody': '{'
                           '"etag":"${etag}",'
                           '"name":"${fname}",'

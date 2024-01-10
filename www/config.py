@@ -34,10 +34,16 @@ MONGODB_URI_PYTEST = 'mongodb://localhost:27017/pytest'
 # UPLOAD_BUCKET = 'koiseed'
 # UPLOAD_AK = 'FIXME'
 # UPLOAD_SK = 'FIXME'
-# UPLOAD_MIMES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif',
-#                 'video/quicktime', 'video/mp4', 'video/mpeg', 'video/webm',
-#                 'audio/mpeg', 'audio/x-wav', 'audio/webm',
-#                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
+# NOTE: we use some invalid mime types just for easy processing, e.g, image/jpg, application/xlsx etc
+# common mime types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+# UPLOAD_MIMES = [
+#     'image/jpg', 'image/jpeg', 'image/png', 'image/gif',
+#     'video/quicktime', 'video/mp4', 'video/mpeg', 'video/webm',
+#     'audio/mpeg', 'audio/wav', 'audio/webm',
+#     'application/pdf',
+#     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/xlsx', 'application/vnd.ms-excel', 'application/xls',
+#     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/docx', 'application/msword', 'application/doc',
+# ]
 # UPLOAD_MAX = 50
 # UPLOAD_IMAGE_PREVIEW = '?imageMogr2/thumbnail/x300'
 # UPLOAD_AVATAR_PREVIEW = '?imageView2/1/w/200/h/200'
@@ -45,10 +51,11 @@ MONGODB_URI_PYTEST = 'mongodb://localhost:27017/pytest'
 # Upload to Local
 UPLOAD_ENDPOINT = '/upload'
 UPLOAD_FOLDER = 'uploads'
-UPLOAD_MIMES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif',
-                'video/quicktime', 'video/mp4', 'video/mpeg', 'video/webm',
-                'audio/mpeg', 'audio/x-wav', 'audio/webm',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']
+UPLOAD_MIMES = [
+    'image/jpg', 'image/jpeg', 'image/png', 'image/gif',
+    'video/quicktime', 'video/mp4', 'video/mpeg', 'video/webm',
+    'audio/mpeg', 'audio/wav', 'audio/webm',
+]
 UPLOAD_MAX = 50
 # starts with _ means inject this thumbnail ops before file extension
 # e.g,

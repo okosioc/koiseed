@@ -3,6 +3,6 @@
     <div id="{{ '{{' }} rte_id {{ '}}' }}" class="editorjs"
          data-token="{{ '{{ upload_config.token }}' }}"
          data-upload="{{ '{{ upload_config.endpoint }}' }}"
-         data-types="{{ '{{ upload_config.mimes_image|join(", ") }}' }}"></div>
+         data-types="{{ '{{ upload_config.image_mimes|join(",") }}' }}"></div>
     <input type="hidden" value="{{ '{{' }} {{ field_path }} or '' {{ '}}' }}"/>
 </div>

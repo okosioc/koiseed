@@ -49,7 +49,7 @@
 {# simple types #}
 {% else %}
 {% if field_schema.format in ['int', 'float'] %}
-{{ '{{' }} {{ field_path }}|commas if {{ field_path }} is not none else '-' {{ '}}' }} {{ '%' if field_schema.unit == '%' }}
+{{ '{{' }} {{ field_path }}|commas if {{ field_path }} is not none else '-' {{ '}}' }}{{ ' %' if field_schema.unit == '%' }}
 {% elif field_schema.format in ['switch'] %}
 {{ '{{' }} '是' if {{ field_path }} else '否' {{ '}}' }}
 {% elif field_schema.format in ['datetime'] %}
