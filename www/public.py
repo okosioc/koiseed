@@ -513,7 +513,7 @@ def posts():
     current_app.logger.info(f'Try to search post by {condition}, sort by {sort}')
     posts_, pagination = Post.search(condition, page, per_page=9, sort=sort)
     #
-    return render_template('public/posts.html', search=search, pagination=pagination, posts=posts_, tags=POST_TAGS)
+    return render_template('public/posts.html', search=search, pagination=pagination, result_posts=posts_, tags=POST_TAGS)
 
 
 @public.route('/post')

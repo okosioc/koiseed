@@ -4,20 +4,20 @@
 {# - 客户的称赞 #}
 {# - 便宜的价格 #}
 {# - 常见的问题 #}
-{% set blocks = [
+{% set blocks = action or [
     {
         'title': '我们的客户',
         'subtitle': '客户的认可是我们前进的动力',
         'children':[
             {
-                'icon': '/static/img/koiplan-logo.png',
+                'icon': '/static/img/demo/koiplan-logo.png',
                 'title': '锦鲤规划',
                 'subtitle': 'Simon Hong',
                 'image': '/static/landkit/assets/img/photos/photo-1.jpg',
                 'content': '定义完数据结构后，即可生成一个完整可用的种子项目，使得我们可以专注于业务逻辑进行开发，不愧为AI时代的低代码平台。',
             },
             {
-                'title': '锦鲤模特',
+                'title': '锦鲤模型',
                 'subtitle': 'Samuel Feng',
                 'image': '/static/landkit/assets/img/photos/photo-26.jpg',
                 'content': '快速的生成项目，方便的二次开发；更改数据结构后往往需要重新生成代码，平台通过一个自动合并的机制实现了代码生成与定制开发的平衡。',

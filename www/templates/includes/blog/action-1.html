@@ -1,7 +1,9 @@
-{% set block = {
-  'title': 'Get our stories delivered',
-  'subtitle': 'From us to your inbox weekly.',
-} %}
+{% set blocks = action or [
+    {
+      'title': 'Get our stories delivered',
+      'subtitle': 'From us to your inbox weekly.',
+    },
+] %}
 <div class="position-relative">
     <div class="shape shape-bottom shape-fluid-x svg-shim text-gray-200">
         <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -9,6 +11,7 @@
         </svg>
     </div>
 </div>
+{% set block = blocks[0] %}
 <section class="pt-6 pt-md-8 bg-gray-200">
     <div class="container pb-6 pb-md-8 border-bottom border-gray-300">
         <div class="row align-items-center">

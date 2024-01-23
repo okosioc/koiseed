@@ -1,6 +1,7 @@
 {# 用于文章查询页面, 以整齐的网格布局列举出相关文章, 支持翻页 #}
-{# 需要传入posts和pagination参数 #}
+{# 需要传入result_posts和pagination参数 #}
 {# 包含搜索框, 需要传入tags参数 #}
+{% set posts = result_posts or [] %}
 <nav class="bg-gray-200">
     <div class="container">
         <div class="row">
