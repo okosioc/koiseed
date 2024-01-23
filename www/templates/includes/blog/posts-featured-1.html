@@ -1,6 +1,6 @@
 {# 用于在博客首页显示热门文章 #}
-{# 需要传入featured_posts参数 #}
-{% set posts = featured_posts or [] %}
+{# 需要传入posts_featured参数 #}
+{% set posts = posts_featured or [] %}
 <section class="pt-7 pt-md-10">
     <div class="container">
         {% for post in posts %}

@@ -500,9 +500,9 @@ def upload_file():
 @public.route('/blog')
 def blog():
     """ 博客首页. """
-    featured_posts = list(Post.find({'status': PostStatus.PUBLISHED, 'featured': True}, sort=[('publish_time', -1)], limit=5))
-    lastest_posts = list(Post.find({'status': PostStatus.PUBLISHED}, sort=[('publish_time', -1)], limit=5))
-    return render_template('public/blog.html', featured_posts=featured_posts, lastest_posts=lastest_posts, tags=POST_TAGS)
+    posts_featured = list(Post.find({'status': PostStatus.PUBLISHED, 'featured': True}, sort=[('publish_time', -1)], limit=5))
+    posts_lastest = list(Post.find({'status': PostStatus.PUBLISHED}, sort=[('publish_time', -1)], limit=5))
+    return render_template('public/blog.html', posts_featured=posts_featured, posts_lastest=posts_lastest, tags=POST_TAGS)
 
 
 @public.route('/posts')
@@ -511,9 +511,9 @@ def posts():
     page, sort = request.args.get('p', 1, lambda x: int(x) if x.isdigit() else 1), [('create_time', -1)]
     search, condition = populate_search(request.args, Post)
     current_app.logger.info(f'Try to search post by {condition}, sort by {sort}')
-    posts_, pagination = Post.search(condition, page, per_page=9, sort=sort)
+    posts_result, pagination = Post.search(condition, page, per_page=9, sort=sort)
     #
-    return render_template('public/posts.html', search=search, pagination=pagination, result_posts=posts_, tags=POST_TAGS)
+    return render_template('public/posts.html', search=search, pagination=pagination, posts_result=posts_result, tags=POST_TAGS)
 
 
 @public.route('/post')
