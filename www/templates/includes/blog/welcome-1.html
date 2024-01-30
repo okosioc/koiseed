@@ -1,16 +1,13 @@
 {# 博客首页的欢迎板块 #}
 {# 包含搜索框, 需要传入tags参数 #}
-{% set blocks = hero or [
-    {
-        'title': 'Blog',
-        'subtitle': 'Keep up to date with what we\'re working on!',
-        'image': '/static/landkit/assets/img/covers/cover-13.jpg',
-        'tags': [
-            'Design', 'Product', 'UX', 'Resources',
-        ],
-    },
-] %}
-{% set block = blocks[0] %}
+{% set block = {
+    'title': 'Blog',
+    'subtitle': 'Keep up to date with what we\'re working on!',
+    'image': '/static/landkit/assets/img/covers/cover-13.jpg',
+    'tags': [
+        'Design', 'Product', 'UX', 'Resources',
+    ],
+} %}
 <section data-jarallax data-speed=".8" class="py-10 py-md-14 overlay overlay-black overlay-60 bg-cover jarallax"
          style="background-image: url({{ block.image }});">
     <div class="container">

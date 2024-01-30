@@ -1,0 +1,77 @@
+{% set intro = {
+    'children': [
+        {
+            'key': 'about',
+            'title': 'Powerful metrics to better understand your business.',
+            'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula auctor ornare. Nulla non ullamcorper tellus. Vestibulum pulvinar eros nec tortor maximus, iaculis rutrum nibh mollis.',
+            'images': [
+                '/static/landkit/assets/img/screenshots/ui/analytics-2.png',
+                '/static/landkit/assets/img/screenshots/ui/analytics-1.png',
+                '/static/landkit/assets/img/screenshots/ui/analytics-3.png',
+            ],
+        },
+        {
+            'key': 'access',
+            'title': 'Universal access to your data is one of our core values.',
+            'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula auctor ornare. Nulla non ullamcorper tellus.',
+            'action': {
+                'url': 'comming();',
+                'title': 'Go',
+            }
+        }
+    ],
+} %}
+{% set block = intro.children[0] %}
+<section class="pt-8 pt-md-11 bg-gray-200">
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-12 col-md-6 col-lg-5 order-md-2">
+                <div class="d-flex flex-column w-md-130 mb-6 mb-md-0">
+                    <img class="img-fluid rounded shadow align-self-start" data-jarallax-element="-20"
+                         src="{{ block.images[0] }}" alt="..."
+                         style="min-height: 1px; max-width: 50%; margin-left: 40%;">
+                    <img class="img-fluid rounded shadow align-self-start" data-jarallax-element="-50"
+                         src="{{ block.images[1] }}" alt="..."
+                         style="min-height: 1px; max-width: 50%; margin-top: -35%;">
+                    <img class=" img-fluid rounded shadow align-self-center" data-jarallax-element="-80"
+                         src="{{ block.images[2] }}" alt="..."
+                         style="min-height: 1px; max-width: 50%; margin-top: -20%;">
+                </div>
+            </div>
+            <div class="col-12 col-md-6 order-md-1 pt-md-12">
+                <h1>{{ block.title }}</h1>
+                <p class="font-size-lg text-gray-700 mb-6">{{ block.content }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% set block = intro.children[1] %}
+<section class="py-8 py-md-11 bg-gray-200">
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-12 col-md-6 img-skewed img-skewed-right">
+                <div class="card rounded-lg bg-black mb-6 mb-md-0 img-skewed-item screenshot">
+                    <div class="card-header border-white-10">
+                        <div class="d-flex">
+                            <span class="bg-danger rounded-circle" style="width: 10px; height: 10px;"></span>
+                            <span class="bg-warning rounded-circle ml-1" style="width: 10px; height: 10px;"></span>
+                            <span class="bg-success rounded-circle ml-1" style="width: 10px; height: 10px;"></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <code class="highlight" data-toggle="typed"
+                              data-options='{"backSpeed":2, "strings": ["&gt;&nbsp;$&nbsp;npm&nbsp;install<br/><span class=\"text-success\">Everything&nbsp;is&nbsp;installed</span><br/><br/>&gt;&nbsp;$&nbsp;gulp<br/><span class=\"text-success\">scss&nbsp;watching</span><br/><span class=\"text-success\">LiveReload&nbsp;started</span><br/><span class=\"text-success\">Opening&nbsp;localhost:3000</span><br/><br/>&gt;&nbsp;$&nbsp;that&#x2019;s&nbsp;it<br/><span class=\"text-success\">Yup,&nbsp;that&#x2019;s&nbsp;it.</span>"]}'
+                              style="min-height: 183px;"></code>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-5">
+                <h2>{{ block.title }}</h2>
+                <p class="font-size-lg text-gray-700">{{ block.content }}</p>
+                <a class="font-weight-bold text-decoration-none" href="{{ block.action.url }}">
+                    {{ block.action.title }} <i class="fe fe-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

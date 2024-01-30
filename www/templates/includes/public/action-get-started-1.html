@@ -1,0 +1,38 @@
+{# cta = call to action, 引导用户采取行动, 如, get started, check it out, get the app now, buy it now #}
+{% set block = {
+    'tag': 'Get Started',
+    'title': '立即开始',
+    'subtitle': '不要再浪费时间尝试从复杂的框架开始，而是从数据本源和种子项目开始构建您的业务，更快、更简单、且您仍然拥有完全的控制权',
+    'action': {
+        'title': '免费使用',
+        'url': '/dashboard',
+        'cls': 'success',
+    },
+} %}
+<div class="position-relative mt-n15">
+    <div class="shape shape-bottom shape-fluid-x svg-shim text-dark">
+        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"></path>
+        </svg>
+    </div>
+</div>
+<section class="pt-15 pb-8 bg-dark">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8 text-center">
+                <span class="badge badge-pill badge-gray-700-soft mb-4">
+                    <span class="h6 font-weight-bold text-uppercase">{{ block.tag }}</span>
+                </span>
+                <h1 class="text-white">
+                    {{ block.title }}
+                </h1>
+                <p class="font-size-lg text-muted mb-6 mb-md-8">
+                    {{ block.subtitle }}
+                </p>
+                <a href="{{ block.action.url }}" class="btn btn-{{ block.action.cls }} lift">
+                    {{ block.action.title }} <i class="fe fe-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
