@@ -1,0 +1,66 @@
+{% set block = {
+  'tag': 'Unified',
+  'title': 'Replace your microservices <br><span class="text-success">with one simple app</span>.',
+  'content': 'Using our single innovative platform you can remove all your communication dependencies and the messy rat\'s nest of email, calls, texts, wikis, and apps you currently have.',
+  'children': [
+    {
+      'title': 'Unlimited users. One price.',
+      'content': 'We don\'t charge per seat, just per service.'
+    },
+    {
+      'title': 'Guaranteed 100% uptime',
+      'content': 'Our server network never goes down.'
+    },
+    {
+      'title': 'Lifetime storage *',
+      'content': 'We store all your data forever. No extra charge.'
+    },
+    {
+      'title': '256-bit encryption',
+      'content': 'Keep your communication and data safe.'
+    }
+  ]
+} %}
+<section class="py-8 py-md-11 border-top">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6 col-lg-5" data-aos="fade-up">
+        <span class="badge badge-pill badge-success-soft mb-3">
+          <span class="h6 text-uppercase">{{ block.tag }}</span>
+        </span>
+                <h2 class="font-weight-bold">
+                    {{ block.title | safe }}
+                </h2>
+                <p class="font-size-lg text-gray-700">
+                    {{ block.content }}
+                </p>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 offset-lg-1">
+                <div class="card card-border border-success shadow-lg mb-5" data-aos="fade-up">
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            {% for child in block.children %}
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="mr-auto">
+                                        <p class="font-weight-bold mb-1">
+                                            {{ child.title }}
+                                        </p>
+                                        <p class="font-size-sm text-muted mb-0">
+                                            {{ child.content }}
+                                        </p>
+                                    </div>
+                                    <div class="badge badge-rounded-circle badge-success-soft ml-4">
+                                        <i class="fe fe-check"></i>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <p class="font-size-sm text-center text-gray-500 mb-0">
+                    * Limited to the life of the company
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

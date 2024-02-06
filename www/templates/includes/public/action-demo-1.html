@@ -1,0 +1,69 @@
+{% set block = {
+    'title': 'Schedule a demo with us',
+    'subtitle': '',
+    'content': 'We can help you solve company communication.',
+    'image': '/static/landkit/assets/img/illustrations/illustration-1.png',
+    'action': {
+        'title': 'Request a demo',
+        'url': '#',
+        'cls': 'btn btn-block btn-primary mt-3 lift',
+    },
+} %}
+<section class="py-8 py-md-11 border-top">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="card card-border border-primary shadow-light-lg" data-jarallax-element="-40">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-xl-11">
+                                <div class="text-center">
+                                    <img src="{{ block.image }}" alt="..." class="img-fluid mb-3" style="width: 200px;">
+                                </div>
+                                <h2 class="font-weight-bold text-center mb-1">
+                                    {{ block.title }}
+                                </h2>
+                                <p class="font-size-lg text-center text-muted mb-6 mb-md-8">
+                                    {{ block.content }}
+                                </p>
+                                <form>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-label-group">
+                                                <input type="text" class="form-control form-control-flush"
+                                                       id="input-demo-name" placeholder="Name">
+                                                <label for="input-demo-name">Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-label-group">
+                                                <input type="email" class="form-control form-control-flush"
+                                                       id="input-demo-email" placeholder="Email">
+                                                <label for="input-demo-email">Email</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button type="button" class="{{ block.action.cls }}" onclick="coming();">
+                                                {{ block.action.title }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="position-relative mt-n16">
+    <div class="shape shape-bottom shape-fluid-x svg-shim text-dark">
+        <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+        </svg>
+    </div>
+</div>
+<div class="pt-16 bg-dark"></div>

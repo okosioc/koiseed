@@ -45,6 +45,7 @@ class Block(MongoModel):
     subtitle: str = Field(required=False, title='子标题')
     content: str = Field(required=False, format_=Format.TEXTAREA, title='内容')
     remarks: str = Field(required=False, title='备注')
+    author: str = Field(required=False, title='作者')
     #
     image: str = Field(required=False, format_=Format.IMAGE, title='图片')
     images: List[str] = Field(required=False, format_=Format.IMAGE, title='图片列表')
@@ -56,6 +57,7 @@ class Block(MongoModel):
     hide: bool = Field(default=False, title='是否隐藏')  # 默认显示
     url: str = Field(required=False, title='转跳地址')
     cls: str = Field(required=False, title='样式')
+    color: str = Field(required=False, title='颜色')
     role: str = Field(required=False, title='角色', description='能访问此版块的角色')
     action: Action = Field(required=False, title='动作')
     actions: List[Action] = Field(required=False, title='动作列表')

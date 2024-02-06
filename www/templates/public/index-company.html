@@ -1,0 +1,9 @@
+{% extends "layout-public-demo.html" %}
+{% set title = _('Index') %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% include 'includes/public/welcome-2.html' %}
+    {% include 'includes/public/intro-2.html' %}
+    {% include 'includes/public/testimonial-2.html' %}
+    {% include 'includes/public/action-get-started-2.html' %}
+{% endblock %}

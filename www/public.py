@@ -38,6 +38,18 @@ def index():
     return render_template('public/index.html')
 
 
+@public.route('/index-company')
+def index_company():
+    """ Index company page. """
+    return render_template('public/index-company.html')
+
+@public.route('/index-service')
+def index_service():
+    """ Index service page. """
+    return render_template('public/index-service.html')
+
+
+
 @public.route('/400')
 @public.route('/403')
 @public.route('/404')
