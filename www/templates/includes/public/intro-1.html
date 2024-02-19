@@ -1,34 +1,17 @@
-{# 各子版块的布局会相互影响, 如下 #}
+{# 各子版块的布局会相互影响 #}
 {# - 第一个板块图片在左, 那么第二个板块为了视觉上的平衡就会把图片放在右边 #}
 {# - 会在版块前后增加修饰, 如弧形曲线以形成视觉上的连贯效果 #}
-{% set intro = {
+{% set block = {
+    'tag': 'DATA',
+    'title': '数据优先',
+    'subtitle': '数据结构决定了整个项目的业务逻辑，可配合项目模板生成种子项目。',
+    'image': '/static/landkit/assets/img/illustrations/illustration-8.png',
     'children': [
-        {
-            'tag': 'DATA',
-            'title': '数据优先',
-            'subtitle': '数据结构决定了整个项目的业务逻辑，可配合项目模板生成种子项目。',
-            'image': '/static/landkit/assets/img/illustrations/illustration-8.png',
-            'children': [
-                {'title': '支持复杂数据结构', 'subtitle': '通过优雅的方式支持数据结构之间的嵌套和关联，从而能够实现复杂的业务逻辑'},
-                {'title': '支持主流数据库', 'subtitle': '支持内存以及主流数据库，包含MySQL以及MongoDB等'},
-                {'title': '通过视图定义逻辑', 'subtitle': '定义数据结构的视图，可配合项目模版生成业务逻辑代码'}
-            ],
-        },
-        {
-            'tag': 'TEMPLATE',
-            'title': '项目模板',
-            'subtitle': '可根据数据结构及其视图快速生成多个平台的种子项目，如网站、小程序、iOS和Android应用等；该种子项目符合最佳实践，代码规范且易于维护；通过自动合并的机制实现了代码生成与定制开发的平衡。',
-            'image': '/static/landkit/assets/img/illustrations/illustration-7.png',
-            'children': [
-                {'title': '跨平台'},
-                {'title': '专业的模板'},
-                {'title': '完备的组件'},
-                {'title': '方便的定制'},
-            ],
-        },
+        {'title': '支持复杂数据结构', 'subtitle': '通过优雅的方式支持数据结构之间的嵌套和关联，从而能够实现复杂的业务逻辑'},
+        {'title': '支持主流数据库', 'subtitle': '支持内存以及主流数据库，包含MySQL以及MongoDB等'},
+        {'title': '通过视图定义逻辑', 'subtitle': '定义数据结构的视图，可配合项目模版生成业务逻辑代码'}
     ],
 } %}
-{% set block = intro.children[0] %}
 <section class="pt-8 pt-md-11 border-top">
     <div class="container">
         <div class="row justify-content-center">
@@ -71,7 +54,18 @@
         </div>
     </div>
 </section>
-{% set block = intro.children[1] %}
+{% set block = {
+    'tag': 'TEMPLATE',
+    'title': '项目模板',
+    'subtitle': '可根据数据结构及其视图快速生成多个平台的种子项目，如网站、小程序、iOS和Android应用等；该种子项目符合最佳实践，代码规范且易于维护；通过自动合并的机制实现了代码生成与定制开发的平衡。',
+    'image': '/static/landkit/assets/img/illustrations/illustration-7.png',
+    'children': [
+        {'title': '跨平台'},
+        {'title': '专业的模板'},
+        {'title': '完备的组件'},
+        {'title': '方便的定制'},
+    ],
+} %}
 <section class="py-8 py-md-11">
     <div class="container">
         <div class="row align-items-center">

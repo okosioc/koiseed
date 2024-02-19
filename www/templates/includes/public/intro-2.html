@@ -1,25 +1,12 @@
-{% set intro = {
-    'children': [
-        {
-            'title': 'Powerful metrics to better understand your business.',
-            'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula auctor ornare. Nulla non ullamcorper tellus. Vestibulum pulvinar eros nec tortor maximus, iaculis rutrum nibh mollis.',
-            'images': [
-                '/static/landkit/assets/img/screenshots/ui/analytics-2.png',
-                '/static/landkit/assets/img/screenshots/ui/analytics-1.png',
-                '/static/landkit/assets/img/screenshots/ui/analytics-3.png',
-            ],
-        },
-        {
-            'title': 'Universal access to your data is one of our core values.',
-            'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula auctor ornare. Nulla non ullamcorper tellus.',
-            'action': {
-                'url': 'comming();',
-                'title': 'Go',
-            }
-        }
+{% set block = {
+    'title': 'Powerful metrics to better understand your business.',
+    'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula auctor ornare. Nulla non ullamcorper tellus. Vestibulum pulvinar eros nec tortor maximus, iaculis rutrum nibh mollis.',
+    'images': [
+        '/static/landkit/assets/img/screenshots/ui/analytics-2.png',
+        '/static/landkit/assets/img/screenshots/ui/analytics-1.png',
+        '/static/landkit/assets/img/screenshots/ui/analytics-3.png',
     ],
 } %}
-{% set block = intro.children[0] %}
 <section class="pt-8 pt-md-11 bg-gray-200">
     <div class="container">
         <div class="row justify-content-between align-items-center">
@@ -43,7 +30,14 @@
         </div>
     </div>
 </section>
-{% set block = intro.children[1] %}
+{% set block = {
+    'title': 'Universal access to your data is one of our core values.',
+    'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula auctor ornare. Nulla non ullamcorper tellus.',
+    'action': {
+        'url': 'comming();',
+        'title': 'Go',
+    }
+} %}
 <section class="py-8 py-md-11 bg-gray-200">
     <div class="container">
         <div class="row justify-content-between align-items-center">

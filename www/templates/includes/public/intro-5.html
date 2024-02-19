@@ -1,0 +1,59 @@
+{% set block = {
+    'title': 'Show your friends and family where you\'ve been.',
+    'content': 'Staying connected while traveling can be tough, but Landkit makes it easy by automatically sharing your experiences.',
+    'button': {
+        'text': 'Learn more',
+        'url': '#!'
+    },
+    'images': [
+        '/static/landkit/assets/img/photos/photo-23.jpg',
+        '/static/landkit/assets/img/photos/photo-25.jpg',
+        '/static/landkit/assets/img/photos/photo-22.jpg',
+        '/static/landkit/assets/img/photos/photo-24.jpg'
+    ]
+} %}
+<section class="pt-8 pt-md-11">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-12 col-md-6 mb-5 mb-md-0">
+                <div class="row">
+                    <div class="col-6 mr-n5">
+                        <img src="{{ block.images[0] }}" alt="..." class="img-fluid mb-4 rounded"
+                             data-aos="fade-right" data-aos-delay="100">
+                        <img src="{{ block.images[1] }}" alt="..." class="img-fluid rounded"
+                             data-aos="fade-right" data-aos-delay="150">
+                    </div>
+                    <div class="col-6 mt-8">
+                        <img src="{{ block.images[2] }}" alt="..." class="img-fluid mb-4 rounded"
+                             data-aos="fade-right">
+                        <img src="{{ block.images[3] }}" alt="..." class="img-fluid rounded"
+                             data-aos="fade-right" data-aos-delay="50">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-5" data-aos="fade-left">
+                <h2 class="font-weight-bold">{{ block.title }}</h2>
+                <p class="font-size-lg text-muted mb-4">{{ block.content }}</p>
+                <a href="{{ block.button.url }}" class="btn btn-primary">{{ block.button.text }}</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% set block = {
+    'title': 'Use your phone number so you\'re easy to find.',
+    'content': 'Landkit uses your phone number for your account instead of an email or username so you\'re super easy to find for all your friends.',
+    'image': '/static/landkit/assets/img/screenshots/ui/mobile-chat.png'
+} %}
+<section class="py-8 py-md-11">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-12 col-md-6 col-lg-7 order-md-2">
+                <img src="{{ block.image }}" alt="..." class="img-fluid mb-6 mb-md-8 mb-md-0" data-aos="fade-left">
+            </div>
+            <div class="col-12 col-md-6 col-lg-5 order-md-1" data-aos="fade-right">
+                <h2 class="font-weight-bold">{{ block.title }}</h2>
+                <p class="font-size-lg text-muted mb-0">{{ block.content }}</p>
+            </div>
+        </div>
+    </div>
+</section>
