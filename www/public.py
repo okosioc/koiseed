@@ -43,11 +43,23 @@ def index_company():
     """ Index company page. """
     return render_template('public/index-company.html')
 
+
 @public.route('/index-service')
 def index_service():
     """ Index service page. """
     return render_template('public/index-service.html')
 
+
+@public.route('/index-desktop')
+def index_desktop():
+    """ Index desktop page. """
+    return render_template('public/index-desktop.html')
+
+
+@public.route('/index-mobile')
+def index_mobile():
+    """ Index mobile page. """
+    return render_template('public/index-mobile.html')
 
 
 @public.route('/400')

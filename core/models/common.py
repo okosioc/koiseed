@@ -50,8 +50,8 @@ class Block(MongoModel):
     image: str = Field(required=False, format_=Format.IMAGE, title='图片')
     images: List[str] = Field(required=False, format_=Format.IMAGE, title='图片列表')
     #
-    value: float = Field(required=False, title='数值')
-    values: List[float] = Field(required=False, title='数值列表')
+    val: float = Field(required=False, title='数值')
+    vals: List[float] = Field(required=False, title='数值列表')
     unit: str = Field(required=False, title='单位')
     #
     hide: bool = Field(default=False, title='是否隐藏')  # 默认显示
