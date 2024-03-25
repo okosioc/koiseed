@@ -35,7 +35,7 @@ public = Blueprint('public', __name__, url_prefix='')
 @public.route('/index')
 def index():
     """ Index page. """
-    return render_template('public/index.html')
+    return render_template('public/index.html', design=request.values.get('design'))
 
 
 @public.route('/index-company')

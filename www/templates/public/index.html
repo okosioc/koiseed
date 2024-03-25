@@ -2,9 +2,6 @@
 {% set title = _('Index') %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-    {% include 'includes/public/welcome-1.html' %}
-    {% include 'includes/public/intro-1.html' %}
-    {% include 'includes/public/testimonial-1.html' %}
-    {% include 'includes/public/price-1.html' %}
-    {% include 'includes/public/action-get-started-1.html' %}
+    {% set design = design or 'basic' %}
+    {% include 'includes/landkit/index-'~design~'.html' %}
 {% endblock %}

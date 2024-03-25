@@ -46,6 +46,7 @@ class Block(MongoModel):
     content: str = Field(required=False, format_=Format.TEXTAREA, title='内容')
     remarks: str = Field(required=False, title='备注')
     author: str = Field(required=False, title='作者')
+    avatar: str = Field(required=False, title='头像')
     #
     image: str = Field(required=False, format_=Format.IMAGE, title='图片')
     images: List[str] = Field(required=False, format_=Format.IMAGE, title='图片列表')

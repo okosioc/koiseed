@@ -39,7 +39,7 @@
             'children': [
                 {'title': 'Landings', 'url': '#!', 'children': [
                     {'title': 'Basic', 'url': '/index'},
-                    {'title': 'Company', 'url': '/index-company'},
+                    {'title': 'Company', 'url': '/index?design=company'},
                     {'title': 'Service', 'url': '/index-service'},
                     {'title': 'Desktop App', 'url': '/index-desktop'},
                     {'title': 'Mobile App', 'url': '/index-mobile'},
@@ -89,7 +89,7 @@
         },
     ],
 } %}
-<nav class="navbar navbar-expand-lg {{ navbar_class or 'navbar-light bg-white border-bottom' }}">
+<nav class="navbar navbar-expand-lg navbar-light border-bottom">
     <div class="container">
         <a class="navbar-brand" href="{{ nav.url }}">
             {% if nav.icon %}
@@ -322,14 +322,14 @@
         },
     ],
 } %}
-<footer class="py-8 py-md-11 {{ footer_class or 'bg-dark border-top border-gray-800-50' }}">
+<footer class="py-8 py-md-11">
     <div class="container">
         <div class="row">
             <div class="col-12 col-md">
                 {% if footer.image %}
                     <img src="./assets/img/brand.svg" alt="..." class="footer-brand img-fluid mb-2">
                 {% else %}
-                    <h3 class="{{ 'text-dark' if footer_class else 'text-white' }} mb-2">{{ footer.title }}</h3>
+                    <h3 class="text-dark mb-2">{{ footer.title }}</h3>
                 {% endif %}
                 <p class="text-gray-700 mb-2">
                     {{ footer.subtitle }}
