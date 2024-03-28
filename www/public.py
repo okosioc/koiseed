@@ -525,8 +525,8 @@ def upload_file():
 def blog():
     """ 博客首页. """
     posts_featured = list(Post.find({'status': PostStatus.PUBLISHED, 'featured': True}, sort=[('publish_time', -1)], limit=5))
-    posts_lastest = list(Post.find({'status': PostStatus.PUBLISHED}, sort=[('publish_time', -1)], limit=5))
-    return render_template('public/blog.html', posts_featured=posts_featured, posts_lastest=posts_lastest, tags=POST_TAGS)
+    posts_latest = list(Post.find({'status': PostStatus.PUBLISHED}, sort=[('publish_time', -1)], limit=5))
+    return render_template('public/blog.html', posts_featured=posts_featured, posts_latest=posts_latest, tags=POST_TAGS)
 
 
 @public.route('/posts')

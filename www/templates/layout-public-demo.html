@@ -40,9 +40,9 @@
                 {'title': 'Landings', 'url': '#!', 'children': [
                     {'title': 'Basic', 'url': '/index'},
                     {'title': 'Company', 'url': '/index?design=company'},
-                    {'title': 'Service', 'url': '/index-service'},
-                    {'title': 'Desktop App', 'url': '/index-desktop'},
-                    {'title': 'Mobile App', 'url': '/index-mobile'},
+                    {'title': 'Service', 'url': '/index?design=service'},
+                    {'title': 'Desktop App', 'url': '/index?design=desktop'},
+                    {'title': 'Mobile App', 'url': '/index?design=mobile'},
                 ]},
                 {'title': 'Shops', 'url': '#!', 'children': [
                     {'title': 'Classic', 'url': '/shop/index'},
@@ -295,7 +295,7 @@
 {# footer #}
 {% set footer = {
     'title': 'KoiSeed',
-    'subtitle': '数据结构+项目模板=种子项目',
+    'subtitle': '基于数据结构及其视图，快速生成跨平台的种子项目',
     'remarks': '2024 © koiseed.com',
     'actions': [
         {'url':'#!', 'image': '/static/landkit/assets/img/icons/social/instagram.svg'},
