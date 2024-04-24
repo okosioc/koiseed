@@ -26,7 +26,7 @@ from wtforms.validators import DataRequired, Email, EqualTo, Regexp
 from py3seed import populate_search
 
 from core.models import User, UserStatus, UserRole, POST_TAGS, PostStatus, Post
-from www.commons import get_id, send_service_mail, auth_permission, generate_image_preview, generate_video_poster
+from www.commons import get_id, send_service_mail, auth_permission, generate_image_preview, generate_video_poster, render_template_with_page
 
 public = Blueprint('public', __name__, url_prefix='')
 
@@ -36,6 +36,12 @@ public = Blueprint('public', __name__, url_prefix='')
 def index():
     """ Index page. """
     return render_template('public/index.html', design=request.values.get('design'))
+
+
+@public.route('/index-basic')
+def index_basic():
+    """ Index basic page. """
+    return render_template_with_page('pub-demo/index-basic.html')
 
 
 @public.route('/index-company')

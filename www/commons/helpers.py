@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 from typing import Type
 from PIL import Image
 
-from flask import abort, request, current_app
+from flask import abort, request, current_app, render_template
 from flask_babel import gettext, ngettext
 
 
@@ -106,6 +106,23 @@ def get_id(type_: Type):
             abort(400)
     #
     return id_
+
+
+def render_template_with_page(name: str, **context):
+    """ Try to render template with name, using the json page content at the same folder, e.g, pub-demo/index-basic.html with pub-demo/index-basic.json.
+
+    The page content is a json file, which contains predefined blocks, e.g, hero, intro, test, price, action etc.
+
+    NOTE: a page param is added to context, so please do not use a page param in your context.
+    """
+    page_path = os.path.join(current_app.root_path, current_app.template_folder, name.replace(os.path.splitext(name)[1], '.json'))
+    if not os.path.exists(page_path):
+        abort(500)
+    #
+    with open(page_path, encoding="utf8") as page_file:
+        page = json.load(page_file)
+    #
+    return render_template(name, page=page, **context)
 
 
 def generate_image_preview(path, ops=None):
