@@ -1,4 +1,4 @@
-""" demo module. """
+""" dash-demo module. """
 import os
 import re
 
@@ -9,13 +9,18 @@ from flask import Blueprint, render_template, current_app, redirect, request, ab
 from flask_login import current_user
 from py3seed import populate_model, populate_search
 
-from core.models import DemoPost, DemoPostStatus, DemoUser, DemoProject, DemoTask, DemoProjectDashboard, DemoTeam
-from www.commons import get_id, auth_permission, admin_permission, json_dumps, prepare_demo_data
+from core.models import DemoPost, DemoUser, DemoProject, DemoTask, DemoProjectDashboard, DemoTeam
+from www.commons import get_id, auth_permission, admin_permission, json_dumps
 
-demo = Blueprint('demo', __name__, url_prefix='/demo')
+from core.models import DemoPostStatus
+from www.commons import prepare_demo_data
+
+dash_demo = Blueprint('dash-demo', __name__, url_prefix='/dash-demo')
+
+prepare_demo_data()
 
 
-@demo.route('/post-list')
+@dash_demo.route('/post-list')
 @auth_permission
 def post_list():
     """ 文章列表. """
@@ -24,11 +29,11 @@ def post_list():
     current_app.logger.info(f'Try to search demo post by {condition}, sort by {sort}')
     demo_posts, pagination = DemoPost.search(condition, page, sort=sort)
     #
-    return render_template('demo/post-list.html',
+    return render_template('dash-demo/post-list.html',
                            search=search, pagination=pagination, demo_posts=demo_posts)
 
 
-@demo.route('/post-edit')
+@dash_demo.route('/post-edit')
 @auth_permission
 def post_edit():
     """ 文章编辑. """
@@ -41,10 +46,10 @@ def post_edit():
     else:
         demo_post = DemoPost()
     #
-    return render_template('demo/post-edit.html', demo_post=demo_post, args=args, **preloads)
+    return render_template('dash-demo/post-edit.html', demo_post=demo_post, args=args, **preloads)
 
 
-@demo.route('/post-edit-upcreate', methods=('POST',))
+@dash_demo.route('/post-edit-upcreate', methods=('POST',))
 @auth_permission
 def post_edit_upcreate():
     """ 保存文章编辑. """
@@ -84,7 +89,7 @@ def post_edit_upcreate():
     return jsonify(error=0, message='Save demo post successfully.', id=id_)
 
 
-@demo.route('/post-preview')
+@dash_demo.route('/post-preview')
 @auth_permission
 def post_preview():
     """ 文章预览. """
@@ -93,10 +98,10 @@ def post_preview():
     if not demo_post:
         abort(404)
     #
-    return render_template('demo/post-preview.html', demo_post=demo_post)
+    return render_template('dash-demo/post-preview.html', demo_post=demo_post)
 
 
-@demo.route('/project-list')
+@dash_demo.route('/project-list')
 @auth_permission
 def project_list():
     """ 项目管理. """
@@ -105,11 +110,11 @@ def project_list():
     current_app.logger.info(f'Try to search demo project by {condition}, sort by {sort}')
     demo_projects, pagination = DemoProject.search(condition, page, sort=sort)
     #
-    return render_template('demo/project-list.html',
+    return render_template('dash-demo/project-list.html',
                            search=search, pagination=pagination, demo_projects=demo_projects)
 
 
-@demo.route('/project-detail')
+@dash_demo.route('/project-detail')
 @auth_permission
 def project_detail():
     """ 项目详情. """
@@ -118,10 +123,10 @@ def project_detail():
     if not demo_project:
         abort(404)
     #
-    return render_template('demo/project-detail.html', demo_project=demo_project)
+    return render_template('dash-demo/project-detail.html', demo_project=demo_project)
 
 
-@demo.route('/project-edit')
+@dash_demo.route('/project-edit')
 @auth_permission
 def project_edit():
     """ 项目编辑. """
@@ -138,10 +143,10 @@ def project_edit():
     current_app.logger.info(f'Preloaded {len(demo_users)} demo users')
     preloads.update({'demo_users': demo_users, 'demo_users_pagination': dict(demo_users_pagination), })
     #
-    return render_template('demo/project-edit.html', demo_project=demo_project, args=args, **preloads)
+    return render_template('dash-demo/project-edit.html', demo_project=demo_project, args=args, **preloads)
 
 
-@demo.route('/project-edit-upcreate', methods=('POST',))
+@dash_demo.route('/project-edit-upcreate', methods=('POST',))
 @auth_permission
 def project_edit_upcreate():
     """ 保存项目编辑. """
@@ -176,7 +181,7 @@ def project_edit_upcreate():
     return jsonify(error=0, message='Save demo project successfully.', id=id_)
 
 
-@demo.route('/project-edit-search-demo-users', methods=('POST',))
+@dash_demo.route('/project-edit-search-demo-users', methods=('POST',))
 @auth_permission
 def project_edit_search_demo_users():
     """ 查找用户. """
@@ -187,10 +192,7 @@ def project_edit_search_demo_users():
     return jsonify(error=0, message='Search demo user successfully.', pagination=dict(pagination), demo_users=demo_users)
 
 
-prepare_demo_data()
-
-
-@demo.route('/project-dashboard')
+@dash_demo.route('/project-dashboard')
 @auth_permission
 def project_dashboard():
     """ 项目仪表盘. """
@@ -217,7 +219,7 @@ def project_dashboard():
     return render_template('demo/project-dashboard.html', demo_project_dashboard=dpd)
 
 
-@demo.route('/task-detail')
+@dash_demo.route('/task-detail')
 @auth_permission
 def task_detail():
     """ 任务详情. """
@@ -226,10 +228,10 @@ def task_detail():
     if not demo_task:
         abort(404)
     #
-    return render_template('demo/task-detail.html', demo_task=demo_task)
+    return render_template('dash-demo/task-detail.html', demo_task=demo_task)
 
 
-@demo.route('/task-edit')
+@dash_demo.route('/task-edit')
 @auth_permission
 def task_edit():
     """ 任务编辑. """
@@ -251,10 +253,10 @@ def task_edit():
     current_app.logger.info(f'Preloaded {len(demo_users)} demo users')
     preloads.update({'demo_users': demo_users, 'demo_users_pagination': dict(demo_users_pagination), })
     #
-    return render_template('demo/task-edit.html', demo_task=demo_task, args=args, **preloads)
+    return render_template('dash-demo/task-edit.html', demo_task=demo_task, args=args, **preloads)
 
 
-@demo.route('/task-edit-upcreate', methods=('POST',))
+@dash_demo.route('/task-edit-upcreate', methods=('POST',))
 @auth_permission
 def task_edit_upcreate():
     """ 保存任务编辑. """
@@ -285,7 +287,7 @@ def task_edit_upcreate():
     return jsonify(error=0, message='Save demo task successfully.', id=id_)
 
 
-@demo.route('/team-profile')
+@dash_demo.route('/team-profile')
 @auth_permission
 def team_profile():
     """ 团队设置. """
@@ -295,10 +297,10 @@ def team_profile():
     if not demo_team:
         abort(404)
     #
-    return render_template('demo/team-profile.html', demo_team=demo_team, **preloads)
+    return render_template('dash-demo/team-profile.html', demo_team=demo_team, **preloads)
 
 
-@demo.route('/team-profile-update', methods=('POST',))
+@dash_demo.route('/team-profile-update', methods=('POST',))
 @auth_permission
 def team_profile_update():
     """ 保存团队设置. """
@@ -322,7 +324,7 @@ def team_profile_update():
     return jsonify(error=0, message='Save demo team successfully.', id=id_)
 
 
-@demo.route('/team-members')
+@dash_demo.route('/team-members')
 @auth_permission
 def team_members():
     """ 团队成员. """
@@ -331,26 +333,23 @@ def team_members():
     if not demo_team:
         abort(404)
     #
-    return render_template('demo/team-members.html', demo_team=demo_team)
+    return render_template('dash-demo/team-members.html', demo_team=demo_team)
 
 
-@demo.route('/user-profile')
+@dash_demo.route('/user-profile')
 @auth_permission
 def user_profile():
     """ 用户设置. """
     preloads = {}
     id_ = get_id(int)
-    if id_:
-        demo_user = DemoUser.find_one(id_)
-        if not demo_user:
-            abort(404)
-    else:
-        demo_user = current_user
+    demo_user = DemoUser.find_one(id_)
+    if not demo_user:
+        abort(404)
     #
-    return render_template('demo/user-profile.html', demo_user=demo_user, **preloads)
+    return render_template('dash-demo/user-profile.html', demo_user=demo_user, **preloads)
 
 
-@demo.route('/user-profile-update', methods=('POST',))
+@dash_demo.route('/user-profile-update', methods=('POST',))
 @auth_permission
 def user_profile_update():
     """ 保存用户设置. """
@@ -372,3 +371,5 @@ def user_profile_update():
     current_app.logger.info(f'Successfully update demo user {id_}')
     #
     return jsonify(error=0, message='Save demo user successfully.', id=id_)
+
+

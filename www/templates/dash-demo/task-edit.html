@@ -217,7 +217,7 @@
         param["demo_task.{{ arg[0] }}"] = "{{ arg[1] }}";
         {% endfor %}
         //
-        var url = "/demo/task-edit-upcreate?id={{ demo_task.id or '' }}";
+        var url = "/dash-demo/task-edit-upcreate?id={{ demo_task.id or '' }}";
         $.post(url, param, function (result) {
             if (result.error == 0) {
                 showSuccess(result.message);

@@ -396,7 +396,7 @@
 <script src="/static/js/form.js?{{ version() }}"></script>
 <div class="modal fade search-modal" data-backdrop="static" data-keyboard="false" tabindex="-1"
      id="search-demo-users"
-     relation-url="/demo/project-edit-search-demo-users"
+     relation-url="/dash-demo/project-edit-search-demo-users"
      relation-key="demo_users"
      relation-title="name"
      relation-id="id">
@@ -543,7 +543,7 @@
         param["demo_project.{{ arg[0] }}"] = "{{ arg[1] }}";
         {% endfor %}
         //
-        var url = "/demo/project-edit-upcreate?id={{ demo_project.id or '' }}";
+        var url = "/dash-demo/project-edit-upcreate?id={{ demo_project.id or '' }}";
         $.post(url, param, function (result) {
             if (result.error == 0) {
                 showSuccess(result.message);

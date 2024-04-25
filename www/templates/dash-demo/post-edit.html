@@ -194,7 +194,7 @@
         param["demo_post.{{ arg[0] }}"] = "{{ arg[1] }}";
         {% endfor %}
         //
-        var url = "/demo/post-edit-upcreate?id={{ demo_post.id or '' }}";
+        var url = "/dash-demo/post-edit-upcreate?id={{ demo_post.id or '' }}";
         $.post(url, param, function (result) {
             if (result.error == 0) {
                 showSuccess(result.message);

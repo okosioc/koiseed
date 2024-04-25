@@ -38,12 +38,6 @@ def index():
     return render_template('public/index.html', design=request.values.get('design'))
 
 
-@public.route('/index-basic')
-def index_basic():
-    """ Index basic page. """
-    return render_template_with_page('pub-demo/index-basic.html')
-
-
 @public.route('/index-company')
 def index_company():
     """ Index company page. """

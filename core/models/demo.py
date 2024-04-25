@@ -39,7 +39,7 @@ class DemoTeam(CacheModel):
     __title__ = '团队'
     #
     __views__ = {
-        'www://demo/team-profile': '''#!update?extends=layout-dash-demo&title=团队设置
+        'www://dash-demo/team-profile': '''#!update?extends=layout-dash-demo&title=团队设置
             1#summary4,    2?title=团队基本信息#8      
               logo           name   
               name           code   
@@ -47,7 +47,7 @@ class DemoTeam(CacheModel):
               members        logo   
               create_time  
         ''',
-        'www://demo/team-members': '''#!read?extends=layout-dash-demo&title=团队成员
+        'www://dash-demo/team-members': '''#!read?extends=layout-dash-demo&title=团队成员
             1#summary4,    members#8                                                  
               logo           avatar, name, status, roles, email, phone, team_join_time
               name                                                                    
@@ -114,7 +114,7 @@ class DemoUser(CacheModel, UserMixin):
     __columns__ = ['avatar', 'name', 'status', 'roles', 'email', 'phone', 'create_time']
     #
     __views__ = {
-        'www://demo/user-profile': '''#!update?extends=layout-dash-demo&title=用户设置
+        'www://dash-demo/user-profile': '''#!update?extends=layout-dash-demo&title=用户设置
             1#summary4,    2?title=用户基本信息#8                                           
               avatar         name  
               name           phone                                                  
@@ -215,11 +215,11 @@ class DemoProject(CacheModel):
     __title__ = '项目'
     #
     __views__ = {
-        'www://demo/project-list': '''#!query?extends=layout-dash-demo&title=项目管理&is_card=true&result_view=grid
+        'www://dash-demo/project-list': '''#!query?extends=layout-dash-demo&title=项目管理&is_card=true&result_view=grid
             title, status, value, start, members, percent, create_time
         ''',
         # NOTE: tasks is a back field created by the relation from DemoTask
-        'www://demo/project-detail': '''#!read?extends=layout-dash-demo&title=项目详情
+        'www://dash-demo/project-detail': '''#!read?extends=layout-dash-demo&title=项目详情
             1#4,              2#8
               1.1#summary       tasks                                   
                 title             title, status, user, start, create_time 
@@ -233,7 +233,7 @@ class DemoProject(CacheModel):
                 avatar, name
               files       
         ''',
-        'www://demo/project-edit': '''#!upcreate?extends=layout-dash-demo&title=项目编辑
+        'www://dash-demo/project-edit': '''#!upcreate?extends=layout-dash-demo&title=项目编辑
             1?title=项目基本信息
               title
               description
@@ -277,7 +277,7 @@ class DemoTask(CacheModel):
     __title__ = '任务'
     #
     __views__ = {
-        'www://demo/task-detail': '''#!read?extends=layout-dash-demo&title=任务详情
+        'www://dash-demo/task-detail': '''#!read?extends=layout-dash-demo&title=任务详情
             project#summary4,  1?title=任务基本信息#8     
               title              title 
               status             status     
@@ -287,7 +287,7 @@ class DemoTask(CacheModel):
               percent            create_time
               create_time
         ''',
-        'www://demo/task-edit': '''#!upcreate?extends=layout-dash-demo&title=任务编辑
+        'www://dash-demo/task-edit': '''#!upcreate?extends=layout-dash-demo&title=任务编辑
             project#summary4,  1?title=任务基本信息#8     
               title              title 
               status             status     
@@ -313,7 +313,7 @@ class DemoProjectDashboard(CacheModel):
     recent_activities: List[DemoActivity] = Field(format_=Format.TIMELINE, title='最近操作')  # 按照时间倒序
     #
     __views__ = {
-        'www://demo/project-dashboard': '''#!read?extends=layout-dash-demo&title=项目仪表盘
+        'www://dash-demo/project-dashboard': '''#!read?extends=layout-dash-demo&title=项目仪表盘
             active_projects_count, active_projects_value, members_count, tasks_count
             active_projects#8,                                            recent_activities#4
               title, status, value, start, members, percent, create_time    user, title, content, time
@@ -355,10 +355,10 @@ class DemoPost(CacheModel):
     __title__ = '文章'
     #
     __views__ = {
-        'www://demo/post-list': '''#!query?extends=layout-dash-demo&is_card=true&title=文章列表
+        'www://dash-demo/post-list': '''#!query?extends=layout-dash-demo&is_card=true&title=文章列表
             title, status, publish_time, featured, author, tags, create_time
         ''',
-        'www://demo/post-edit': '''#!upcreate?extends=layout-dash-demo&title=文章编辑
+        'www://dash-demo/post-edit': '''#!upcreate?extends=layout-dash-demo&title=文章编辑
             1#4,        2#8              
               title       content      
               subtitle                 
@@ -367,7 +367,7 @@ class DemoPost(CacheModel):
               featured                    
               status           
         ''',
-        'www://demo/post-preview': '''#!read?extends=layout-dash-demo&title=文章预览
+        'www://dash-demo/post-preview': '''#!read?extends=layout-dash-demo&title=文章预览
             1#4,        2#8              
               title       content      
               subtitle                 

@@ -1,5 +1,5 @@
 {% extends "layout-dash-demo.html" %}
-{% set title = '团队设置' %}
+{% set title = '用户设置' %}
 {% set breadcrumb = {
     'subtitle': '',
     'title': title,
@@ -11,9 +11,9 @@
 <link href="/static/vendor/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block content %}
-<div id="div-team-profile">
-    <form id="team-profile" class="form-editor needs-validation" novalidate method="post">
-        <fieldset class="object" name="demo_team">
+<div id="div-user-profile">
+    <form id="user-profile" class="form-editor needs-validation" novalidate method="post">
+        <fieldset class="object" name="demo_user">
             <div class="row">
                 <div class="col-lg-4">
                     <fieldset class="group" name="1" format="summary">
@@ -21,14 +21,14 @@
                         <div class="card-body">
                             <div class="row text-center">
                                 <div class="col">
-                                    <div name="logo" format="avatar">
-                                        <a href="team-members?id={{ demo_team.id }}" class="avatar avatar-xl mt-2 mb-4">
-                                            <img src="{{ demo_team.logo or '' }}" alt="..." class="avatar-img rounded-circle {{ 'd-none' if not demo_team.logo }}">
-                                            <span fallback=name class="avatar-title rounded-circle bg-primary {{ 'd-none' if demo_team.logo }}">{{ demo_team.name|first|upper if demo_team.name is not none }}</span>
+                                    <div name="avatar" format="avatar">
+                                        <a href="user-profile?id={{ demo_user.id }}" class="avatar avatar-xl mt-2 mb-4">
+                                            <img src="{{ demo_user.avatar or '' }}" alt="..." class="avatar-img rounded-circle {{ 'd-none' if not demo_user.avatar }}">
+                                            <span fallback=name class="avatar-title rounded-circle bg-primary {{ 'd-none' if demo_user.avatar }}">{{ demo_user.name|first|upper if demo_user.name is not none }}</span>
                                         </a>
                                     </div>
                                     <div class="mb-4">
-                                        <span class="h3 text-primary" name="name" foramt="text">{{ demo_team.name or '-' }}</span>
+                                        <span class="h3 text-primary" name="name" foramt="text">{{ demo_user.name or '-' }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -36,20 +36,42 @@
                                 <div class="list-group-item">
                                     <div class="row align-items-center">
                                         <div class="col">
-                                            <span><i class="fe fe-circle mr-2"></i>团队状态</span>
+                                            <span><i class="fe fe-circle mr-2"></i>用户状态</span>
                                         </div>
-                                        <div class="col-auto text-muted" name="status" format="select" enum="DemoTeamStatus">
-                                            {% if demo_team.status is not none %}<span class="text-{{ demo_team.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoTeamStatus')[demo_team.status] }}{% else %}-{% endif %}
+                                        <div class="col-auto text-muted" name="status" format="select" enum="DemoUserStatus">
+                                            {% if demo_user.status is not none %}<span class="text-{{ demo_user.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoUserStatus')[demo_user.status] }}{% else %}-{% endif %}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="list-group-item">
                                     <div class="row align-items-center">
                                         <div class="col">
-                                            <span><i class="fe fe-users mr-2"></i>团队成员</span>
+                                            <span><i class="fe fe-box mr-2"></i>用户角色</span>
                                         </div>
-                                        <div class="col-auto text-muted" name="members" format="table" enum="">
-                                            {{ demo_team.members|length }}
+                                        <div class="col-auto text-muted" name="roles" format="select" enum="DemoUserRole">
+                                            {% for roles_item in demo_user.roles %}
+                                            {{ ' ' if not loop.fist }}{% if roles_item is not none %}{{ enum_titles('DemoUserRole')[roles_item] }}{% else %}-{% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <span><i class="fe fe-mail mr-2"></i>登录邮箱</span>
+                                        </div>
+                                        <div class="col-auto text-muted" name="email" format="text" enum="">
+                                            {{ demo_user.email or '-' }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <span><i class="fe fe-phone mr-2"></i>手机号</span>
+                                        </div>
+                                        <div class="col-auto text-muted" name="phone" format="text" enum="">
+                                            {{ demo_user.phone or '-' }}
                                         </div>
                                     </div>
                                 </div>
@@ -59,7 +81,7 @@
                                             <span><i class="fe fe-clock mr-2"></i>创建时间</span>
                                         </div>
                                         <div class="col-auto text-muted" name="create_time" format="datetime" enum="">
-                                            {{ demo_team.create_time|datetime if demo_team.create_time is not none else '-' }}
+                                            {{ demo_user.create_time|datetime if demo_user.create_time is not none else '-' }}
                                         </div>
                                     </div>
                                 </div>
@@ -70,40 +92,40 @@
                 </div>
                 <div class="col-lg-8">
                     <fieldset class="group" name="2" format="">
-                        <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-users mr-2"></i>团队基本信息</h4></div><div class="card-body">
+                        <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-user mr-2"></i>用户基本信息</h4></div><div class="card-body">
                         <div class="row">
                             <div class="col">
                                 <div class="form-group string-text" name="name">
-                                    <label class=""><span class="text-danger mr-1">*</span>团队名称</label>
+                                    <label class=""><span class="text-danger mr-1">*</span>用户名</label>
                                     <input name="name" type="text" required class="form-control"
-                                           value="{{ demo_team.name or '' }}">
-                                    <div class="invalid-feedback">__(Invalid )团队名称__(!)</div>
+                                           value="{{ demo_user.name or '' }}">
+                                    <div class="invalid-feedback">__(Invalid )用户名__(!)</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string-text" name="code">
-                                    <label class="">邀请码</label>
-                                    <input name="code" type="text" class="form-control"
-                                           value="{{ demo_team.code or '' }}">
-                                    <div class="invalid-feedback">__(Invalid )邀请码__(!)</div>
+                                <div class="form-group string-text" name="phone">
+                                    <label class="">手机号</label>
+                                    <input name="phone" type="text" class="form-control"
+                                           value="{{ demo_user.phone or '' }}">
+                                    <div class="invalid-feedback">__(Invalid )手机号__(!)</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string-textarea" name="remarks">
-                                    <label class="">备注</label>
-                                    <textarea name="remarks" rows="5" class="form-control autosize">{{ demo_team.remarks or '' }}</textarea>
-                                    <div class="invalid-feedback">__(Invalid )备注__(!)</div>
+                                <div class="form-group string-textarea" name="intro">
+                                    <label class="">个人简介</label>
+                                    <textarea name="intro" rows="5" class="form-control autosize">{{ demo_user.intro or '' }}</textarea>
+                                    <div class="invalid-feedback">__(Invalid )个人简介__(!)</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="form-group string-avatar" name="logo">
-                                    <label class="">团队图标</label>
+                                <div class="form-group string-avatar" name="avatar">
+                                    <label class="">头像</label>
                                     <div class="plupload-input-group image-input-group" >
                                         <a class="btn btn-outline-primary plupload" href="javascript:;"
                                            data-token="{{ upload_config.token }}"
@@ -115,19 +137,19 @@
                                            data-hiddens="url">__(Choose Image)...</a>
                                         <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ upload_config.image_exts|join('/') }}</small>
                                         <div class="plupload-input-result image-input-result mt-1 clearfix">
-                                            {% if demo_team.logo %}
+                                            {% if demo_user.avatar %}
                                             <div class="image uploaded" style="width: auto">
-                                                <img data-src="{{ demo_team.logo }}">
+                                                <img data-src="{{ demo_user.avatar }}">
                                                 <div class="btns">
-                                                    <a href="{{ demo_team.logo }}" target="_blank">i</a>
+                                                    <a href="{{ demo_user.avatar }}" target="_blank">i</a>
                                                     <a href="javascript:;" onclick="$(this).closest('.image').remove();">x</a>
                                                 </div>
-                                                <input type="hidden" name="url" value="{{ demo_team.logo }}">
+                                                <input type="hidden" name="url" value="{{ demo_user.avatar }}">
                                             </div>
                                             {% endif %}
                                         </div>
                                     </div>
-                                    <div class="invalid-feedback">__(Please upload )团队图标__(!)</div>
+                                    <div class="invalid-feedback">__(Please upload )头像__(!)</div>
                                 </div>
                             </div>
                         </div>
@@ -138,10 +160,7 @@
         </fieldset>
     </form>
     <div class="form-actions mb-4">
-        <a class="btn btn-primary mr-2" onclick="team_profile_update($(this));"><i class="fe fe-save mr-1"></i>__(Save)</a>
-        {% if demo_team.id %}
-        <a href="team-members?id={{ demo_team.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
-        {% endif %}
+        <a class="btn btn-primary mr-2" onclick="user_profile_update($(this));"><i class="fe fe-save mr-1"></i>__(Save)</a>
     </div>
 </div>
 {% endblock %}
@@ -156,7 +175,7 @@
         install_form();
     });
     //
-    function team_profile_update(btn){
+    function user_profile_update(btn){
         if (btn.is(".doing")) {
             return;
         }
@@ -165,7 +184,7 @@
         if (!con) {
             return false;
         }
-        var param = process_form($("#team-profile"));
+        var param = process_form($("#user-profile"));
         if (!param["valid"]) {
             showError('__(Found invalid data, please correct and retry!)');
             return false;
@@ -177,16 +196,16 @@
         btn[method](oldLabel + "...");
         //
         {% for arg in args %}
-        param["demo_team.{{ arg[0] }}"] = "{{ arg[1] }}";
+        param["demo_user.{{ arg[0] }}"] = "{{ arg[1] }}";
         {% endfor %}
         //
-        var url = "/demo/team-profile-update?id={{ demo_team.id or '' }}";
+        var url = "/dash-demo/user-profile-update?id={{ demo_user.id or '' }}";
         $.post(url, param, function (result) {
             if (result.error == 0) {
                 showSuccess(result.message);
                 showInfo('Refreshing...');
                 setTimeout(function () {
-                    location.href = "team-members?id=" + result.id;
+                    location.href = "{{ request.path }}?id=" + result.id;
                 }, 2000);
             } else {
                 showError(result.message);
