@@ -1,0 +1,99 @@
+{
+  "hero": {
+    "title": "Welcome to KoiSeed.<br>Develop anything.",
+    "content": "基于数据结构及其视图，快速生成跨平台的种子项目。",
+    "action": {
+      "url": "#!",
+      "title": "创建您的项目"
+    },
+    "cls": "primary",
+    "children": [
+      {
+        "title": "数据定义",
+        "content": "无需考虑存储细节，支持主流数据库的数据结构定义。",
+        "image": "/static/landkit/assets/img/illustrations/illustration-4.png"
+      },
+      {
+        "title": "视图设计",
+        "content": "为数据结构定义直观的视图，轻松生成跨平台应用。",
+        "image": "/static/landkit/assets/img/illustrations/illustration-8.png"
+      },
+      {
+        "title": "代码生成",
+        "content": "自动合并机制，平衡代码生成与定制开发。",
+        "image": "/static/landkit/assets/img/illustrations/illustration-7.png"
+      },
+      {
+        "title": "易于维护",
+        "content": "生成的种子项目符合最佳实践，易于维护。",
+        "image": "/static/landkit/assets/img/illustrations/illustration-6.png"
+      }
+    ]
+  },
+  "intro": {
+    "tag": "Platform",
+    "title": "简化开发流程。",
+    "content": "KoiSeed 提供一站式服务，从数据结构定义到跨平台应用生成。",
+    "children": [
+      {
+        "title": "跨平台支持",
+        "content": "生成网站、小程序、iOS和Android应用等。"
+      },
+      {
+        "title": "主流数据库支持",
+        "content": "无需担心存储细节，我们全都支持。"
+      },
+      {
+        "title": "最佳实践",
+        "content": "按照最佳实践生成代码，确保项目质量。"
+      },
+      {
+        "title": "代码与定制的平衡",
+        "content": "通过自动合并机制，实现代码生成与定制开发的完美平衡。"
+      }
+    ]
+  },
+  "test": {
+    "tag": "Testimonials",
+    "title": "客户见证",
+    "content": "了解全球顶尖初创公司如何使用 KoiSeed 加速开发。",
+    "children": [
+      {
+        "content": "“KoiSeed 让我们的开发流程大大加速，现在我们可以更专注于产品本身。”",
+        "author": "来自 Airbnb 的 Casey Fyfe",
+        "image": "/static/landkit/assets/img/covers/cover-1.jpg"
+      },
+      {
+        "content": "“使用 KoiSeed，我们能够快速迭代我们的产品，无需担心后端。”",
+        "image": "/static/landkit/assets/img/brands/logotype/airbnb.svg",
+        "color": "#FF5A5F"
+      },
+      {
+        "content": "“KoiSeed 生成的代码清晰易懂，大大提高了我们的开发效率。”",
+        "image": "/static/landkit/assets/img/brands/logotype/netflix.svg",
+        "color": "#B81D24"
+      },
+      {
+        "content": "“我们喜欢 KoiSeed 的平台灵活性，它满足了我们所有的开发需求。”",
+        "image": "/static/landkit/assets/img/brands/logotype/coinbase.svg",
+        "color": "#0081C9"
+      },
+      {
+        "content": "“KoiSeed 给了我们开发的自由，同时还保证了项目的质量。”",
+        "image": "/static/landkit/assets/img/brands/logotype/stripe.svg",
+        "color": "#6772E5"
+      }
+    ]
+  },
+  "action": {
+    "title": "立即体验 KoiSeed",
+    "subtitle": "开始您的项目开发之旅",
+    "content": "不要再浪费时间在复杂的开发流程上，KoiSeed 为您提供一站式解决方案。",
+    "image": "/static/landkit/assets/img/illustrations/illustration-1.png",
+    "action": {
+      "title": "立即开始",
+      "url": "#",
+      "cls": "btn btn-block btn-primary mt-3 lift"
+    }
+  }
+}

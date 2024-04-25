@@ -1,0 +1,223 @@
+{% extends "layout-public-demo.html" %}
+{% set title = _('Index') %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% set hero = page.hero %}
+    <section class="py-10 py-md-14 bg-{{ hero.cls }}">
+        <div class="shape shape-blur-3 svg-shim text-white">
+            <svg viewBox="0 0 1738 487" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0h1420.92s713.43 457.505 0 485.868C707.502 514.231 0 0 0 0z" fill="url(#paint0_linear)"/>
+                <defs>
+                    <linearGradient id="paint0_linear" x1="0" y1="0" x2="1049.98" y2="912.68"
+                                    gradientUnits="userSpaceOnUse">
+                        <stop stop-color="currentColor" stop-opacity=".075"/>
+                        <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 text-center">
+                    <h1 class="display-2 font-weight-bold text-white">{{ hero.title | safe }}</h1>
+                    <p class="lead text-white mb-8">{{ hero.subtitle }}</p>
+                    <a href="{{ hero.action.url }}" class="btn btn-white shadow lift">{{ hero.action.title }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="position-relative">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-white">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+            </svg>
+        </div>
+    </div>
+    <section class="pt-8 pt-md-10 pb-3" id="welcome-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <a href="#welcome-3" class="btn btn-white btn-rounded-circle shadow mt-n12 mt-md-n14"
+                       data-toggle="smooth-scroll">
+                        <i class="fe fe-arrow-down"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                {% for child in hero.children %}
+                    <div class="col-12 col-lg-6">
+                        <div class="row align-items-center mb-8">
+                            <div class="col-4 col-lg-5">
+                                <img src="{{ child.image }}" alt="..." class="img-fluid">
+                            </div>
+                            <div class="col-8 col-lg-7">
+                                <h3 class="font-weight-bold mb-2">{{ child.title }}</h3>
+                                <p class="text-gray-700 mb-0">{{ child.content }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% set intro = page.intro %}
+    <section class="py-8 py-md-11 border-top">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-6 col-lg-5" data-aos="fade-up">
+            <span class="badge badge-pill badge-success-soft mb-3">
+              <span class="h6 text-uppercase">{{ intro.tag }}</span>
+            </span>
+                    <h2 class="font-weight-bold">
+                        {{ intro.title | safe }}
+                    </h2>
+                    <p class="font-size-lg text-gray-700">
+                        {{ intro.content }}
+                    </p>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6 offset-lg-1">
+                    <div class="card card-border border-success shadow-lg mb-5" data-aos="fade-up">
+                        <div class="card-body">
+                            <div class="list-group list-group-flush">
+                                {% for child in intro.children %}
+                                    <div class="list-group-item d-flex align-items-center">
+                                        <div class="mr-auto">
+                                            <p class="font-weight-bold mb-1">
+                                                {{ child.title }}
+                                            </p>
+                                            <p class="font-size-sm text-muted mb-0">
+                                                {{ child.content }}
+                                            </p>
+                                        </div>
+                                        <div class="badge badge-rounded-circle badge-success-soft ml-4">
+                                            <i class="fe fe-check"></i>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <p class="font-size-sm text-center text-gray-500 mb-0">
+                        * Limited to the life of the company
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set test = page.test %}
+    {% set first = test.children[0] %}
+    <section data-jarallax data-speed=".8" class="py-15 overlay overlay-black overlay-60 jarallax"
+             style="background-image: url({{ first.image }});">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-7">
+                    <blockquote class="blockquote mb-0">
+                        <p class="h2 text-white">{{ first.content }}</p>
+                        <footer class="blockquote-footer text-white-50 mb-0">{{ first.author }}</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="position-relative">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-white">
+            <svg viewBox="0 0 2880 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M720 28H0v28h2880V28h-720S1874 0 1440 0 720 28 720 28z" fill="currentColor"/>
+            </svg>
+        </div>
+    </div>
+    <section class="py-8 py-md-11">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 text-center">
+                <span class="badge badge-pill badge-success-soft mb-3">
+                  <span class="h6 text-uppercase">{{ test.tag }}</span>
+                </span>
+                    <h2 class="font-weight-bold">{{ test.title }}</h2>
+                    <p class="font-size-lg text-gray-700 mb-9">{{ test.content }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="flickity-viewport-visible pt-2 pb-2"
+                         data-flickity='{"cellAlign": "left", "imagesLoaded": true, "pageDots": false, "prevNextButtons": false, "contain": true}'>
+                        {% for child in test.children[1:] %}
+                            <div class="col-12 col-md-5 col-lg-4">
+                                <div class="card card-border shadow-light-lg lift lift-lg"
+                                     style="border-top-color: {{ child.color }}">
+                                    <div class="card-body text-center">
+                                        <div class="img-fluid mb-5 w-50 svg-shim mx-auto">
+                                            <img src="{{ child.image }}" style="color: {{ child.color }}">
+                                        </div>
+                                        <p class="text-gray-700">{{ child.content }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set action = page.action %}
+    <section class="py-8 py-md-11 border-top">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <div class="card card-border border-primary shadow-light-lg" data-jarallax-element="-40">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-xl-11">
+                                    <div class="text-center">
+                                        <img src="{{ action.image }}" alt="..." class="img-fluid mb-3"
+                                             style="width: 200px;">
+                                    </div>
+                                    <h2 class="font-weight-bold text-center mb-1">
+                                        {{ action.title }}
+                                    </h2>
+                                    <p class="font-size-lg text-center text-muted mb-6 mb-md-8">
+                                        {{ action.content }}
+                                    </p>
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-label-group">
+                                                    <input type="text" class="form-control form-control-flush"
+                                                           id="input-demo-name" placeholder="Name">
+                                                    <label for="input-demo-name">Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-label-group">
+                                                    <input type="email" class="form-control form-control-flush"
+                                                           id="input-demo-email" placeholder="Email">
+                                                    <label for="input-demo-email">Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <button type="button" class="{{ action.action.cls }}"
+                                                        onclick="coming();">
+                                                    {{ action.action.title }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="position-relative mt-n16">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-dark">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+            </svg>
+        </div>
+    </div>
+    <div class="pt-16 bg-dark"></div>
+{% endblock %}

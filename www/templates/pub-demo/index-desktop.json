@@ -1,0 +1,152 @@
+{
+  "hero": {
+    "title": "Welcome to <span class=\"text-primary\">KoiSeed</span>.<br>Develop anything.",
+    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目",
+    "image": "/static/landkit/assets/img/screenshots/desktop/dashkit.jpg",
+    "actions": [
+      {
+        "title": "立即开始",
+        "url": "#!",
+        "cls": "btn btn-primary mr-1 lift"
+      },
+      {
+        "title": "了解更多",
+        "url": "#!",
+        "cls": "btn btn-primary-soft lift"
+      }
+    ]
+  },
+  "intro": {
+    "children": [
+      {
+        "title": "通过简单的定义，<br><span class=\"text-primary\">快速搭建业务架构。</span>",
+        "content": "KoiSeed让您通过简单的方式定义业务所需的数据结构及其相互关系，无需关心背后的存储细节，同时支持主流数据库系统。",
+        "image": "/static/landkit/assets/img/screenshots/ui/dashkit-layered.png",
+        "children": [
+          {
+            "title": "灵活性",
+            "subtitle": "数据定义"
+          },
+          {
+            "title": "高效率",
+            "subtitle": "跨平台支持"
+          },
+          {
+            "title": "易于维护",
+            "subtitle": "最佳实践"
+          }
+        ]
+      },
+      {
+        "tag": "代码生成与定制",
+        "title": "生成的种子项目易于维护，<br>且符合最佳实践。",
+        "content": "KoiSeed通过自动合并的机制，实现了代码生成与定制开发的平衡，保证了项目的可扩展性与易于维护性。",
+        "images": [
+          "/static/landkit/assets/img/photos/photo-10.jpg",
+          "/static/landkit/assets/img/photos/photo-12.jpg",
+          "/static/landkit/assets/img/photos/photo-9.jpg",
+          "/static/landkit/assets/img/photos/photo-11.jpg"
+        ],
+        "children": [
+          {
+            "title": "代码自动合并",
+            "icon": "fe fe-check",
+            "cls": "success"
+          },
+          {
+            "title": "定制开发支持",
+            "icon": "fe fe-check",
+            "cls": "success"
+          },
+          {
+            "title": "项目可扩展性",
+            "icon": "fe fe-check",
+            "cls": "success"
+          },
+          {
+            "title": "维护简便",
+            "icon": "fe fe-check",
+            "cls": "success"
+          }
+        ]
+      },
+      {
+        "tag": "跨平台支持",
+        "title": "全面的跨平台支持，<br>覆盖网站与移动应用。",
+        "content": "KoiSeed为数据结构定义直观的视图，支持生成包括网站、小程序、iOS和Android应用在内的跨平台种子项目，全面覆盖您的开发需求。",
+        "image": "/static/landkit/assets/img/screenshots/desktop/dashkit-alt-dark.jpg"
+      }
+    ]
+  },
+  "price": {
+    "tag": "定价",
+    "title": "我们的定价简单且灵活。",
+    "content": "各种规模的公司都需要访问KoiSeed，因此我们提供了适应任何项目或公司规模的灵活定价体系。",
+    "children": [
+      {
+        "title": "标准版",
+        "vals": [
+          29,
+          49
+        ],
+        "unit": "mo",
+        "cls": "success",
+        "children": [
+          {
+            "title": "单个项目使用"
+          },
+          {
+            "title": "包含所有组件"
+          },
+          {
+            "title": "包含所有页面"
+          },
+          {
+            "title": "6个月的支持"
+          }
+        ]
+      },
+      {
+        "title": "扩展版",
+        "vals": [
+          49,
+          69
+        ],
+        "unit": "mo",
+        "cls": "dark",
+        "children": [
+          {
+            "title": "单个项目使用"
+          },
+          {
+            "title": "包含所有组件"
+          },
+          {
+            "title": "包含所有页面"
+          },
+          {
+            "title": "6个月的支持"
+          },
+          {
+            "title": "无限用户"
+          },
+          {
+            "title": "免费拥抱"
+          }
+        ]
+      }
+    ]
+  },
+  "action": {
+    "tag": "立即开始",
+    "title": "获取KoiSeed，加速您的开发过程。",
+    "content": "不再浪费时间尝试从零开始构建应用。KoiSeed提供了更快、更简单的解决方案，同时您还可以完全控制。",
+    "image": "/static/landkit/assets/img/patterns/pattern-1.svg",
+    "action": {
+      "title": "立即开始",
+      "url": "#!",
+      "cls": "btn btn-primary-desat lift",
+      "icon": "fe fe-arrow-right ml-2"
+    }
+  }
+}

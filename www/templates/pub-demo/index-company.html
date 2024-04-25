@@ -1,0 +1,140 @@
+{% extends "layout-public-demo.html" %}
+{% set title = _('Index') %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% set hero = page.hero %}
+    <section class="position-relative pt-12 pt-md-14 mt-n11">
+        <div class="shape shape-fluid-x shape-blur-2 svg-shim text-light">
+            <svg viewBox="0 0 1313 768" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M442.794 768c163.088 0 305.568-88.227 382.317-219.556l.183.556s.249-.749.762-2.181a440.362 440.362 0 0033.192-71.389C901.996 397.81 989.306 277.09 1144.29 206l-.92-.693C1230.34 171.296 1295.63 94.049 1312.83 0H1.294v295.514c-.663 9.909-1 19.908-1 29.986 0 244.386 198.114 442.5 442.5 442.5z"
+                      fill="currentColor"/>
+            </svg>
+        </div>
+        <div class="container">
+            <div class="row align-items-center text-center text-md-left">
+                <div class="col-12 col-md-6">
+                    <img src="{{ hero.image }}" alt="..." class="img-fluid mw-130 float-right mb-6 mb-md-0"
+                         data-aos="fade-right">
+                </div>
+                <div class="col-12 col-md-6">
+                    <h1 class="display-3 font-weight-bold">
+                        {{ hero.title|safe }}
+                    </h1>
+                    <p class="font-size-lg text-muted mb-0">
+                        {{ hero.subtitle }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-8 py-md-11">
+        <div class="container">
+            <div class="row">
+                {% for c in hero.children %}
+                    <div class="col-12 col-md-4 text-center" data-aos="fade-up">
+                        <div class="icon text-primary mb-3">
+                            <img src="{{ c.icon }}" style="width: 48px; height: 48px;">
+                        </div>
+                        <h3>{{ c.title }}</h3>
+                        <p class="text-muted mb-6 mb-md-0">{{ c.content }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% set intro = page.intro.children[0] %}
+    <section class="pt-8 pt-md-11 bg-gray-200">
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-12 col-md-6 col-lg-5 order-md-2">
+                    <div class="d-flex flex-column w-md-130 mb-6 mb-md-0">
+                        <img class="img-fluid rounded shadow align-self-start" data-jarallax-element="-20"
+                             src="{{ intro.images[0] }}" alt="..."
+                             style="min-height: 1px; max-width: 50%; margin-left: 40%;">
+                        <img class="img-fluid rounded shadow align-self-start" data-jarallax-element="-50"
+                             src="{{ intro.images[1] }}" alt="..."
+                             style="min-height: 1px; max-width: 50%; margin-top: -35%;">
+                        <img class=" img-fluid rounded shadow align-self-center" data-jarallax-element="-80"
+                             src="{{ intro.images[2] }}" alt="..."
+                             style="min-height: 1px; max-width: 50%; margin-top: -20%;">
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 order-md-1 pt-md-12">
+                    <h1>{{ intro.title }}</h1>
+                    <p class="font-size-lg text-gray-700 mb-6">{{ intro.content }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set intro = page.intro.children[1] %}
+    <section class="py-8 py-md-11 bg-gray-200">
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-12 col-md-6 img-skewed img-skewed-right">
+                    <div class="card rounded-lg bg-black mb-6 mb-md-0 img-skewed-item screenshot">
+                        <div class="card-header border-white-10">
+                            <div class="d-flex">
+                                <span class="bg-danger rounded-circle" style="width: 10px; height: 10px;"></span>
+                                <span class="bg-warning rounded-circle ml-1" style="width: 10px; height: 10px;"></span>
+                                <span class="bg-success rounded-circle ml-1" style="width: 10px; height: 10px;"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <code class="highlight" data-toggle="typed"
+                                  data-options='{"backSpeed":2, "strings": ["&gt;&nbsp;$&nbsp;npm&nbsp;install<br/><span class=\"text-success\">Everything&nbsp;is&nbsp;installed</span><br/><br/>&gt;&nbsp;$&nbsp;gulp<br/><span class=\"text-success\">scss&nbsp;watching</span><br/><span class=\"text-success\">LiveReload&nbsp;started</span><br/><span class=\"text-success\">Opening&nbsp;localhost:3000</span><br/><br/>&gt;&nbsp;$&nbsp;that&#x2019;s&nbsp;it<br/><span class=\"text-success\">Yup,&nbsp;that&#x2019;s&nbsp;it.</span>"]}'
+                                  style="min-height: 183px;"></code>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-5">
+                    <h2>{{ intro.title }}</h2>
+                    <p class="font-size-lg text-gray-700">{{ intro.content }}</p>
+                    <a class="font-weight-bold text-decoration-none" href="{{ intro.action.url }}">
+                        {{ intro.action.title }} <i class="fe fe-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set test = page.test %}
+    <section class="py-8 py-md-11">
+        <div class="container">
+            <div class="row align-items-stretch">
+                {% for t in test.children %}
+                    <div class="col-12 col-md-5">
+                        <blockquote class="blockquote text-center">
+                            <div class="img-fluid mb-5 mb-md-7 mx-auto svg-shim">
+                                <img src="{{ t.icon }}" style="max-width: 120px;">
+                            </div>
+                            <p class="mb-5 mb-md-7">{{ t.content }}</p>
+                            <footer class="blockquote-footer mb-8 mb-md-0">
+                                <div class="avatar mr-3">
+                                    <img src="{{ t.avatar }}" class="avatar-img rounded-circle" alt="{{ t.avatar }}">
+                                </div>
+                                <span class="h6 text-uppercase">{{ t.author }}</span>
+                            </footer>
+                        </blockquote>
+                    </div>
+                    {% if loop.index == 1 %}
+                        <div class="col-12 col-md-1 border-right my-n8 my-md-n11 d-none d-md-block"></div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% set action = page.action %}
+    <section data-jarallax data-speed=".8" class="py-12 py-md-14 overlay overlay-black overlay-80 jarallax"
+             style="background-image: url({{ action.image }});">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 text-center">
+                    <h1 class="text-white">{{ action.title }}</h1>
+                    <p class="font-size-lg text-white-80 mb-6 mb-md-8">{{ action.content }}</p>
+                    <a href="{{ action.action.url }}" class="btn btn-pill btn-primary lift">
+                        {{ action.action.title }} <i class="{{ action.action.icon }} ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

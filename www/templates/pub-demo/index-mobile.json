@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "title": "Welcome to <span class=\"text-primary\">KoiSeed</span>.<br>Develop anything.",
+    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目",
+    "images": [
+      "/static/landkit/assets/img/screenshots/mobile/home.jpg",
+      "/static/landkit/assets/img/screenshots/mobile/rental.jpg"
+    ],
+    "action": {
+      "title": "立即开始",
+      "url": "#"
+    }
+  },
+  "intro": {
+    "children": [
+      {
+        "title": "轻松定义你的数据结构。",
+        "content": "KoiSeed允许你轻松定义业务所需的数据结构及其关系，免除了存储细节的复杂性。这种简便性加快了开发流程，使其更高效。",
+        "button": {
+          "text": "了解更多",
+          "url": "#!"
+        },
+        "images": [
+          "/static/landkit/assets/img/photos/photo-23.jpg",
+          "/static/landkit/assets/img/photos/photo-25.jpg",
+          "/static/landkit/assets/img/photos/photo-22.jpg",
+          "/static/landkit/assets/img/photos/photo-24.jpg"
+        ]
+      },
+      {
+        "title": "跨所有平台生成种子项目。",
+        "content": "通过为你的数据结构定义直观的视图，KoiSeed能生成可以在任何平台运行的种子项目。无论是网站、小程序、iOS或Android应用，你都能在开发开始时就占据优势，获得遵循最佳实践且易于维护的项目。",
+        "image": "/static/landkit/assets/img/screenshots/ui/mobile-chat.png"
+      }
+    ]
+  },
+  "action": {
+    "title": "今天就开始你的项目吧！",
+    "content": "通过KoiSeed跳跃式开始你的开发，通过自动合并机制实现生成代码与定制开发之间的完美平衡。",
+    "images": [
+      "/static/landkit/assets/img/buttons/button-app.png",
+      "/static/landkit/assets/img/buttons/button-play.png"
+    ]
+  }
+}
