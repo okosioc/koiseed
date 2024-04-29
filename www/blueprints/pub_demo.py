@@ -348,7 +348,7 @@ def verify_email():
 def _send_welcome_email(user: DemoUser):
     """ Send a welcome email to user. """
     # Add name to subject can reduce the chance of being marked as spa
-    subject = _('Welcome to ') + _(current_app.config['SHORT_NAME']) + _(', ') + user.name
+    subject = _('Welcome to ') + current_app.config['SHORT_NAME'] + _(', ') + user.name
     link = ''
     email = render_template('emails/welcome.html', title=subject, name=user.name, link=link)
     send_service_mail(current_app._get_current_object(), subject, [user.email], email)
