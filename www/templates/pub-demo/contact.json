@@ -1,0 +1,28 @@
+{
+  "action": {
+    "title": "We’re Here to Help",
+    "subtitle": "We always want to hear from you! Let us know how we can best help you and we will do our very best.",
+    "image": "/static/landkit/assets/img/covers/cover-5.jpg",
+    "children": [
+      {
+        "icon": "fe fe-map-pin",
+        "title": "地址",
+        "content": "中国香港中环"
+      },
+      {
+        "icon": "fe fe-phone",
+        "title": "电话",
+        "content": "+852-12345678"
+      },
+      {
+        "icon": "fe fe-mail",
+        "title": "邮箱",
+        "content": "service#koiseed.com"
+      }
+    ],
+    "action": {
+      "title": "Let us hear from you directly.",
+      "remarks": "Send us a email and we will get back to you as soon as possible."
+    }
+  }
+}

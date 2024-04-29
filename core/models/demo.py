@@ -313,7 +313,7 @@ class DemoProjectDashboard(CacheModel):
     recent_activities: List[DemoActivity] = Field(format_=Format.TIMELINE, title='最近操作')  # 按照时间倒序
     #
     __views__ = {
-        'www://dash-demo/project-dashboard': '''#!read?extends=layout-dash-demo&title=项目仪表盘
+        'www://dash-demo/index-project': '''#!read?extends=layout-dash-demo&title=项目仪表盘
             active_projects_count, active_projects_value, members_count, tasks_count
             active_projects#8,                                            recent_activities#4
               title, status, value, start, members, percent, create_time    user, title, content, time

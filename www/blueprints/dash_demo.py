@@ -9,15 +9,10 @@ from flask import Blueprint, render_template, current_app, redirect, request, ab
 from flask_login import current_user
 from py3seed import populate_model, populate_search
 
-from core.models import DemoPost, DemoUser, DemoProject, DemoTask, DemoProjectDashboard, DemoTeam
+from core.models import DemoPostStatus, DemoPost, DemoUser, DemoProject, DemoTask, DemoProjectDashboard, DemoTeam
 from www.commons import get_id, auth_permission, admin_permission, json_dumps
 
-from core.models import DemoPostStatus
-from www.commons import prepare_demo_data
-
 dash_demo = Blueprint('dash-demo', __name__, url_prefix='/dash-demo')
-
-prepare_demo_data()
 
 
 @dash_demo.route('/post-list')
@@ -192,9 +187,9 @@ def project_edit_search_demo_users():
     return jsonify(error=0, message='Search demo user successfully.', pagination=dict(pagination), demo_users=demo_users)
 
 
-@dash_demo.route('/project-dashboard')
+@dash_demo.route('/index-project')
 @auth_permission
-def project_dashboard():
+def index_project():
     """ 项目仪表盘. """
     # NOTE: 目前是实时扫描数据并整合为一个仪表盘数据, 实际应用中应该是是使用定时任务来生成
     dpd = DemoProjectDashboard()
@@ -216,7 +211,7 @@ def project_dashboard():
     recent_activities.sort(key=lambda x: x.time, reverse=True)
     dpd.recent_activities = recent_activities[:10]
     #
-    return render_template('demo/project-dashboard.html', demo_project_dashboard=dpd)
+    return render_template('dash-demo/index-project.html', demo_project_dashboard=dpd)
 
 
 @dash_demo.route('/task-detail')
@@ -373,3 +368,15 @@ def user_profile_update():
     return jsonify(error=0, message='Save demo user successfully.', id=id_)
 
 
+@dash_demo.route('/index')
+@auth_permission
+def index():
+    """ Dash index. """
+    return redirect(url_for('dash-demo.index_project'))
+
+
+@dash_demo.route('/profile')
+@auth_permission
+def profile():
+    """ User profile page. """
+    return redirect(url_for('dash-demo.user_profile', id=current_user.id))

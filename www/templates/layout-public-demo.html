@@ -51,9 +51,8 @@
                     {'title': 'Sidenav', 'url': '/shop/index-sidenav'},
                 ]},
                 {'title': 'Dashboards', 'url': '#!', 'children': [
-                    {'title': 'Default', 'url': '/dashboard/index'},
-                    {'title': 'Projects', 'url': '/dashboard/index-projects'},
-                    {'title': 'Sales', 'url': '/dashboard/index-sales'},
+                    {'title': 'Projects', 'url': '/dash-demo/index-project'},
+                    {'title': 'Sales', 'url': '/dash-demo/index-sale'},
                 ]},
             ],
         },
@@ -73,8 +72,8 @@
             ],
         },
         {
-            'title': 'Connect', 'url': '/about', 'children': [
-                {'title': 'Contact Us', 'url': '/contact'},
+            'title': 'Connect', 'url': '#!', 'children': [
+                {'title': 'Contact Us', 'url': '/pub-demo/contact'},
                 {'title': 'Help Center', 'url': 'javascript:coming();'},
                 {'title': '', 'url': '#!'},
                 {'title': 'Privacy Policy', 'url': 'javascript:coming();'},
@@ -82,9 +81,9 @@
             ],
         },
         {
-            'title': 'Blog', 'url': '/blog', 'hide_children': true,  'children': [
-                {'url': '/posts'},
-                {'url': '/post'},
+            'title': 'Blog', 'url': '/pub-demo/blog', 'hide_children': true,  'children': [
+                {'url': '/pub-demo/posts'},
+                {'url': '/pub-demo/post'},
             ],
         },
     ],
@@ -238,7 +237,7 @@
                 {% endfor %}
                 <li class="nav-item">
                     {% if current_user.is_authenticated %}
-                        <a class="nav-link" href="/home">__(Home)</a>
+                        <a class="nav-link" href="/dash-demo/index">__(Home)</a>
                     {% else %}
                         <a class="nav-link" href="/login">__(Login/Signup)</a>
                     {% endif %}
@@ -314,7 +313,7 @@
         {
             'title': 'Connect',
             'children': [
-                {'title': 'Contact Us', 'url': '/contact'},
+                {'title': 'Contact Us', 'url': '/pub-demo/contact'},
                 {'title': 'Help Center', 'url': 'javascript:coming();'},
                 {'title': 'Privacy Policy', 'url': 'javascript:coming();'},
                 {'title': 'Terms and Conditions', 'url': 'javascript:coming();'},

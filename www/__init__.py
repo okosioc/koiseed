@@ -27,8 +27,8 @@ from py3seed import ModelJSONProvider, connect, SimpleEnumMeta
 from werkzeug.datastructures import MultiDict
 from werkzeug.urls import url_quote, url_encode
 
-from core.models import User, Block
-from www.commons import SSLSMTPHandler, helpers, ListConverter, BSONObjectIdConverter
+from core.models import DemoUser
+from www.commons import SSLSMTPHandler, helpers, ListConverter, BSONObjectIdConverter, prepare_demo_data
 from www.extensions import mail, cache, qiniu
 from www.jobs import init_schedule
 from www.public import public
@@ -60,7 +60,7 @@ def create_www(pytest=False, runscripts=False):
     configure_logging(app)
     configure_errorhandlers(app)
     configure_py3seed(app)
-    configure_blocks(app)
+    configure_demo(app)
     configure_extensions(app)
     configure_login(app)
     configure_before_handlers(app)
@@ -83,20 +83,14 @@ def configure_extensions(app):
     cache.init_app(app)
 
 
-def configure_blocks(app):
-    """ Prepare blocks. """
-    block_dict = {blk.key: blk for blk in list(Block.find())}
-    app.logger.debug(f'loaded {len(block_dict)} blocks: {block_dict.keys()}')
-
-    @app.context_processor
-    def inject_blocks():
-        """ Inject blocks into template context. """
-        return dict(blocks=block_dict)
-
-
 def configure_py3seed(app):
     """ Prepare db connection. """
     connect(app.config.get('MONGODB_URI'))
+
+
+def configure_demo(app):
+    """ Prepare demo data. """
+    prepare_demo_data()
 
 
 def configure_login(app):
@@ -106,7 +100,7 @@ def configure_login(app):
     @login_manager.user_loader
     def load_user(user_id):
         """ Reload the user object from the user ID stored in the session. """
-        return User.find_one(User.__id_type__(user_id))
+        return DemoUser.find_one(DemoUser.__id_type__(user_id))
 
 
 def configure_uploads(app):

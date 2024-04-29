@@ -179,16 +179,16 @@ def project_edit_search_demo_users():
     return jsonify(error=0, message='Search demo user successfully.', pagination=dict(pagination), demo_users=demo_users)
 
 
-@dash_demo.route('/project-dashboard')
+@dash_demo.route('/index-project')
 @auth_permission
-def project_dashboard():
+def index_project():
     """ 项目仪表盘. """
     id_ = get_id(int)
     demo_project_dashboard = DemoProjectDashboard.find_one(id_)
     if not demo_project_dashboard:
         abort(404)
     #
-    return render_template('dash-demo/project-dashboard.html', demo_project_dashboard=demo_project_dashboard)
+    return render_template('dash-demo/index-project.html', demo_project_dashboard=demo_project_dashboard)
 
 
 @dash_demo.route('/task-detail')

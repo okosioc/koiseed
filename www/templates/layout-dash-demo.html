@@ -24,33 +24,33 @@
 {% set nav = {
     'title': 'KoiSeed',
     'icon': '/static/img/logo.png',
-    'url': '/home',
+    'url': '/dash-demo/index',
     'actions': [
-        {'icon':'fe fe-user', 'title':'Profile', 'url':'/profile'},
+        {'icon':'fe fe-user', 'title':'Profile', 'url':'/dash-demo/profile'},
         {'title':''},
-        {'icon':'fe fe-log-out', 'title':'Logout', 'url':'/logout'}
+        {'icon':'fe fe-log-out', 'title':'Logout', 'url':'/pub-demo/logout'}
     ],
     'children': [
         {'icon':'fe fe-grid', 'title':'仪表盘', 'url':'#', 'children':[
-            {'title':'项目', 'url':'/demo/project-dashboard'},
+            {'title':'项目', 'url':'/dash-demo/index-project'},
         ]},
         {'icon':'fe fe-user', 'title':'用户', 'url':'#', 'children':[
-            {'title':'用户设置', 'url':'/demo/user-profile?id=1'},
+            {'title':'用户设置', 'url':'/dash-demo/user-profile?id=1'},
         ]},
         {'icon':'fe fe-users', 'title':'团队', 'url':'#', 'children':[
-            {'title':'团队设置', 'url':'/demo/team-profile?id=1'},
-            {'title':'团队成员', 'url':'/demo/team-members?id=1'},
+            {'title':'团队设置', 'url':'/dash-demo/team-profile?id=1'},
+            {'title':'团队成员', 'url':'/dash-demo/team-members?id=1'},
         ]},
         {'icon':'fe fe-briefcase', 'title':'项目管理', 'url':'#', 'children':[
-            {'title':'项目列表', 'url':'/demo/project-list'},
-            {'title':'项目详情', 'url':'/demo/project-detail?id=1'},
-            {'title':'项目编辑', 'url':'/demo/project-edit'},
-            {'title':'任务详情', 'url':'/demo/task-detail?id=1'},
-            {'title':'任务编辑', 'url':'/demo/task-edit?project_id=1'},
+            {'title':'项目列表', 'url':'/dash-demo/project-list'},
+            {'title':'项目详情', 'url':'/dash-demo/project-detail?id=1'},
+            {'title':'项目编辑', 'url':'/dash-demo/project-edit'},
+            {'title':'任务详情', 'url':'/dash-demo/task-detail?id=1'},
+            {'title':'任务编辑', 'url':'/dash-demo/task-edit?project_id=1'},
         ]},
-        {'icon':'fe fe-book-open', 'title':'博客管理', 'url':'/demo/post-list', 'hide_children': True,  'children':[
-            {'url':'/demo/post-edit'},
-            {'url':'/demo/post-preview'},
+        {'icon':'fe fe-book-open', 'title':'博客管理', 'url':'/dash-demo/post-list', 'hide_children': True,  'children':[
+            {'url':'/dash-demo/post-edit'},
+            {'url':'/dash-demo/post-preview'},
         ]},
         {'icon': 'fe fe-home', 'title': '网站首页', 'url': '/'},
     ],
@@ -294,7 +294,7 @@
         {% block content %}
         {% endblock %}
     </div>
-    {% set footer = blocks['footer'] or {
+    {% set footer = {
         'remarks': '2024 © koiseed.com',
     } %}
     <footer class="footer py-3">

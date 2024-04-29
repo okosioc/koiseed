@@ -1,0 +1,21 @@
+{
+  "hero": {
+    "title": "Blog",
+    "subtitle": "Keep up to date with what we're working on!",
+    "image": "/static/landkit/assets/img/covers/cover-13.jpg",
+    "tags": [
+      "Design",
+      "Product",
+      "UX",
+      "Resources"
+    ]
+  },
+  "action": {
+    "title": "Get our stories delivered",
+    "subtitle": "From us to your inbox weekly.",
+    "action": {
+      "title": "Subscribe",
+      "url": "coming();"
+    }
+  }
+}

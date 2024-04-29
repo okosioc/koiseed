@@ -13,7 +13,3 @@ from .demo import DemoUserStatus, DemoUserRole, DemoUserType, DemoUser, DemoTeam
     DemoProjectStatus, DemoTaskStatus, DemoTask, DemoActivity, DemoProject, DemoProjectDashboard, \
     DemoAttributeOption, DemoAttribute, DemoCategory, DemoProductAttribute, DemoProduct, DemoSku, \
     DEMO_POST_TAGS, DemoPostStatus, DemoPost
-# You need to implement your user models, because above DemoXXX models are CacheModel, which is not suitable for real project
-# Please use your own user models below
-from .demo import DemoUserStatus as UserStatus, DemoUserRole as UserRole, DemoUserType as UserType, DemoUser as User
-from .demo import DEMO_POST_TAGS as POST_TAGS, DemoPostStatus as PostStatus, DemoPost as Post

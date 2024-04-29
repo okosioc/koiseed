@@ -20,6 +20,8 @@ from PIL import Image
 from flask import abort, request, current_app, render_template
 from flask_babel import gettext, ngettext
 
+from www.extensions import cache
+
 
 def timesince(dt, default=None):
     """  Returns string representing "time since".
@@ -114,13 +116,22 @@ def render_template_with_page(name: str, **context):
     The page content is a json file, which contains predefined blocks, e.g, hero, intro, test, price, action etc.
 
     NOTE: a page param is added to context, so please do not use a page param in your context.
+
+    TODO: Support i18n
     """
     page_path = os.path.join(current_app.root_path, current_app.template_folder, name.replace(os.path.splitext(name)[1], '.json'))
-    if not os.path.exists(page_path):
-        abort(500)
-    #
-    with open(page_path, encoding="utf8") as page_file:
-        page = json.load(page_file)
+    # Simple cache mechanism
+    page_cache = cache.get(page_path)
+    if page_cache is None:
+        if not os.path.exists(page_path):
+            abort(500)
+        #
+        with open(page_path, encoding="utf8") as page_file:
+            page = json.load(page_file)
+        #
+        cache.set(page_path, page)
+    else:
+        page = page_cache
     #
     return render_template(name, page=page, **context)
 

@@ -1,0 +1,265 @@
+{% extends "layout-public-demo.html" %}
+{% set title = _('Blog') %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% set block = page.hero %}
+    <section data-jarallax data-speed=".8" class="py-10 py-md-14 overlay overlay-black overlay-60 bg-cover jarallax"
+             style="background-image: url({{ block.image }});">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-7 text-center">
+                    <h1 class="display-2 font-weight-bold text-white">
+                        {{ block.title }}
+                    </h1>
+                    <p class="lead mb-0 text-white-75">
+                        {{ block.subtitle }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="position-relative">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-light">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+            </svg>
+        </div>
+    </div>
+    <section class="mt-n6">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <form class="rounded shadow mb-4" action="posts">
+                        <div class="input-group input-group-lg">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text border-0 pr-1">
+                                    <i class="fe fe-search"></i>
+                                </span>
+                            </div>
+                            <input name="search.title__like" type="text" class="form-control border-0 px-1"
+                                   aria-label="Search our blog..."
+                                   placeholder="Search our blog...">
+                            <div class="input-group-append">
+                                <span class="input-group-text border-0 py-0 pl-1 pr-3">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        Search
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <h6 class="font-weight-bold text-uppercase text-muted mb-0">
+                                Tags:
+                            </h6>
+                        </div>
+                        <div class="col ml-n5">
+                            {% for tag in tags %}
+                                <a class="badge badge-pill badge-secondary-soft" href="posts?search.tags={{ tag }}">
+                                    <span class="h6 text-uppercase">{{ tag }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set posts = posts_featured or [] %}
+    <section class="pt-7 pt-md-10">
+        <div class="container">
+            {% for post in posts %}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-row shadow-light-lg mb-6 lift lift-lg">
+                            <div class="row no-gutters">
+                                <div class="col-12">
+                                <span class="badge badge-pill badge-light badge-float badge-float-inside">
+                                    <span class="h6 text-uppercase">FEATURED</span>
+                                </span>
+                                </div>
+                                <a class="col-12 col-md-6 order-md-2 bg-cover card-img-right"
+                                   style="background-image: url({{ post.cover }});" href="post?id={{ post.id }}">
+                                    <img src="{{ post.cover }}" alt="..." class="img-fluid d-md-none invisible">
+                                    <div class="shape shape-left shape-fluid-y svg-shim text-white d-none d-md-block">
+                                        <svg viewBox="0 0 112 690" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M0 0h62.759v172C38.62 384 112 517 112 517v173H0V0z"
+                                                  fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </a>
+                                <div class="col-12 col-md-6 order-md-1">
+                                    <a class="card-body" href="post?id={{ post.id }}">
+                                        <h3>
+                                            {{ post.title }}
+                                        </h3>
+                                        <p class="mb-0 text-muted">
+                                            {{ post.subtitle }}
+                                        </p>
+                                    </a>
+                                    <a class="card-meta" href="javascript:;">
+                                        <hr class="card-meta-divider">
+                                        <div class="avatar avatar-sm mr-2">
+                                            {% if post.author.avatar %}
+                                                <img src="{{ post.author.avatar }}" alt="..."
+                                                     class="avatar-img rounded-circle">
+                                            {% else %}
+                                                <span class="avatar-title rounded-circle bg-primary">{{ post.author.name|first }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <h6 class="text-uppercase text-muted mr-2 mb-0">
+                                            {{ post.author.name }}
+                                        </h6>
+                                        <p class="h6 text-uppercase text-muted mb-0 ml-auto">
+                                            <span>{{ post.publish_time|date if post.publish_time is not none else '-' }}</span>
+                                        </p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% set posts = posts_latest or [] %}
+    <section class="pt-7 pt-md-10">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="mb-0">
+                        Latest Posts
+                    </h3>
+                    <p class="mb-5 text-muted">
+                        Here’s what’s big recently!
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                {# 前两个帖子 #}
+                {% for post in posts[:2] %}
+                    <div class="col-12 col-md-6 d-flex">
+                        <div class="card mb-6 shadow-light-lg lift lift-lg">
+                            <a class="card-img-top" href="post?id={{ post.id }}">
+                                <img src="{{ post.cover }}" alt="..." class="card-img-top">
+                                <div class="position-relative">
+                                    <div class="shape shape-bottom shape-fluid-x svg-shim text-white">
+                                        <svg viewBox="0 0 2880 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M2160 0C1440 240 720 240 720 240H0v240h2880V0h-720z"
+                                                  fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                            <a class="card-body" href="post?id={{ post.id }}">
+                                <h3>{{ post.title }}</h3>
+                                <p class="mb-0 text-muted">{{ post.subtitle }}</p>
+                            </a>
+                            <a class="card-meta mt-auto" href="javascript:;">
+                                <hr class="card-meta-divider">
+                                <div class="avatar avatar-sm mr-2">
+                                    {% if post.author.avatar %}
+                                        <img src="{{ post.author.avatar }}" alt="..."
+                                             class="avatar-img rounded-circle">
+                                    {% else %}
+                                        <span class="avatar-title rounded-circle bg-primary">{{ post.author.name|first }}</span>
+                                    {% endif %}
+                                </div>
+                                <h6 class="text-uppercase text-muted mr-2 mb-0">{{ post.author.name }}</h6>
+                                <p class="h6 text-uppercase text-muted mb-0 ml-auto">
+                                    <span>{{ post.publish_time|date if post.publish_time is not none else '-' }}</span>
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                {# 后面的帖子 #}
+                {% for post in posts[2:] %}
+                    <div class="col-12 col-md-6 col-lg-4 d-flex">
+                        <div class="card mb-6 shadow-light-lg lift lift-lg">
+                            <a class="card-img-top" href="post?id={{ post.id }}">
+                                <img src="{{ post.cover }}" alt="..." class="card-img-top">
+                                <div class="position-relative">
+                                    <div class="shape shape-bottom shape-fluid-x svg-shim text-white">
+                                        <svg viewBox="0 0 2880 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M2160 0C1440 240 720 240 720 240H0v240h2880V0h-720z"
+                                                  fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                            <a class="card-body" href="post?id={{ post.id }}">
+                                <h3>{{ post.title }}</h3>
+                                <p class="mb-0 text-muted">{{ post.subtitle }}</p>
+                            </a>
+                            <a class="card-meta mt-auto" href="javascript:;">
+                                <hr class="card-meta-divider">
+                                <div class="avatar avatar-sm mr-2">
+                                    {% if post.author.avatar %}
+                                        <img src="{{ post.author.avatar }}" alt="..."
+                                             class="avatar-img rounded-circle">
+                                    {% else %}
+                                        <span class="avatar-title rounded-circle bg-primary">{{ post.author.name|first }}</span>
+                                    {% endif %}
+                                </div>
+                                <h6 class="text-uppercase text-muted mr-2 mb-0">{{ post.author.name }}</h6>
+                                <p class="h6 text-uppercase text-muted mb-0 ml-auto">
+                                    <span>{{ post.publish_time|date if post.publish_time is not none else '-' }}</span>
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <section class="py-7 py-md-10">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-9 col-lg-8 col-xl-7">
+                    <a href="posts" class="btn btn-block btn-outline-gray-300 d-flex align-items-center">
+                        <span class="mx-auto">Load more</span> <i class="fe fe-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set block = page.action %}
+    <div class="position-relative">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-gray-200">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+            </svg>
+        </div>
+    </div>
+    <section class="pt-6 pt-md-8 bg-gray-200">
+        <div class="container pb-6 pb-md-8">
+            <div class="row align-items-center">
+                <div class="col-12 col-md">
+                    <h3 class="mb-1 font-weight-bold">
+                        {{ block.title }}
+                    </h3>
+                    <p class="font-size-lg text-muted mb-6 mb-md-0">
+                        {{ block.subtitle }}
+                    </p>
+                </div>
+                <div class="col-12 col-md-5">
+                    <form>
+                        <div class="row">
+                            <div class="col">
+                                <input type="email" class="form-control" placeholder="Enter your email">
+                            </div>
+                            <div class="col-auto ml-n5">
+                                <button class="btn btn-primary" type="button"
+                                        onclick="{{ block.action.url }}">{{ block.action.title }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

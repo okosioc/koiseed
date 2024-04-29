@@ -1,0 +1,10 @@
+{
+  "action": {
+    "title": "Get our stories delivered",
+    "subtitle": "From us to your inbox weekly.",
+    "action": {
+      "title": "Subscribe",
+      "url": "coming();"
+    }
+  }
+}

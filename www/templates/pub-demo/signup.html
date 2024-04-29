@@ -35,7 +35,7 @@
                     <p class="mb-6 text-center text-muted">
                         __(Please use your email address to signup)
                     </p>
-                    <form class="mb-6" novalidate action="/signup" method="post">
+                    <form class="mb-6" novalidate action="signup" method="post">
                         {{ form.csrf_token }}
                         {{ form.next_url }}
                         <div class="form-group">
@@ -87,7 +87,7 @@
                         </div>
                     </form>
                     <p class="mb-0 font-size-sm text-center text-muted">
-                        __(Already have an account?) <a href="/login">__(Login) ></a>
+                        __(Already have an account?) <a href="login">__(Login) ></a>
                     </p>
                 </div>
             </div>
