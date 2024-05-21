@@ -1,18 +1,26 @@
 DOMAIN = 'koiseed.com'
 SHORT_NAME = 'KoiSeed'
 SECRET_KEY = 'FIXME'
+#
 # Cache
+#
 CACHE_TYPE = 'SimpleCache'
 CACHE_DEFAULT_TIMEOUT = 300
 CACHE_THRESHOLD = 10240
+#
 # Locale
+#
 ACCEPT_LANGUAGES = ['en', 'zh']
 BABEL_DEFAULT_LOCALE = 'zh'
 BABEL_DEFAULT_TIMEZONE = 'UTC'
+#
 # Log
+#
 DEBUG_LOG = 'logs/debug.log'
 ERROR_LOG = 'logs/error.log'
+#
 # Email
+#
 # ADMINS is used to receive support emails, e.g, calling logger.error(), or sending support email programmatically
 # MAIL_SERVER is None, will not send email, so you need to update it to your own SMTP server, e.g, 'smtp.gmail.com'
 # MAIL_USERNAME is used to log in SMTP server, most of the cases it is same as MAIL_DEFAULT_SENDER
@@ -25,10 +33,14 @@ MAIL_USE_SSL = True
 MAIL_USERNAME = 'FIXME'
 MAIL_PASSWORD = 'FIXME'
 MAIL_DEFAULT_SENDER = 'FIXME'
+#
 # DB
+#
 MONGODB_URI = 'mongodb://localhost:27017/koiseed'
 MONGODB_URI_PYTEST = 'mongodb://localhost:27017/pytest'
+#
 # Upload
+#
 # UPLOAD_ENDPOINT = '//upload.qiniup.com/'
 # UPLOAD_BASE = '//cdn.koiseed.com'
 # UPLOAD_BUCKET = 'koiseed'
@@ -70,3 +82,13 @@ UPLOAD_IMAGE_PREVIEW = '_thumbnail_x300'
 UPLOAD_AVATAR_PREVIEW = '_thumbnail_!200x200c'
 # _frame_<Second>_<Width>x<Height> -> get the frame of the video at specified second
 UPLOAD_VIDEO_POSTER = '_frame_1_x300'
+#
+# OpenAI
+#
+OPENAI_API_KEY = 'FIXME'
+# Azure OpenAI
+# Keys and endpoint are defined in an Azure resource of OpenAI
+# OPENAI_API_KEY = 'FIXME'
+# OPENAI_ENDPOINT = 'FIXME'
+# Api versions defined in https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#completions
+# OPENAI_API_VERSION = '2024-02-15-preview'
