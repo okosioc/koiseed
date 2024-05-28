@@ -1,7 +1,7 @@
 {
   "hero": {
     "title": "Welcome to KoiSeed.<br>Develop anything.",
-    "content": "基于数据结构及其视图，快速生成跨平台的种子项目。",
+    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目。",
     "action": {
       "url": "#!",
       "title": "创建您的项目"
@@ -31,7 +31,7 @@
     ]
   },
   "intro": {
-    "tag": "Platform",
+    "tag": "Flow",
     "title": "简化开发流程。",
     "content": "KoiSeed 提供一站式服务，从数据结构定义到跨平台应用生成。",
     "children": [

@@ -22,6 +22,7 @@ class OpenAISupport(object):
         self.client = None
         #
         self.api_key = None
+        self.default_model = None
         self.endpoint = None
         self.api_version = None
         #
@@ -32,6 +33,7 @@ class OpenAISupport(object):
         """ Init from app. """
         self.app = app
         self.api_key = app.config['OPENAI_API_KEY']
+        self.default_model = app.config['OPENAI_DEFAULT_MODEL']
         self.endpoint = app.config.get('OPENAI_ENDPOINT', '')
         self.api_version = app.config.get('OPENAI_API_VERSION')
         #
@@ -53,33 +55,33 @@ class OpenAISupport(object):
                 base_url=self.endpoint or None,
             )
 
-    def chat(self, messages, model):
+    def chat(self, messages, model=None):
         """ Return chatGPT response.
 
         :param messages: List of message, e.g. [{'role': 'system', 'content': 'You are a helpful assistant'}, {'role': 'user", 'content': 'Hello'}]
         :param model: Model name, e.g, gpt-3.5-turbo, gpt-4-turbo, gpt-4o, etc.
 
         NOTE:
-        - If you are using Azure OpenAI, you should use the deployment name instead of model name, which has configured the OpenAI model(e.g, gpt-4) and its version(e.g, turbo-2024-04-09)
+        - If you are using Azure OpenAI, you should Use deployment name instead of model name under an Azure resource, which has configured the OpenAI model(e.g, gpt-4) and its version(e.g, turbo-2024-04-09)
           e.g, open-gpt4-turbo-01
         """
         # Chat completion demo, https://platform.openai.com/docs/guides/text-generation/chat-completions-api
         # Chat completion api, https://platform.openai.com/docs/api-reference/chat/create
         completion = self.client.chat.completions.create(
-            model=model,
+            model=model or self.default_model,
             messages=messages,
         )
         # print(completion.model_dump_json(indent=2))
         return completion.choices[0].message.content
 
-    def chat_stream(self, messages, model):
+    def chat_stream(self, messages, model=None):
         """ Yield chatGPT response by streaming.
 
         :param messages: List of message, e.g. [{'role': 'system', 'content': 'You are a helpful assistant'}, {'role': 'user", 'content': 'Hello'}]
         :param model: Model name, e.g, gpt-3.5-turbo, gpt-4-turbo, gpt-4o, etc.
 
         NOTE:
-        - If you are using Azure OpenAI, you should use the deployment name instead of model name, which has configured the OpenAI model(e.g, gpt-4) and its version(e.g, turbo-2024-04-09)
+        - If you are using Azure OpenAI, you should Use deployment name instead of model name under an Azure resource, which has configured the OpenAI model(e.g, gpt-4) and its version(e.g, turbo-2024-04-09)
           e.g, open-gpt4-turbo-01
         """
         start_time = time.time()
@@ -87,7 +89,7 @@ class OpenAISupport(object):
         # Chat completion demo, https://platform.openai.com/docs/guides/text-generation/chat-completions-api
         # Chat completion api, https://platform.openai.com/docs/api-reference/chat/create
         stream = self.client.chat.completions.create(
-            model=model,
+            model=model or self.default_model,
             messages=messages,
             stream=True,
         )
@@ -116,7 +118,7 @@ class OpenAISupport(object):
         elapsed_time = time.time() - start_time
         self.app.logger.info(f'Total tokens: {tokens}, Elapsed: {elapsed_time:.2f} seconds')
 
-    def chat_sse(self, messages, model):
+    def chat_sse(self, messages, model=None):
         """ Yield chatGPT response by server-sent events.
 
         Use server-sent events, FE needs to use EventSource to build a long connection to receive openAI's stream response.
@@ -127,7 +129,7 @@ class OpenAISupport(object):
         :param model: Model name, e.g, gpt-3.5-turbo, gpt-4-turbo, gpt-4o, etc.
 
         NOTE:
-        - If you are using Azure OpenAI, you should use the deployment name instead of model name, which has configured the OpenAI model(e.g, gpt-4) and its version(e.g, turbo-2024-04-09)
+        - If you are using Azure OpenAI, you should Use deployment name instead of model name under an Azure resource, which has configured the OpenAI model(e.g, gpt-4) and its version(e.g, turbo-2024-04-09)
           e.g, open-gpt4-turbo-01
         """
         try:
@@ -135,7 +137,7 @@ class OpenAISupport(object):
             # Chat completion demo, https://platform.openai.com/docs/guides/text-generation/chat-completions-api
             # Chat completion api, https://platform.openai.com/docs/api-reference/chat/create
             stream = self.client.chat.completions.create(
-                model=model,
+                model=model or self.default_model,
                 messages=messages,
                 stream=True,
             )

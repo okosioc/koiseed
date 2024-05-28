@@ -22,7 +22,7 @@
 </head>
 <body>
 {% set nav = {
-    'title': 'KoiSeed',
+    'title': config['SHORT_NAME'],
     'icon': '/static/img/logo.png',
     'url': '/dash-demo/index',
     'actions': [
@@ -295,7 +295,7 @@
         {% endblock %}
     </div>
     {% set footer = {
-        'remarks': '2024 © koiseed.com',
+        'remarks': '2024 © ' + config['DOMAIN'],
     } %}
     <footer class="footer py-3">
         <div class="container-{{ 'fluid' if nav_mode == 'side' else 'xxl' }}">

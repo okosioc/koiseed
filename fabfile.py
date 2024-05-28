@@ -9,6 +9,7 @@
     :date: 16/7/21
 """
 import json
+import re
 import os
 
 from invoke import task as local_task
@@ -17,6 +18,7 @@ from paramiko import RSAKey
 from fabric import task
 
 from www import create_www
+from www.commons import json_simplify, json_dumps, json_merge
 from www.extensions import openai
 
 # Multi hosts
@@ -106,51 +108,70 @@ def ai(ctx):
         # Print readme content
         print('\n----- README.md -----\n')
         print(readme)
-        print('\n----- END -----\n')
         # Create
         app = create_www(runscripts=True)
         with app.app_context():
             # Generate static contents
             # Read each json files in www/templates/public
             directory = 'www/templates/pub-demo'
+            demo_suffix = '.json'
             for fn in os.listdir(directory):
-                if fn.endswith('.json'):
-                    print(f'Processing {fn}...')
+                if fn.endswith(demo_suffix):
+                    print(f'\n----- {fn} -----\n')
+                    fg = os.path.join(directory, fn.replace(demo_suffix, '.jsonai'))
+                    if os.path.exists(fg):
+                        print(f'file exists, skip')
+                        continue
+                    #
                     fp = os.path.join(directory, fn)
                     with open(fp, 'r', encoding='utf-8') as f:
-                        data = f.read()
-                    #
-                    gpt_template = f'''下面是用来渲染我的jinja2模版的数据，用于网页的各个部分：
+                        demo_data = f.read()
+                    # 从json提取文本字段, 并使用yaml格式, 从而减少gpt的生成内容
+                    demo_json = json.loads(demo_data)
+                    simple_json = json_simplify(demo_json)
+                    gpt_template = f'''下面是用来渲染我的jinja2模版的json数据，用于网页的各个部分：
     
-    {data}
-    
-    我将提供一个新网站的介绍，需要复用上述数据结构，请保持结构不变，仅替换title/subtitle/content等文本字段的内容，并满足如下要求：
-    
-    1. 保证生成的内容符合该介绍，且无需参考原始数据的内容
-    2. 如果遇到lorom ipsum占位数据，保持不变
-    3. 生成的内容应当与我提供的介绍是同一个语言
-    4. 生成的内容以jinja2格式显示
-    
-    如果你明白了，请确认并等待新网站的介绍 ~
-    '''
+{simple_json}
+
+我将提供一个新网站的介绍，需要复用上述数据结构，请保持结构不变，生成各个文本字段的内容，并满足如下要求：
+
+1. 保证生成的内容符合该介绍，且无需参考原始数据的内容
+2. 通常我们会在hero部分简单列举产品的功能或者卖点，后续intro应当逐一介绍
+3. 生成的内容应当与我提供的介绍是同一个语言，只有tag字段使用相关的英文
+4. 请生成合法的json数据，以便我能够直接复制粘贴到json文件中
+
+如果你明白了，请确认并等待新网站的介绍 ~
+'''
                     response = openai.chat_stream(messages=[
                         {'role': 'system', 'content': '你是一个网站开发助理'},
                         {'role': 'user', 'content': gpt_template},
-                        {'role': 'assistant', 'content': '明白了，请提供新网站的介绍，以便我能够根据您提供的信息生成新的内容。'},
-                        {'role': 'user', 'content': '''
-    KoiSeed，基于数据结构及其视图，快速生成跨平台的种子项目。
-    
-    - 通过简单的方式定义业务所需的数据结构以及相互关系，无需考虑存储细节，支持主流数据库
-    - 为数据结构定义直观的视图，可生成跨平台的种子项目，如网站、小程序、iOS和Android应用等
-    - 生成的种子项目符合最佳实践且易于维护，并通过自动合并的机制实现了代码生成与定制开发的平衡                        
-                            '''}
-                    ],
-                        # For Aruze OpenAI, use deployment name instead of model name
-                        # model='open-gpt4-turbo-01')
-                        # For OpenAI, use model directly
-                        model='gpt-4o')
+                        {'role': 'assistant', 'content': '明白了，请提供新网站的介我!F绍，以便我能够根据您提供的信息生成新的内容。'},
+                        {'role': 'user', 'content': '''锦鲤模型，专注于大模型的实际应用
+- 针对具体的应用场景，选择合适的大模型，实现并开源了最小可行产品
+- 您可以在线体验这些应用，或下载源代码自行二次开发，或联系我们量身定制
+'''
+                         }
+                    ])
                     #
-                    for content in response:
-                        print(content, end='')
+                    content = ''
+                    for chunk in response:
+                        print(chunk, end='')
+                        content += chunk
                     #
-                    break
+                    json_pattern = re.compile(r"```json(.*?)```", re.DOTALL)
+                    json_match = json_pattern.search(content)
+                    # TODO: retry if no json content found or invalid json content
+                    if not json_match:
+                        print('No json content found, try to retry')
+                        break
+                    #
+                    response_data = json_match.group(1).strip()
+                    try:
+                        response_json = json.loads(response_data)
+                    except json.JSONDecodeError as e:
+                        print('Invalid json content, try to retry')
+                        break
+                    # Consolidate back to demo_json and save to file .jsonai
+                    json_merge(demo_json, response_json)
+                    with open(fg, 'w', encoding='utf-8') as f:
+                        f.write(json_dumps(demo_json, pretty=True))

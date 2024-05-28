@@ -12,6 +12,7 @@ fabric
 schedule
 arrow
 py3seed
+pyYAML
 qiniu
 requests
 Pillow

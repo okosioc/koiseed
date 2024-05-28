@@ -12,6 +12,7 @@ import os.path
 import re
 import json
 import ffmpeg
+import yaml
 
 from datetime import datetime, timedelta
 from typing import Type
@@ -98,6 +99,50 @@ def json_dumps(data, pretty=False):
         return json.dumps(data, separators=(',', ':'), ensure_ascii=False)
 
 
+def json_simplify(json_obj, keep_fields=('tag', 'subtitle', 'title', 'content', 'author')):
+    """
+    递归遍历JSON对象，只保留subtitle、title和content字段。
+
+    :param json_obj: 输入的JSON对象
+    :param keep_fields: 保留的字段
+    :return: 简化后的JSON对象
+    """
+    if isinstance(json_obj, dict):
+        simplified_obj = {}
+        for key, value in json_obj.items():
+            if key in keep_fields:
+                simplified_obj[key] = value
+            else:
+                nested_result = json_simplify(value)
+                if nested_result:
+                    simplified_obj[key] = nested_result
+        return simplified_obj
+    elif isinstance(json_obj, list):
+        return [json_simplify(item) for item in json_obj if json_simplify(item)]
+    else:
+        return None
+
+
+def json_merge(a, b):
+    """ Merge two json objects, a will be updated by b. """
+    if isinstance(a, dict) and isinstance(b, dict):
+        for k, v in b.items():
+            if k in a:
+                a[k] = json_merge(a[k], v)
+            else:
+                a[k] = v
+    elif isinstance(a, list) and isinstance(b, list):
+        for i, v in enumerate(b):
+            if i < len(a):
+                a[i] = json_merge(a[i], v)
+            else:
+                a.append(v)
+    else:
+        return b
+    #
+    return a
+
+
 def get_id(type_: Type):
     """ Try to get model id from request.args and request.form.  """
     id_ = request.values.get('id')
@@ -120,14 +165,20 @@ def render_template_with_page(name: str, **context):
     TODO: Support i18n
     """
     page_path = os.path.join(current_app.root_path, current_app.template_folder, name.replace(os.path.splitext(name)[1], '.json'))
-    # Simple cache mechanism
+    # Simple cache mechanism, default cache time is 300 seconds defined in config.py
     page_cache = cache.get(page_path)
     if page_cache is None:
-        if not os.path.exists(page_path):
-            abort(500)
-        #
-        with open(page_path, encoding="utf8") as page_file:
-            page = json.load(page_file)
+        # .jsonai -> .json
+        page_path_ai = page_path.replace('.json', '.jsonai')
+        if os.path.exists(page_path_ai):
+            with open(page_path_ai, encoding="utf8") as page_file:
+                page = json.load(page_file)
+        else:
+            if not os.path.exists(page_path):
+                abort(500)
+            #
+            with open(page_path, encoding="utf8") as page_file:
+                page = json.load(page_file)
         #
         cache.set(page_path, page)
     else:

@@ -50,3 +50,6 @@ venv/
 *.*.BASE
 *.*.THIS
 *.*.OTHER
+
+# ai generated json files
+*.jsonai

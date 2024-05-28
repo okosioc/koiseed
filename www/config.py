@@ -86,9 +86,12 @@ UPLOAD_VIDEO_POSTER = '_frame_1_x300'
 # OpenAI
 #
 OPENAI_API_KEY = 'FIXME'
+OPENAI_DEFAULT_MODEL = 'gpt-4o'
 # Azure OpenAI
 # Keys and endpoint are defined in an Azure resource of OpenAI
 # OPENAI_API_KEY = 'FIXME'
 # OPENAI_ENDPOINT = 'FIXME'
 # Api versions defined in https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#completions
 # OPENAI_API_VERSION = '2024-02-15-preview'
+# Use deployment name instead of model name under an Azure resource, which has configured the OpenAI model(e.g, gpt-4) and its version(e.g, turbo-2024-04-09)
+# OPENAI_DEFAULT_MODEL = 'open-gpt4-turbo-01'
