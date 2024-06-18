@@ -1,6 +1,6 @@
 {
   "hero": {
-    "title": "Welcome to <span class=\"text-primary\">KoiSeed</span>.<br>Develop anything.",
+    "title": "Welcome to <span class=\"text-primary\">KoiSeed</span><br>Develop anything",
     "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目",
     "image": "/static/landkit/assets/img/illustrations/illustration-2.png",
     "actions": [
@@ -38,27 +38,27 @@
       {
         "tag": "DATA",
         "title": "数据优先",
-        "subtitle": "数据结构决定了整个项目的业务逻辑，可配合项目模板生成种子项目。",
+        "content": "数据结构决定了整个项目的业务逻辑，可配合项目模板生成种子项目。",
         "image": "/static/landkit/assets/img/illustrations/illustration-8.png",
         "children": [
           {
             "title": "支持复杂数据结构",
-            "subtitle": "通过优雅的方式支持数据结构之间的嵌套和关联，从而能够实现复杂的业务逻辑"
+            "content": "通过优雅的方式支持数据结构之间的嵌套和关联，从而能够实现复杂的业务逻辑。"
           },
           {
             "title": "支持主流数据库",
-            "subtitle": "支持内存以及主流数据库，包含MySQL以及MongoDB等"
+            "content": "支持内存以及主流数据库，包含MySQL以及MongoDB等。"
           },
           {
             "title": "通过视图定义逻辑",
-            "subtitle": "定义数据结构的视图，可配合项目模版生成业务逻辑代码"
+            "content": "定义数据结构的视图，可配合项目模版生成业务逻辑代码。"
           }
         ]
       },
       {
         "tag": "TEMPLATE",
         "title": "项目模板",
-        "subtitle": "可根据数据结构及其视图快速生成多个平台的种子项目，如网站、小程序、iOS和Android应用等；该种子项目符合最佳实践，代码规范且易于维护；通过自动合并的机制实现了代码生成与定制开发的平衡。",
+        "content": "可根据数据结构及其视图快速生成多个平台的种子项目，如网站、小程序、iOS和Android应用等；该种子项目符合最佳实践，代码规范且易于维护；通过自动合并的机制实现了代码生成与定制开发的平衡。",
         "image": "/static/landkit/assets/img/illustrations/illustration-7.png",
         "children": [
           {
@@ -83,13 +83,13 @@
     "children": [
       {
         "title": "锦鲤规划",
-        "subtitle": "Simon Hong",
+        "author": "Simon Hong",
         "image": "/static/landkit/assets/img/photos/photo-1.jpg",
         "content": "定义完数据结构后，即可生成一个完整可用的种子项目，使得我们可以专注于业务逻辑进行开发，不愧为AI时代的低代码平台。"
       },
       {
         "title": "锦鲤模型",
-        "subtitle": "Samuel Feng",
+        "author": "Samuel Feng",
         "image": "/static/landkit/assets/img/photos/photo-26.jpg",
         "content": "快速的生成项目，方便的二次开发；更改数据结构后往往需要重新生成代码，平台通过一个自动合并的机制实现了代码生成与定制开发的平衡。"
       }
@@ -138,7 +138,7 @@
   "action": {
     "tag": "Get Started",
     "title": "立即开始",
-    "subtitle": "不要再浪费时间尝试从复杂的框架开始，而是从数据本源和种子项目开始构建您的业务，更快、更简单、且您仍然拥有完全的控制权",
+    "content": "不要再浪费时间尝试从复杂的框架开始，而是从数据本源和种子项目开始构建您的业务，更快、更简单、且您仍然拥有完全的控制权。",
     "action": {
       "title": "免费使用",
       "url": "/dashboard",

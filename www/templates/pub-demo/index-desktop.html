@@ -2,7 +2,7 @@
 {% set title = _('Index') %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-    {% set block = page.hero %}
+    {% set hero = page.hero %}
     <section class="position-relative py-8 py-md-11 bg-light">
         <div class="shape shape-fluid-x shape-blur-1 svg-shim text-gray-200">
             <svg viewBox="0 0 723 569" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,14 +14,14 @@
             <div class="row align-items-center">
                 <div class="col-12 col-md-6 order-md-2">
                     <div class="img-skewed img-skewed-left mb-8 mb-md-0">
-                        <img src="{{ block.image }}" alt="..." class="screenshot img-fluid mw-md-130"
+                        <img src="{{ hero.image }}" alt="..." class="screenshot img-fluid mw-md-130"
                              data-aos="img-skewed-item-left" data-aos-delay="100">
                     </div>
                 </div>
                 <div class="col-12 col-md-6 order-md-1" data-aos="fade-up">
-                    <h1 class="display-3">{{ block.title | safe }}</h1>
-                    <p class="lead text-muted mb-6 mb-md-8">{{ block.subtitle }}</p>
-                    {% for action in block.actions %}
+                    <h1 class="display-3">{{ hero.title | safe }}</h1>
+                    <p class="lead text-muted mb-6 mb-md-8">{{ hero.subtitle }}</p>
+                    {% for action in hero.actions %}
                         <a href="{{ action.url }}" class="{{ action.cls }}">
                             {{ action.title }} <i class="fe fe-arrow-right ml-3"></i>
                         </a>
@@ -30,26 +30,26 @@
             </div>
         </div>
     </section>
-    {% set block = page.intro.children[0] %}
+    {% set intro = page.intro.children[0] %}
     <section class="pt-8 pt-md-12 pb-10 pb-md-14 pb-lg-15 bg-light">
         <div class="container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-12 col-md-6">
                     <div class="img-skewed img-skewed-right mb-10 mb-md-0">
-                        <img src="{{ block.image }}" alt="..." class="img-fluid" data-aos="img-skewed-item-right">
+                        <img src="{{ intro.image }}" alt="..." class="img-fluid" data-aos="img-skewed-item-right">
                     </div>
                 </div>
                 <div class="col-12 col-md-6 col-lg-5">
-                    <h2>{{ block.title | safe }}</h2>
-                    <p class="font-size-lg text-gray-700 mb-6">{{ block.content }}</p>
+                    <h2>{{ intro.title | safe }}</h2>
+                    <p class="font-size-lg text-gray-700 mb-6">{{ intro.content }}</p>
                     <div class="d-flex">
-                        {% for child in block.children %}
+                        {% for child in intro.children %}
                             <div class="{{ 'border-left border-gray-300' if loop.index > 1 }}">
                                 {% set padding = 'px-5' %}
                                 {% if loop.first %}{% set padding = 'pr-5' %}{% endif %}
                                 {% if loop.last %}{% set padding = 'pl-5' %}{% endif %}
                                 <div class="{{ padding }}">
-                                    <h3 class="mb-0">{{ child.title }}</h3>
+                                    <h3 class="mb-1">{{ child.title }}</h3>
                                     <p class="text-gray-700 mb-0">{{ child.subtitle }}</p>
                                 </div>
                             </div>
@@ -67,18 +67,18 @@
             </svg>
         </div>
     </div>
-    {% set block = page.intro.children[1] %}
+    {% set intro = page.intro.children[1] %}
     <section class="pt-10 pt-lg-9 pb-md-14 pb-lg-15 bg-white">
         <div class="container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-12 col-md-6 col-lg-5">
                     <span class="badge badge-pill badge-success-soft mb-3">
-                        <span class="h6 text-uppercase">{{ block.tag }}</span>
+                        <span class="h6 text-uppercase">{{ intro.tag }}</span>
                     </span>
-                    <h2>{{ block.title | safe }}</h2>
-                    <p class="font-size-lg text-gray-700 mb-6">{{ block.content }}</p>
+                    <h2>{{ intro.title | safe }}</h2>
+                    <p class="font-size-lg text-gray-700 mb-6">{{ intro.content }}</p>
                     <div class="row">
-                        {% for child in block.children %}
+                        {% for child in intro.children %}
                             <div class="col-12 col-lg-6">
                                 <div class="d-flex">
                                     <div class="badge badge-rounded-circle badge-{{ child.cls }}-soft mt-1 mr-4">
@@ -93,12 +93,12 @@
                 <div class="col-12 col-md-6">
                     <div class="row">
                         <div class="col-6 mt-8 mr-n5" data-aos="fade-up">
-                            <img src="{{ block.images[0] }}" alt="..." class="img-fluid mb-4 rounded">
-                            <img src="{{ block.images[1] }}" alt="..." class="img-fluid rounded">
+                            <img src="{{ intro.images[0] }}" alt="..." class="img-fluid mb-4 rounded">
+                            <img src="{{ intro.images[1] }}" alt="..." class="img-fluid rounded">
                         </div>
                         <div class="col-6" data-aos="fade-up" data-aos-delay="100">
-                            <img src="{{ block.images[2] }}" alt="..." class="img-fluid mb-4 rounded">
-                            <img src="{{ block.images[3] }}" alt="..." class="img-fluid rounded">
+                            <img src="{{ intro.images[2] }}" alt="..." class="img-fluid mb-4 rounded">
+                            <img src="{{ intro.images[3] }}" alt="..." class="img-fluid rounded">
                         </div>
                     </div>
                 </div>
@@ -113,19 +113,19 @@
             </svg>
         </div>
     </div>
-    {% set block = page.intro.children[2] %}
+    {% set intro = page.intro.children[2] %}
     <section class="py-8 py-md-11 bg-light">
         <div class="container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-12 col-md-6 col-lg-5 order-md-2">
                     <span class="badge badge-pill badge-primary-soft mb-3">
-                      <span class="h6 text-uppercase">{{ block.tag }}</span>
+                      <span class="h6 text-uppercase">{{ intro.tag }}</span>
                     </span>
                     <h2>
-                        {{ block.title | safe }}
+                        {{ intro.title | safe }}
                     </h2>
                     <p class="font-size-lg text-gray-700 mb-8 mb-md-0">
-                        {{ block.content }}
+                        {{ intro.content }}
                     </p>
                 </div>
                 <div class="col-12 col-md-6 order-md-1" data-aos="fade-up">
@@ -137,7 +137,7 @@
                             </svg>
                         </div>
                         <div class="device device-macbook">
-                            <img src="{{ block.image }}" class="device-screen" alt="...">
+                            <img src="{{ intro.image }}" class="device-screen" alt="...">
                             <img src="/static/landkit/assets/img/devices/macbook.svg" class="img-fluid" alt="...">
                         </div>
                     </div>
@@ -145,16 +145,16 @@
             </div>
         </div>
     </section>
-    {% set block = page.price %}
+    {% set price = page.price %}
     <section class="pt-8 py-md-11">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-10 col-lg-8 text-center">
                 <span class="badge badge-pill badge-success-soft mb-3">
-                    <span class="h6 text-uppercase">{{ block.tag }}</span>
+                    <span class="h6 text-uppercase">{{ price.tag }}</span>
                 </span>
-                    <h2>{{ block.title | safe }}</h2>
-                    <p class="lead text-gray-700">{{ block.content }}</p>
+                    <h2>{{ price.title | safe }}</h2>
+                    <p class="lead text-gray-700">{{ price.content }}</p>
                     <form class="d-flex align-items-center justify-content-center mb-7 mb-md-9">
                         <span class="text-muted">Annual</span>
                         <div class="custom-control custom-switch mx-3">
@@ -167,7 +167,7 @@
                 </div>
             </div>
             <div class="row justify-content-center">
-                {% for child in block.children %}
+                {% for child in price.children %}
                     <div class="col-12 col-md-6 col-lg-5">
                         <div class="card card-border card-border-xl border-{{ child.cls }} shadow-light-lg mb-6 mb-md-0 lift lift-lg">
                             <div class="card-body">
@@ -196,22 +196,22 @@
             </div>
         </div>
     </section>
-    {% set block = page.action %}
-    <section class="py-10 py-md-14 bg-dark" style="background-image: url({{ block.image }});">
+    {% set action = page.action %}
+    <section class="py-10 py-md-14 bg-dark" style="background-image: url({{ action.image }});">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-10 col-lg-8 text-center">
                     <span class="badge badge-pill badge-gray-700-soft mb-3">
-                        <span class="h6 text-uppercase">{{ block.tag }}</span>
+                        <span class="h6 text-uppercase">{{ action.tag }}</span>
                     </span>
                     <h1 class="display-4 text-white">
-                        {{ block.title }}
+                        {{ action.title }}
                     </h1>
                     <p class="font-size-lg text-muted mb-6 mb-md-8">
-                        {{ block.content }}
+                        {{ action.content }}
                     </p>
-                    <a href="{{ block.action.url }}" class="{{ block.action.cls }}">
-                        {{ block.action.title }} <i class="{{ block.action.icon }}"></i>
+                    <a href="{{ action.action.url }}" class="{{ action.action.cls }}">
+                        {{ action.action.title }} <i class="{{ action.action.icon }}"></i>
                     </a>
                 </div>
             </div>

@@ -165,7 +165,7 @@ def render_template_with_page(name: str, **context):
     TODO: Support i18n
     """
     page_path = os.path.join(current_app.root_path, current_app.template_folder, name.replace(os.path.splitext(name)[1], '.json'))
-    # Simple cache mechanism, default cache time is 300 seconds defined in config.py
+    # Simple cache mechanism
     page_cache = cache.get(page_path)
     if page_cache is None:
         # .jsonai -> .json
@@ -179,8 +179,8 @@ def render_template_with_page(name: str, **context):
             #
             with open(page_path, encoding="utf8") as page_file:
                 page = json.load(page_file)
-        #
-        cache.set(page_path, page)
+        # Timeout is 60 seconds
+        cache.set(page_path, page, timeout=60)
     else:
         page = page_cache
     #

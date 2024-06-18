@@ -116,36 +116,52 @@ def ai(ctx):
             directory = 'www/templates/pub-demo'
             demo_suffix = '.json'
             for fn in os.listdir(directory):
-                if fn.endswith(demo_suffix):
+                if fn == 'post.json':
+                # if fn.endswith(demo_suffix):
                     print(f'\n----- {fn} -----\n')
                     fg = os.path.join(directory, fn.replace(demo_suffix, '.jsonai'))
-                    if os.path.exists(fg):
-                        print(f'file exists, skip')
-                        continue
+                    # if os.path.exists(fg):
+                    #    print(f'file exists, skip')
+                    #    continue
                     #
                     fp = os.path.join(directory, fn)
                     with open(fp, 'r', encoding='utf-8') as f:
                         demo_data = f.read()
-                    # 从json提取文本字段, 并使用yaml格式, 从而减少gpt的生成内容
+                    # 从json提取文本字段, 从而减少gpt的生成内容
                     demo_json = json.loads(demo_data)
                     simple_json = json_simplify(demo_json)
-                    gpt_template = f'''下面是用来渲染我的jinja2模版的json数据，用于网页的各个部分：
+                    #
+                    if fn.startswith('index-'):
+                        gpt_template = f'''下面是用来渲染我的jinja2模版的json数据，用于网页的各个部分：
     
 {simple_json}
 
-我将提供一个新网站的介绍，需要复用上述数据结构，请保持结构不变，生成各个文本字段的内容，并满足如下要求：
+我将提供一个新网站的介绍，请生成符合该介绍的json数据，并满足如下要求：
 
 1. 保证生成的内容符合该介绍，且无需参考原始数据的内容
-2. 通常我们会在hero部分简单列举产品的功能或者卖点，后续intro应当逐一介绍
-3. 生成的内容应当与我提供的介绍是同一个语言，只有tag字段使用相关的英文
-4. 请生成合法的json数据，以便我能够直接复制粘贴到json文件中
+2. 保持json结构不变，并生成合法的json数据
+3. 生成的内容应当与我提供的介绍是同一个语言，只有tag字段可以使用对应的英文
 
 如果你明白了，请确认并等待新网站的介绍 ~
 '''
+                    else:
+                        gpt_template = f'''下面是用来渲染我的jinja2模版的json数据，用于网页的各个部分：
+                        
+{simple_json}                        
+
+我将提供一个新网站的介绍，你只需根据该介绍的语言进行翻译即可：
+
+1. 保持原始数据的意思不变，无需参考新网站的介绍
+2. 保持json结构不变，并生成合法的json数据
+
+如果你明白了，请确认并等待新网站的介绍 ~
+'''
+                    #
+                    print(gpt_template)
                     response = openai.chat_stream(messages=[
                         {'role': 'system', 'content': '你是一个网站开发助理'},
                         {'role': 'user', 'content': gpt_template},
-                        {'role': 'assistant', 'content': '明白了，请提供新网站的介我!F绍，以便我能够根据您提供的信息生成新的内容。'},
+                        {'role': 'assistant', 'content': '明白了，请提供新网站的介绍'},
                         {'role': 'user', 'content': '''锦鲤模型，专注于大模型的实际应用
 - 针对具体的应用场景，选择合适的大模型，实现并开源了最小可行产品
 - 您可以在线体验这些应用，或下载源代码自行二次开发，或联系我们量身定制

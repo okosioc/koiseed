@@ -21,8 +21,8 @@
       }
     ],
     "action": {
-      "title": "Let us hear from you directly.",
-      "remarks": "Send us a email and we will get back to you as soon as possible."
+      "title": "Let us hear from you directly",
+      "content": "Send us a email and we will get back to you as soon as possible."
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "hero": {
-    "title": "Welcome to <span class=\"text-primary\">KoiSeed</span>.<br>Develop anything.",
-    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目。",
+    "title": "Welcome to <span class=\"text-primary\">KoiSeed</span><br>Develop anything",
+    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目",
     "image": "/static/landkit/assets/img/illustrations/illustration-4.png",
     "children": [
       {

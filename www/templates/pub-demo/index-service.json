@@ -1,7 +1,7 @@
 {
   "hero": {
-    "title": "Welcome to KoiSeed.<br>Develop anything.",
-    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目。",
+    "title": "Welcome to KoiSeed<br>Develop anything",
+    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目",
     "action": {
       "url": "#!",
       "title": "创建您的项目"
@@ -32,7 +32,7 @@
   },
   "intro": {
     "tag": "Flow",
-    "title": "简化开发流程。",
+    "title": "简化开发流程",
     "content": "KoiSeed 提供一站式服务，从数据结构定义到跨平台应用生成。",
     "children": [
       {
@@ -56,7 +56,7 @@
   "test": {
     "tag": "Testimonials",
     "title": "客户见证",
-    "content": "了解全球顶尖初创公司如何使用 KoiSeed 加速开发。",
+    "subtitle": "了解我们的客户如何使用 KoiSeed 加速开发",
     "children": [
       {
         "content": "“KoiSeed 让我们的开发流程大大加速，现在我们可以更专注于产品本身。”",
@@ -87,7 +87,6 @@
   },
   "action": {
     "title": "立即体验 KoiSeed",
-    "subtitle": "开始您的项目开发之旅",
     "content": "不要再浪费时间在复杂的开发流程上，KoiSeed 为您提供一站式解决方案。",
     "image": "/static/landkit/assets/img/illustrations/illustration-1.png",
     "action": {
