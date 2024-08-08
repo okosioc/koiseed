@@ -19,3 +19,4 @@ Pillow
 # Need to install ffmpeg manually
 ffmpeg-python
 openai
+websocket-client

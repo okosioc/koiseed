@@ -29,7 +29,7 @@ from werkzeug.urls import url_quote, url_encode
 
 from core.models import DemoUser
 from www.commons import SSLSMTPHandler, helpers, ListConverter, BSONObjectIdConverter, prepare_demo_data
-from www.extensions import mail, cache, qiniu, openai
+from www.extensions import mail, cache, qiniu, openai, comfyui
 from www.jobs import init_schedule
 from www.public import public
 from www.blueprints import blueprints
@@ -92,6 +92,7 @@ def configure_py3seed(app):
 def configure_ai(app):
     """ Prepare ai related components. """
     openai.init_app(app)
+    comfyui.init_app(app)
 
 
 def configure_demo(app):

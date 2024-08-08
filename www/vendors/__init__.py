@@ -11,3 +11,4 @@
 
 from .qiniusupport import QiniuSupport
 from .openaisupport import OpenAISupport
+from .comfyuisupport import ComfyUISupport

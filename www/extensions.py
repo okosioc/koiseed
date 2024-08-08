@@ -12,11 +12,12 @@
 from flask_caching import Cache
 from flask_mail import Mail
 
-from www.vendors import QiniuSupport, OpenAISupport
+from www.vendors import QiniuSupport, OpenAISupport, ComfyUISupport
 
-__all__ = ['mail', 'cache', 'qiniu', 'openai']
+__all__ = ['mail', 'cache', 'qiniu', 'openai', 'comfyui']
 
 mail = Mail()
 cache = Cache()
 qiniu = QiniuSupport()
 openai = OpenAISupport()
+comfyui = ComfyUISupport()

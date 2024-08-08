@@ -1,0 +1,128 @@
+{
+  "3": {
+    "inputs": {
+      "seed": 626063484239874,
+      "steps": 6,
+      "cfg": 4,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "15",
+        0
+      ],
+      "positive": [
+        "12",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "4": {
+    "inputs": {
+      "ckpt_name": "dreamshaperXL_v21TurboDPMSDE.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "5": {
+    "inputs": {
+      "width": 1024,
+      "height": 768,
+      "batch_size": 3
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "7": {
+    "inputs": {
+      "text": "lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature\ndeformed, ugly, mutilated, disfigured, text, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck\nplants",
+      "clip": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Style Align - Images"
+    }
+  },
+  "12": {
+    "inputs": {
+      "text": "\"0\": \"a single developer typing on a laptop in a minimalist workspace with a whiteboard\",\n\"1\": \"a young professional presenting a working prototype to a colleague in a small conference room with a projector screen and a notepad\",\n\"2\": \"a person exploring applications on a tablet in a modern living room with a sofa and bookshelf\"\n",
+      "max_frames": 3,
+      "print_output": true,
+      "pre_text": "flat vector minimalist cute illustration, blue and white theme, white background",
+      "app_text": "trending on artstation, popular on dribbble, illustration by airbnb",
+      "start_frame": 0,
+      "end_frame": 0,
+      "clip": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "BatchPromptSchedule",
+    "_meta": {
+      "title": "Batch Prompt Schedule 📅🅕🅝"
+    }
+  },
+  "15": {
+    "inputs": {
+      "share_norm": "both",
+      "share_attn": "q+k",
+      "scale": 0.9,
+      "model": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "StyleAlignedBatchAlign",
+    "_meta": {
+      "title": "StyleAligned Batch Align"
+    }
+  }
+}

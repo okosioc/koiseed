@@ -99,6 +99,27 @@ def json_dumps(data, pretty=False):
         return json.dumps(data, separators=(',', ':'), ensure_ascii=False)
 
 
+def json_update_by_path(json_obj, path, value):
+    """ Update nested json object by path, supported path like a.b.c and a.b[0].c """
+    keys = path.split('.')
+    for key in keys[:-1]:
+        if '[' in key:
+            key, index = key.split('[')
+            index = int(index[:-1])
+            json_obj = json_obj.setdefault(key, [])
+            json_obj = json_obj[index]
+        else:
+            json_obj = json_obj.setdefault(key, {})
+    #
+    last_key = keys[-1]
+    if '[' in last_key:
+        last_key, index = last_key.split('[')
+        index = int(index[:-1])
+        json_obj[last_key][index] = value
+    else:
+        json_obj[last_key] = value
+
+
 def json_simplify(json_obj, keep_fields=('tag', 'subtitle', 'title', 'content', 'author')):
     """
     递归遍历JSON对象，只保留subtitle、title和content字段。
@@ -116,6 +137,7 @@ def json_simplify(json_obj, keep_fields=('tag', 'subtitle', 'title', 'content', 
                 nested_result = json_simplify(value)
                 if nested_result:
                     simplified_obj[key] = nested_result
+        #
         return simplified_obj
     elif isinstance(json_obj, list):
         return [json_simplify(item) for item in json_obj if json_simplify(item)]
@@ -168,8 +190,8 @@ def render_template_with_page(name: str, **context):
     # Simple cache mechanism
     page_cache = cache.get(page_path)
     if page_cache is None:
-        # .jsonai -> .json
-        page_path_ai = page_path.replace('.json', '.jsonai')
+        # .json -> .ai.json
+        page_path_ai = page_path.replace('.json', '.ai.json')
         if os.path.exists(page_path_ai):
             with open(page_path_ai, encoding="utf8") as page_file:
                 page = json.load(page_file)

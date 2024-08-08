@@ -20,7 +20,6 @@ class OpenAISupport(object):
     def __init__(self, app=None):
         self.app = app
         self.client = None
-        #
         self.api_key = None
         self.default_model = None
         self.endpoint = None
@@ -37,23 +36,24 @@ class OpenAISupport(object):
         self.endpoint = app.config.get('OPENAI_ENDPOINT', '')
         self.api_version = app.config.get('OPENAI_API_VERSION')
         #
-        if 'azure' in self.endpoint:
-            self.client = AzureOpenAI(
-                # Api versions defined in https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#completions
-                # e.g, 2024-02-15-preview
-                api_version=self.api_version,
-                # Endpoint and key are defined in an Azure resource of OpenAI
-                # e.g, https://openai-instance-eastus2-01.openai.azure.com/
-                azure_endpoint=self.endpoint,
-                api_key=self.api_key,
-            )
-        else:
-            self.client = OpenAI(
-                api_key=self.api_key,
-                # If you have a reverse proxy pointing to openAI, you can set the base_url but not using default value https://api.openai.com/v1
-                # e.g, https://openai.fengweimin.com/v1
-                base_url=self.endpoint or None,
-            )
+        if self.api_key:
+            if 'azure' in self.endpoint:
+                self.client = AzureOpenAI(
+                    # Api versions defined in https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#completions
+                    # e.g, 2024-02-15-preview
+                    api_version=self.api_version,
+                    # Endpoint and key are defined in an Azure resource of OpenAI
+                    # e.g, https://openai-instance-eastus2-01.openai.azure.com/
+                    azure_endpoint=self.endpoint,
+                    api_key=self.api_key,
+                )
+            else:
+                self.client = OpenAI(
+                    api_key=self.api_key,
+                    # If you have a reverse proxy pointing to openAI, you can set the base_url but not using default value https://api.openai.com/v1
+                    # e.g, https://openai.fengweimin.com/v1
+                    base_url=self.endpoint or None,
+                )
 
     def chat(self, messages, model=None):
         """ Return chatGPT response.
