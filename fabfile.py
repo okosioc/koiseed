@@ -205,7 +205,27 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
     if not confirm('Are you sure to gen medias for page content(s)?'):
         return
     #
+    # Prepare
+    #
     ai_suffix = '.ai' + suffix
+    # (pre_prompt, app_prompt, negative_prompt, steps, cfg) for different media types
+    comfyui_settings = {
+        'illustration': (
+            'flat simple minimalist cute illustration, blue theme, isolated on white background',
+            'trending on artstation, popular on dribbble, illustration by airbnb',
+            'lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature\ndeformed, ugly, mutilated, disfigured, text, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck',
+            6,  # steps
+            4,  # cfg
+        ),
+        'photo': (
+            'realistic photo',
+            'highly detailed glossy eyes, high detailed skin, skin pores, intricate design, film grain, dslr, HDR, 64k',
+            'disfigured, ugly, bad, immature, cartoon, anime, 3d, painting, b&w',
+            4,  # steps
+            2,  # cfg
+        )
+    }
+    #
     app = create_www(runscripts=True)
     with app.app_context():
         # Generate media for each page content file in specified folder
@@ -223,12 +243,26 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
             with open(fp, 'r', encoding='utf-8') as f:
                 page_data = f.read()
             #
-            print(f'--- ChatGPT4o Prompt ---')
             page_json = json.loads(page_data)
-            image_type = 'illustration'
-            images_for_generation = []  # [(path, demo/current image, related content, prompt), ...]
+            #
+            # ChatGPT4o generation
+            #
+            print(f'--- Analyze Page Content ---')
+            groups_for_generation = {
+                'illustration': [],  # [(path, demo/current image, related content), ...]
+                'photo': [],
+            }
 
-            def iterate(d, path_=''):
+            def _guess_image_type(image_url):
+                """ Guess image type from image url. """
+                if 'illustration' in image_url:
+                    return 'illustration'
+                if 'photo' in image_url:
+                    return 'photo'
+                #
+                return None
+
+            def _iterate(d, path_=''):
                 """ Iterate json data to find image fields. """
                 for k, v in d.items():
                     related_content_ = ''
@@ -239,44 +273,49 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
                     related_content_ = related_content_.rstrip('\n')
                     #
                     if isinstance(v, dict):
-                        iterate(v, f'{path_}.{k}')
+                        _iterate(v, f'{path_}.{k}')
                     elif isinstance(v, list):
                         if k == 'images':
                             for ii, vv in enumerate(v):
-                                if image_type not in vv:
+                                it = _guess_image_type(vv)
+                                if not it:
+                                    print(f'Error: unknown image type for {vv}')
                                     continue
                                 #
-                                images_for_generation.append([f'{path_}.{k}[{ii}]', vv, related_content_, None])
+                                groups_for_generation[it].append([f'{path_}.{k}[{ii}]', vv, related_content_])
                         else:
                             for ii, vv in enumerate(v):
                                 if isinstance(vv, dict):
-                                    iterate(vv, f'{path_}.{k}[{ii}]')
+                                    _iterate(vv, f'{path_}.{k}[{ii}]')
                     elif isinstance(v, str):
                         if k == 'image':
-                            if image_type not in v:
+                            it = _guess_image_type(v)
+                            if not it:
+                                print(f'Error: unknown image type for {v}')
                                 continue
                             #
-                            images_for_generation.append([f'{path_}.{k}', v, related_content_, None])
+                            groups_for_generation[it].append([f'{path_}.{k}', v, related_content_])
 
             #
-            iterate(page_json)
-            if not images_for_generation:
-                print(f'Skip as no image needs to be generated')
-                continue
-            # Invoke ChatGPT4o to generate prompt
-            generated_prompts = []
-            for ig in images_for_generation:
-                related_content = ig[2]
-                print(f'Image {ig[0]}: {ig[1]} with related content: {related_content}')
-                if not related_content:
-                    print('Skip as no related content found')
-                    continue
-                #
-                response = openai.chat_stream(messages=[
-                    {'role': 'system', 'content': '你是一个网站设计'},
-                    {'role': 'user', 'content': f'''我将提供一两句文案，这些文案用来介绍网站的某个功能或者服务，请根据文案设计一个简洁画面，让网站的用户能够更加直观的了解这个功能或者服务，并满足如下要求：
-
-1. 只需包含具体的人物和环境，返回一句英文的简单的描述即可，比如, a office lady working in office with a plant
+            _iterate(page_json)
+            #
+            updated = 0
+            for image_type, images_for_generation in groups_for_generation.items():
+                print(f'--- Prompt Generation for {image_type} ---')
+                # Invoke ChatGPT4o to generate prompt
+                generated_prompts = []
+                for ig in images_for_generation:
+                    related_content = ig[2]
+                    print(f'Image {ig[0]}: {ig[1]} with related content: {related_content}')
+                    if not related_content:
+                        print('Skip as no related content found')
+                        continue
+                    #
+                    response = openai.chat_stream(messages=[
+                        {'role': 'system', 'content': '你是一个网站设计专家'},
+                        {'role': 'user', 'content': f'''我将提供一两句文案，请根据文案设计一个简洁的画面，让网站的用户能够更加直观的理解该文案，并满足如下要求：
+    
+1. 只需包含具体的人物和环境，返回一句英文的简单的描述即可
 2. 人物和环境的描述尽可能简单明了，不超过3人，环境不超过5个物件
 
 下面是已有的描述，请避免生成类似的描述，且不使用已经出现过的人物和物件：
@@ -284,56 +323,69 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
 {'；'.join(generated_prompts)}
 
 '''},
-                    {'role': 'assistant', 'content': '明白了，请提供文案'},
-                    {'role': 'user', 'content': related_content}
-                ])
-                content = ''
-                for chunk in response:
-                    print(chunk, end='')
-                    content += chunk
+                        {'role': 'assistant', 'content': '明白了，请提供文案'},
+                        {'role': 'user', 'content': related_content}
+                    ])
+                    content = ''
+                    for chunk in response:
+                        print(chunk, end='')
+                        content += chunk
+                    #
+                    generated_prompts.append(content.strip())
                 #
-                ig[3] = content.strip()
-                generated_prompts.append(content.strip())
+                comfyui_setting = comfyui_settings[image_type]
+                pre_prompt = comfyui_setting[0]
+                app_prompt = comfyui_setting[1]
+                negative_prompt = comfyui_setting[2]
+                schedule_prompt = ''
+                for i, prompt in enumerate(generated_prompts):
+                    schedule_prompt += f'"{i}": "{prompt}",\n'
+                #
+                schedule_prompt = schedule_prompt.rstrip(',\n')
+                print(f'positive prompt: {pre_prompt}\n{schedule_prompt}\n{app_prompt}')
+                print(f'negative prompt: {negative_prompt}')
+                #
+                # ComfyUI generation
+                #
+                print(f'--- ComfyUI Generation for {image_type} ---')
+                # Load comfyui prompt template from file
+                # 对comfyui的json文件的要求:
+                # 1. 没有多余节点, 否则无法正确显示自行进度
+                # 2. 可以直接在测试环境部署使用, 方便调试
+                # 3. 节点序号不能随意更改, 下面更新内容的时候需要根据节点序号来更新
+                # 4. 由于comfyui有些字段的内容诸如模型的名字等依赖于本地的文件名, 因此应当尽可能保证线上和各个测试环境的统一
+                with open(os.path.join(app.root_path, 'ai/comfyui-api-sdxl-batch-with-aligned-style.json'), 'r', encoding='utf-8') as f:
+                    comfyui_prompt = json.load(f)
+                #
+                comfyui_prompt['3']['inputs']['seed'] = random.randint(1000000000, 9999999999)
+                comfyui_prompt['3']['inputs']['steps'] = comfyui_setting[3]
+                comfyui_prompt['3']['inputs']['cfg'] = comfyui_setting[4]
+                comfyui_prompt['5']['inputs']['batch_size'] = len(generated_prompts)
+                comfyui_prompt['7']['inputs']['text'] = negative_prompt
+                comfyui_prompt['9']['inputs']['filename_prefix'] = image_type
+                comfyui_prompt['12']['inputs']['text'] = schedule_prompt
+                comfyui_prompt['12']['inputs']['max_frames'] = len(generated_prompts)
+                comfyui_prompt['12']['inputs']['pre_text'] = pre_prompt
+                comfyui_prompt['12']['inputs']['app_text'] = app_prompt
+                #
+                generated_images = comfyui.generate_images(comfyui_prompt)
+                if not generated_images:
+                    print(f'Skip as no images generated')
+                    continue
+                #
+                if len(generated_images) != len(images_for_generation):
+                    print(f'Error: images count not match')
+                    continue
+                #
+                print(f'--- Update Content ---')
+                for i, ig in enumerate(images_for_generation):
+                    path = ig[0][1:]
+                    generated_image = generated_images[i]
+                    print(f'Update page content {path} -> {generated_image}')
+                    json_update_by_path(page_json, path, generated_image)  # Note: path starts with '.'
+                    updated += 1
             #
-            pre_prompt = 'flat vector minimalist cute illustration, blue and white theme, white background'
-            app_prompt = 'trending on artstation, popular on dribbble, illustration by airbnb'
-            negative_prompt = 'lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature\ndeformed, ugly, mutilated, disfigured, text, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck'
-            #
-            schedule_prompt = ''
-            for i, prompt in enumerate(generated_prompts):
-                schedule_prompt += f'"{i}": "{prompt}",\n'
-            #
-            schedule_prompt = schedule_prompt.rstrip(',\n')
-            print(f'positive prompt: {pre_prompt}\n{schedule_prompt}\n{app_prompt}')
-            print(f'negative prompt: {negative_prompt}')
-            #
-            print(f'--- ComfyUI Generation ---')
-            # Load comfyui prompt template from file
-            with open(os.path.join(app.root_path, 'ai/comfyui-api-sdxl-batch-with-aligned-style.json'), 'r', encoding='utf-8') as f:
-                comfyui_prompt = json.load(f)
-            #
-            comfyui_prompt['3']['inputs']['seed'] = random.randint(1000000000, 9999999999)
-            comfyui_prompt['7']['inputs']['text'] = negative_prompt
-            comfyui_prompt['9']['inputs']['filename_prefix'] = image_type
-            comfyui_prompt['12']['inputs']['text'] = schedule_prompt
-            comfyui_prompt['12']['inputs']['pre_text'] = pre_prompt
-            comfyui_prompt['12']['inputs']['app_text'] = app_prompt
-            #
-            generated_images = comfyui.generate_images(comfyui_prompt)
-            if not generated_images:
-                print(f'Skip as no images generated')
-                continue
-            #
-            if len(generated_images) != len(images_for_generation):
-                print(f'Error: images count not match')
-                continue
-            #
-            print(f'--- Update Content ---')
-            for i, ig in enumerate(images_for_generation):
-                path = ig[0][1:]
-                generated_image = generated_images[i]
-                print(f'Update page content {path} -> {generated_image}')
-                json_update_by_path(page_json, path, generated_image)  # Note: path starts with '.'
-            #
-            with open(fp, 'w', encoding='utf-8') as f:
-                f.write(json_dumps(page_json, pretty=True))
+            print(f'Totally {updated} images updated')
+            if updated > 0:
+                with open(fp, 'w', encoding='utf-8') as f:
+                    f.write(json_dumps(page_json, pretty=True))

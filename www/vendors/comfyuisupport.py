@@ -84,7 +84,7 @@ class ComfyUISupport(object):
         prompt_id = self.queue_prompt(prompt)['prompt_id']
         self.app.logger.info(f'Queue prompt with id {prompt_id}')
         # Open websocket
-        with closing(create_connection(f'ws://{self.server}/ws?clientId={self.client_id}')) as conn:
+        with closing(create_connection(f'ws://{self.server}/ws?clientId={self.client_id}', timeout=5)) as conn:
             # Tracking progress
             node_ids = list(prompt.keys())
             finished_nodes = []
