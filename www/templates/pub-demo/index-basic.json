@@ -17,17 +17,17 @@
     ],
     "children": [
       {
-        "icon": "/static/landkit/assets/img/icons/duotone-icons/General/Settings-1.svg",
+        "icon": "../../static/landkit/assets/img/icons/duotone-icons/General/Settings-1.svg",
         "title": "数据结构",
         "content": "通过简单的方式定义业务所需的数据结构，无需考虑存储细节，支持主流数据库。"
       },
       {
-        "icon": "/static/landkit/assets/img/icons/duotone-icons/Layout/Layout-arrange.svg",
+        "icon": "../../static/landkit/assets/img/icons/duotone-icons/Layout/Layout-arrange.svg",
         "title": "项目模板",
         "content": "根据数据结构及其视图，即可配合项目模板生成各个平台的种子项目，如网站、小程序、iOS和Android应用等等。"
       },
       {
-        "icon": "/static/landkit/assets/img/icons/duotone-icons/Code/Code.svg",
+        "icon": "../../static/landkit/assets/img/icons/duotone-icons/Code/Code.svg",
         "title": "二次开发",
         "content": "通过自动合并的机制实现了代码生成与定制开发的平衡。"
       }

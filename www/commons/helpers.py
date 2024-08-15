@@ -188,7 +188,7 @@ def render_template_with_page(name: str, **context):
     """
     page_path = os.path.join(current_app.root_path, current_app.template_folder, name.replace(os.path.splitext(name)[1], '.json'))
     # Simple cache mechanism
-    page_cache = cache.get(page_path)
+    page_cache = None if current_app.debug else cache.get(page_path)
     if page_cache is None:
         # .json -> .ai.json
         page_path_ai = page_path.replace('.json', '.ai.json')
@@ -201,8 +201,9 @@ def render_template_with_page(name: str, **context):
             #
             with open(page_path, encoding="utf8") as page_file:
                 page = json.load(page_file)
-        # Timeout is 60 seconds
-        cache.set(page_path, page, timeout=60)
+        # Timeout is 1 hour if not debug
+        if not current_app.debug:
+            cache.set(page_path, page, timeout=3600)
     else:
         page = page_cache
     #

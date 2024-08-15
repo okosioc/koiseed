@@ -83,8 +83,9 @@ class ComfyUISupport(object):
         # Queue prompt
         prompt_id = self.queue_prompt(prompt)['prompt_id']
         self.app.logger.info(f'Queue prompt with id {prompt_id}')
+        # TODO: Auto retry on websocket._exceptions.WebSocketTimeoutException:
         # Open websocket
-        with closing(create_connection(f'ws://{self.server}/ws?clientId={self.client_id}', timeout=5)) as conn:
+        with closing(create_connection(f'ws://{self.server}/ws?clientId={self.client_id}', timeout=30)) as conn:
             # Tracking progress
             node_ids = list(prompt.keys())
             finished_nodes = []

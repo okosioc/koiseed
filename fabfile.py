@@ -96,8 +96,16 @@ def seed(ctx):
         ctx.run('pyseed gen')
 
 
-@local_task(optional=['folder', 'file', 'suffix'])
-def ai0(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
+theme_settings = {
+    'landkit': {
+        'templates_folder': 'www/templates/pub-demo',  # 页面模版文件夹, 用来解析演示用的json数据并生成业务相关的json数据
+        'icons_folder': 'www/static/landkit/assets/img/icons/duotone-icons',  # 独立图标的文件夹, 根据文案选择相关的图标
+    }
+}
+
+
+@local_task(optional=['theme', 'file', 'suffix'])
+def ai0(ctx, file=None, theme='landkit', suffix='.json'):
     """ Invoke AI tools to generate page content for specified page, i.e, index-basic.json -> index-basic.ai.json. """
     if not confirm('Are you sure to gen page content(s)?'):
         return
@@ -112,10 +120,13 @@ def ai0(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
     print(readme)
     #
     ai_suffix = '.ai' + suffix
+    theme_setting = theme_settings[theme]
+    templates_folder = theme_setting['templates_folder']
+    #
     app = create_www(runscripts=True)
     with app.app_context():
         # Generate page content for each json file in specified folder
-        for fn in os.listdir(folder):
+        for fn in os.listdir(templates_folder):
             #
             if not fn.endswith(suffix) and not fn.endswith(ai_suffix):
                 continue
@@ -125,12 +136,12 @@ def ai0(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
                 print(f'Skip as file name not match: {file}')
                 continue
             #
-            fg = os.path.join(folder, fn.replace(suffix, ai_suffix))
+            fg = os.path.join(templates_folder, fn.replace(suffix, ai_suffix))
             # if os.path.exists(fg):
             #    print(f'file exists, skip')
             #    continue
             #
-            fp = os.path.join(folder, fn)
+            fp = os.path.join(templates_folder, fn)
             with open(fp, 'r', encoding='utf-8') as f:
                 demo_data = f.read()
             # 从json提取文本字段, 从而减少gpt的生成内容
@@ -199,9 +210,9 @@ def ai0(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
                 f.write(json_dumps(demo_json, pretty=True))
 
 
-@local_task(optional=['folder', 'file', 'suffix'])
-def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
-    """ Invoke AI tools to generate medias, i.e, image/icon/video, from generated page content. """
+@local_task(optional=['theme', 'file', 'suffix'])
+def ai1(ctx, file=None, theme='landkit', suffix='.json'):
+    """ Invoke AI tools to generate medias, i.e, image/video, from generated page content. """
     if not confirm('Are you sure to gen medias for page content(s)?'):
         return
     #
@@ -211,25 +222,33 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
     # (pre_prompt, app_prompt, negative_prompt, steps, cfg) for different media types
     comfyui_settings = {
         'illustration': (
-            'flat simple minimalist cute illustration, blue theme, isolated on white background',
-            'trending on artstation, popular on dribbble, illustration by airbnb',
+            'a flat illustration with minimalist style, blue tones, white background',
+            'trending on artstation, popular on dribbble',
             'lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature\ndeformed, ugly, mutilated, disfigured, text, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck',
             6,  # steps
             4,  # cfg
         ),
         'photo': (
             'realistic photo',
-            'highly detailed glossy eyes, high detailed skin, skin pores, intricate design, film grain, dslr, HDR, 64k',
-            'disfigured, ugly, bad, immature, cartoon, anime, 3d, painting, b&w',
+            'high detailed skin, skin pores, intricate design, film grain, dslr, HDR, 64k',
+            'lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature\ndeformed, ugly, mutilated, disfigured, text, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck\nillustration, painting, drawing, art, sketch',
             4,  # steps
             2,  # cfg
-        )
+        ),
     }
+    theme_setting = theme_settings[theme]
+    templates_folder = theme_setting['templates_folder']
+    icons_folder = theme_setting.get('icons_folder')
+    icons = []
+    if icons_folder:
+        for r, _, fs in os.walk(icons_folder):
+            for f in fs:
+                icons.append(os.path.relpath(os.path.join(r, f), icons_folder))
     #
     app = create_www(runscripts=True)
     with app.app_context():
         # Generate media for each page content file in specified folder
-        for fn in os.listdir(folder):
+        for fn in os.listdir(templates_folder):
             # Only works for ai generated json files
             if not fn.endswith(ai_suffix):
                 continue
@@ -239,7 +258,7 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
                 print(f'Skip as file name not match: {file}')
                 continue
             #
-            fp = os.path.join(folder, fn)
+            fp = os.path.join(templates_folder, fn)
             with open(fp, 'r', encoding='utf-8') as f:
                 page_data = f.read()
             #
@@ -251,7 +270,11 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
             groups_for_generation = {
                 'illustration': [],  # [(path, demo/current image, related content), ...]
                 'photo': [],
+                'icon': [],
             }
+            # You can comment out a type to skip generation for that type
+            if not icons:
+                groups_for_generation.pop('icon')
 
             def _guess_image_type(image_url):
                 """ Guess image type from image url. """
@@ -282,7 +305,8 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
                                     print(f'Error: unknown image type for {vv}')
                                     continue
                                 #
-                                groups_for_generation[it].append([f'{path_}.{k}[{ii}]', vv, related_content_])
+                                if it in groups_for_generation:
+                                    groups_for_generation[it].append([f'{path_}.{k}[{ii}]', vv, related_content_])
                         else:
                             for ii, vv in enumerate(v):
                                 if isinstance(vv, dict):
@@ -294,14 +318,18 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
                                 print(f'Error: unknown image type for {v}')
                                 continue
                             #
-                            groups_for_generation[it].append([f'{path_}.{k}', v, related_content_])
+                            if it in groups_for_generation:
+                                groups_for_generation[it].append([f'{path_}.{k}', v, related_content_])
+                        elif k == 'icon':
+                            if 'icon' in groups_for_generation:
+                                groups_for_generation['icon'].append([f'{path_}.{k}', v, related_content_])
 
             #
             _iterate(page_json)
             #
             updated = 0
             for image_type, images_for_generation in groups_for_generation.items():
-                print(f'--- Prompt Generation for {image_type} ---')
+                print(f'--- Prompt for {image_type} ---')
                 # Invoke ChatGPT4o to generate prompt
                 generated_prompts = []
                 for ig in images_for_generation:
@@ -311,9 +339,29 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
                         print('Skip as no related content found')
                         continue
                     #
-                    response = openai.chat_stream(messages=[
-                        {'role': 'system', 'content': '你是一个网站设计专家'},
-                        {'role': 'user', 'content': f'''我将提供一两句文案，请根据文案设计一个简洁的画面，让网站的用户能够更加直观的理解该文案，并满足如下要求：
+                    if image_type == 'icon':
+                        response = openai.chat_stream(messages=[
+                            {'role': 'system', 'content': f'''你是一个网站的图标设计专家，已经设计了很多图标，下面每行表示一个图标，包含了类别和名字：
+
+{chr(10).join(icons)}                          
+                            '''},
+                            {'role': 'user', 'content': f'''我将提供一两句文案，请根据文案从上述图标中选择一个合适的，并满足如下要求：
+
+1. 从中选择一个图标并直接返回，不能凭空生成不存在的图标
+2. 选中的图标能够恰当的体现文案的意思即可
+
+下面是已经选择的图标，请勿重复选择：
+
+{'；'.join(generated_prompts)}
+                            
+'''},
+                            {'role': 'assistant', 'content': '明白了，请提供文案'},
+                            {'role': 'user', 'content': related_content}
+                        ])
+                    else:
+                        response = openai.chat_stream(messages=[
+                            {'role': 'system', 'content': '你是一个网站设计专家'},
+                            {'role': 'user', 'content': f'''我将提供一两句文案，请根据文案设计一个简洁的画面，让网站的用户能够更加直观的理解该文案，并满足如下要求：
     
 1. 只需包含具体的人物和环境，返回一句英文的简单的描述即可
 2. 人物和环境的描述尽可能简单明了，不超过3人，环境不超过5个物件
@@ -323,9 +371,10 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
 {'；'.join(generated_prompts)}
 
 '''},
-                        {'role': 'assistant', 'content': '明白了，请提供文案'},
-                        {'role': 'user', 'content': related_content}
-                    ])
+                            {'role': 'assistant', 'content': '明白了，请提供文案'},
+                            {'role': 'user', 'content': related_content}
+                        ])
+                    # Consolidate response stream
                     content = ''
                     for chunk in response:
                         print(chunk, end='')
@@ -333,49 +382,58 @@ def ai1(ctx, file=None, folder='www/templates/pub-demo', suffix='.json'):
                     #
                     generated_prompts.append(content.strip())
                 #
-                comfyui_setting = comfyui_settings[image_type]
-                pre_prompt = comfyui_setting[0]
-                app_prompt = comfyui_setting[1]
-                negative_prompt = comfyui_setting[2]
-                schedule_prompt = ''
-                for i, prompt in enumerate(generated_prompts):
-                    schedule_prompt += f'"{i}": "{prompt}",\n'
+                # ComfyUI generation or Icon selection
                 #
-                schedule_prompt = schedule_prompt.rstrip(',\n')
-                print(f'positive prompt: {pre_prompt}\n{schedule_prompt}\n{app_prompt}')
-                print(f'negative prompt: {negative_prompt}')
+                print(f'--- Generate for {image_type} ---')
+                if image_type == 'icon':
+                    generated_images = []
+                    # TODO: Hard code icon base folder here, different themes may have different icon sets
+                    for i, prompt in enumerate(generated_prompts):
+                        print(f'{i}: {prompt}')
+                        generated_images.append(f'/static/landkit/assets/img/icons/duotone-icons/{prompt}')
+                else:
+                    # Load comfyui icon template from file
+                    comfyui_setting = comfyui_settings[image_type]
+                    pre_prompt = comfyui_setting[0]
+                    app_prompt = comfyui_setting[1]
+                    negative_prompt = comfyui_setting[2]
+                    schedule_prompt = ''
+                    for i, prompt in enumerate(generated_prompts):
+                        schedule_prompt += f'"{i}": "{prompt}",\n'
+                    #
+                    schedule_prompt = schedule_prompt.rstrip(',\n')
+                    print(f'positive prompt: {pre_prompt}\n{schedule_prompt}\n{app_prompt}')
+                    print(f'negative prompt: {negative_prompt}')
+                    # Load comfyui prompt template from file
+                    # 对comfyui的json文件的要求:
+                    # 1. 没有多余节点, 否则无法正确显示自行进度
+                    # 2. 可以直接在测试环境部署使用, 方便调试
+                    # 3. 节点序号不能随意更改, 下面更新内容的时候需要根据节点序号来更新
+                    # 4. 由于comfyui有些字段的内容诸如模型的名字等依赖于本地的文件名, 因此应当尽可能保证线上和各个测试环境的统一
+                    with open(os.path.join(app.root_path, 'ai/comfyui-api-sdxl-batch-with-aligned-style.json'), 'r', encoding='utf-8') as f:
+                        comfyui_prompt = json.load(f)
+                    #
+                    comfyui_prompt['3']['inputs']['seed'] = random.randint(1000000000, 9999999999)
+                    comfyui_prompt['3']['inputs']['steps'] = comfyui_setting[3]
+                    comfyui_prompt['3']['inputs']['cfg'] = comfyui_setting[4]
+                    comfyui_prompt['5']['inputs']['batch_size'] = len(generated_prompts)
+                    comfyui_prompt['7']['inputs']['text'] = negative_prompt
+                    comfyui_prompt['9']['inputs']['filename_prefix'] = image_type
+                    comfyui_prompt['12']['inputs']['text'] = schedule_prompt
+                    comfyui_prompt['12']['inputs']['max_frames'] = len(generated_prompts)
+                    comfyui_prompt['12']['inputs']['pre_text'] = pre_prompt
+                    comfyui_prompt['12']['inputs']['app_text'] = app_prompt
+                    #
+                    generated_images = comfyui.generate_images(comfyui_prompt)
+                    if not generated_images:
+                        print(f'Skip as no images generated')
+                        continue
+                    #
+                    if len(generated_images) != len(images_for_generation):
+                        print(f'Error: images count not match')
+                        continue
                 #
-                # ComfyUI generation
-                #
-                print(f'--- ComfyUI Generation for {image_type} ---')
-                # Load comfyui prompt template from file
-                # 对comfyui的json文件的要求:
-                # 1. 没有多余节点, 否则无法正确显示自行进度
-                # 2. 可以直接在测试环境部署使用, 方便调试
-                # 3. 节点序号不能随意更改, 下面更新内容的时候需要根据节点序号来更新
-                # 4. 由于comfyui有些字段的内容诸如模型的名字等依赖于本地的文件名, 因此应当尽可能保证线上和各个测试环境的统一
-                with open(os.path.join(app.root_path, 'ai/comfyui-api-sdxl-batch-with-aligned-style.json'), 'r', encoding='utf-8') as f:
-                    comfyui_prompt = json.load(f)
-                #
-                comfyui_prompt['3']['inputs']['seed'] = random.randint(1000000000, 9999999999)
-                comfyui_prompt['3']['inputs']['steps'] = comfyui_setting[3]
-                comfyui_prompt['3']['inputs']['cfg'] = comfyui_setting[4]
-                comfyui_prompt['5']['inputs']['batch_size'] = len(generated_prompts)
-                comfyui_prompt['7']['inputs']['text'] = negative_prompt
-                comfyui_prompt['9']['inputs']['filename_prefix'] = image_type
-                comfyui_prompt['12']['inputs']['text'] = schedule_prompt
-                comfyui_prompt['12']['inputs']['max_frames'] = len(generated_prompts)
-                comfyui_prompt['12']['inputs']['pre_text'] = pre_prompt
-                comfyui_prompt['12']['inputs']['app_text'] = app_prompt
-                #
-                generated_images = comfyui.generate_images(comfyui_prompt)
-                if not generated_images:
-                    print(f'Skip as no images generated')
-                    continue
-                #
-                if len(generated_images) != len(images_for_generation):
-                    print(f'Error: images count not match')
-                    continue
+                # Update Page Content
                 #
                 print(f'--- Update Content ---')
                 for i, ig in enumerate(images_for_generation):
