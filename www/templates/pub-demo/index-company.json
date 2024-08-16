@@ -36,7 +36,7 @@
         "title": "数据结构定义与项目模板结合",
         "content": "KoiSeed的创新之处在于将数据结构定义与项目模板紧密结合，生成的种子项目既符合最佳实践又易于维护。",
         "action": {
-          "url": "coming();",
+          "url": "javascript:coming();",
           "title": "了解更多"
         }
       }
@@ -45,14 +45,14 @@
   "test": {
     "children": [
       {
-        "icon": "/static/landkit//assets/img/brands/logotype/airbnb.svg",
+        "title": "科技公司A",
         "content": "\"KoiSeed的使用极大地提升了我们的开发效率，让我们能够更加专注于业务逻辑的实现。\"",
         "author": "Bill Callan",
         "avatar": "/static/landkit/assets/img/avatars/avatar-2.jpg"
       },
       {
-        "icon": "/static/landkit//assets/img/brands/logotype/pinterest.svg",
-        "content": "“利用KoiSeed，我们能够快速启动新项目，并保持代码的高质量和可维护性。”",
+        "title": "工作室B",
+        "content": "\"利用KoiSeed，我们能够快速启动新项目，并保持代码的高质量和可维护性。\"",
         "author": "Jacob Thornton",
         "avatar": "/static/landkit/assets/img/avatars/avatar-1.jpg"
       }
@@ -64,8 +64,7 @@
     "image": "/static/landkit/assets/img/covers/cover-8.jpg",
     "action": {
       "url": "#!",
-      "title": "立即开始",
-      "icon": "fe fe-arrow-right"
+      "title": "立即开始"
     }
   }
 }

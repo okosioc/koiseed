@@ -19,7 +19,7 @@ from paramiko import RSAKey
 from fabric import task
 
 from www import create_www
-from www.commons import json_simplify, json_dumps, json_merge, json_update_by_path
+from www.commons import json_simplify, json_dumps, json_merge, json_update_by_path, resize_image
 from www.extensions import openai, comfyui
 
 # Multi hosts
@@ -115,9 +115,6 @@ def ai0(ctx, file=None, theme='landkit', suffix='.json'):
         # if '# koiseed' in readme:
         #     print('# koiseed is found in README.md, Please make update readme file to describe your project')
         #     return
-    # Print readme content
-    print('----- README.md -----')
-    print(readme)
     #
     ai_suffix = '.ai' + suffix
     theme_setting = theme_settings[theme]
@@ -125,15 +122,18 @@ def ai0(ctx, file=None, theme='landkit', suffix='.json'):
     #
     app = create_www(runscripts=True)
     with app.app_context():
+        # Print readme content
+        app.logger.info('----- README.md -----')
+        app.logger.info(readme)
         # Generate page content for each json file in specified folder
         for fn in os.listdir(templates_folder):
             #
             if not fn.endswith(suffix) and not fn.endswith(ai_suffix):
                 continue
             #
-            print(f'----- {fn} -----')
+            app.logger.info(f'----- {fn} -----')
             if file and file != fn:
-                print(f'Skip as file name not match: {file}')
+                app.logger.info(f'Skip as file name not match: {file}')
                 continue
             #
             fg = os.path.join(templates_folder, fn.replace(suffix, ai_suffix))
@@ -174,7 +174,7 @@ def ai0(ctx, file=None, theme='landkit', suffix='.json'):
 如果你明白了，请确认并等待新网站的介绍 ~
 '''
             #
-            print(gpt_template)
+            app.logger.info(gpt_template)
             response = openai.chat_stream(messages=[
                 {'role': 'system', 'content': '你是一个网站开发'},
                 {'role': 'user', 'content': gpt_template},
@@ -187,6 +187,7 @@ def ai0(ctx, file=None, theme='landkit', suffix='.json'):
             ])
             #
             content = ''
+            print('gpt> ', end='')
             for chunk in response:
                 print(chunk, end='')
                 content += chunk
@@ -195,14 +196,14 @@ def ai0(ctx, file=None, theme='landkit', suffix='.json'):
             json_match = json_pattern.search(content)
             # TODO: retry if no json content found or invalid json content
             if not json_match:
-                print('No json content found, try to retry')
+                app.logger.info('No json content found, try to retry')
                 break
             #
             response_data = json_match.group(1).strip()
             try:
                 response_json = json.loads(response_data)
             except json.JSONDecodeError as e:
-                print('Invalid json content, try to retry')
+                app.logger.info('Invalid json content, try to retry')
                 break
             # Consolidate back to demo_json and save to file .jsonai
             json_merge(demo_json, response_json)
@@ -219,21 +220,25 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
     # Prepare
     #
     ai_suffix = '.ai' + suffix
-    # (pre_prompt, app_prompt, negative_prompt, steps, cfg) for different media types
+    # (pre_prompt, app_prompt, negative_prompt, steps, cfg, width, height) for different media types
     comfyui_settings = {
         'illustration': (
             'a flat illustration with minimalist style, blue tones, white background',
             'trending on artstation, popular on dribbble',
-            'lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature\ndeformed, ugly, mutilated, disfigured, text, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck',
+            'lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature, text\ndeformed, ugly, mutilated, disfigured, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck',
             6,  # steps
             4,  # cfg
+            1024,  # width
+            768,  # height
         ),
         'photo': (
             'realistic photo',
             'high detailed skin, skin pores, intricate design, film grain, dslr, HDR, 64k',
-            'lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature\ndeformed, ugly, mutilated, disfigured, text, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck\nillustration, painting, drawing, art, sketch',
+            'lowres, error, cropped, worst quality, low quality, jpeg artifacts, out of frame, watermark, signature, text\ndeformed, ugly, mutilated, disfigured, extra limbs, extra fingers, extra arms, mutation, bad proportions, malformed limbs, mutated hands, fused fingers, long neck\nillustration, painting, drawing, art, sketch',
             4,  # steps
             2,  # cfg
+            1024,  # width
+            1024,  # height
         ),
     }
     theme_setting = theme_settings[theme]
@@ -253,9 +258,9 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
             if not fn.endswith(ai_suffix):
                 continue
             #
-            print(f'----- {fn} -----')
+            app.logger.info(f'----- {fn} -----')
             if file and file != fn:
-                print(f'Skip as file name not match: {file}')
+                app.logger.info(f'Skip as file name not match: {file}')
                 continue
             #
             fp = os.path.join(templates_folder, fn)
@@ -266,7 +271,7 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
             #
             # ChatGPT4o generation
             #
-            print(f'--- Analyze Page Content ---')
+            app.logger.info(f'--- Analyze Page Content ---')
             groups_for_generation = {
                 'illustration': [],  # [(path, demo/current image, related content), ...]
                 'photo': [],
@@ -302,7 +307,7 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
                             for ii, vv in enumerate(v):
                                 it = _guess_image_type(vv)
                                 if not it:
-                                    print(f'Error: unknown image type for {vv}')
+                                    app.logger.info(f'Error: unknown image type for {vv}')
                                     continue
                                 #
                                 if it in groups_for_generation:
@@ -315,7 +320,7 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
                         if k == 'image':
                             it = _guess_image_type(v)
                             if not it:
-                                print(f'Error: unknown image type for {v}')
+                                app.logger.info(f'Error: unknown image type for {v}')
                                 continue
                             #
                             if it in groups_for_generation:
@@ -329,14 +334,14 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
             #
             updated = 0
             for image_type, images_for_generation in groups_for_generation.items():
-                print(f'--- Prompt for {image_type} ---')
+                app.logger.info(f'--- Prompt for {image_type} ---')
                 # Invoke ChatGPT4o to generate prompt
                 generated_prompts = []
                 for ig in images_for_generation:
                     related_content = ig[2]
-                    print(f'Image {ig[0]}: {ig[1]} with related content: {related_content}')
+                    app.logger.info(f'Image {ig[0]}: {ig[1]} with related content: {related_content}')
                     if not related_content:
-                        print('Skip as no related content found')
+                        app.logger.info('Skip as no related content found')
                         continue
                     #
                     if image_type == 'icon':
@@ -376,21 +381,27 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
                         ])
                     # Consolidate response stream
                     content = ''
+                    print('gpt> ', end='')
                     for chunk in response:
                         print(chunk, end='')
                         content += chunk
                     #
-                    generated_prompts.append(content.strip())
+                    content = content.strip().strip("\"").strip("'")  # 返回描述时有可能会带上引号
+                    generated_prompts.append(content)
                 #
                 # ComfyUI generation or Icon selection
                 #
-                print(f'--- Generate for {image_type} ---')
+                if not generated_prompts:
+                    app.logger.info(f'Skip as no prompt generated')
+                    continue
+                #
+                app.logger.info(f'--- Generate for {image_type} ---')
                 if image_type == 'icon':
                     generated_images = []
                     # TODO: Hard code icon base folder here, different themes may have different icon sets
                     for i, prompt in enumerate(generated_prompts):
-                        print(f'{i}: {prompt}')
-                        generated_images.append(f'/static/landkit/assets/img/icons/duotone-icons/{prompt}')
+                        app.logger.info(f'{i}: {prompt}')
+                        generated_images.append((f'/static/landkit/assets/img/icons/duotone-icons/{prompt}', None))
                 else:
                     # Load comfyui icon template from file
                     comfyui_setting = comfyui_settings[image_type]
@@ -402,8 +413,8 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
                         schedule_prompt += f'"{i}": "{prompt}",\n'
                     #
                     schedule_prompt = schedule_prompt.rstrip(',\n')
-                    print(f'positive prompt: {pre_prompt}\n{schedule_prompt}\n{app_prompt}')
-                    print(f'negative prompt: {negative_prompt}')
+                    app.logger.info(f'positive prompt: {pre_prompt}\n{schedule_prompt}\n{app_prompt}')
+                    app.logger.info(f'negative prompt: {negative_prompt}')
                     # Load comfyui prompt template from file
                     # 对comfyui的json文件的要求:
                     # 1. 没有多余节点, 否则无法正确显示自行进度
@@ -416,6 +427,8 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
                     comfyui_prompt['3']['inputs']['seed'] = random.randint(1000000000, 9999999999)
                     comfyui_prompt['3']['inputs']['steps'] = comfyui_setting[3]
                     comfyui_prompt['3']['inputs']['cfg'] = comfyui_setting[4]
+                    comfyui_prompt['5']['inputs']['width'] = comfyui_setting[5]
+                    comfyui_prompt['5']['inputs']['height'] = comfyui_setting[6]
                     comfyui_prompt['5']['inputs']['batch_size'] = len(generated_prompts)
                     comfyui_prompt['7']['inputs']['text'] = negative_prompt
                     comfyui_prompt['9']['inputs']['filename_prefix'] = image_type
@@ -426,24 +439,38 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
                     #
                     generated_images = comfyui.generate_images(comfyui_prompt)
                     if not generated_images:
-                        print(f'Skip as no images generated')
+                        app.logger.info(f'Skip as no images generated')
                         continue
                     #
                     if len(generated_images) != len(images_for_generation):
-                        print(f'Error: images count not match')
+                        app.logger.info(f'Error: images count not match')
                         continue
                 #
                 # Update Page Content
                 #
-                print(f'--- Update Content ---')
+                app.logger.info(f'--- Update Content ---')
                 for i, ig in enumerate(images_for_generation):
-                    path = ig[0][1:]
-                    generated_image = generated_images[i]
-                    print(f'Update page content {path} -> {generated_image}')
-                    json_update_by_path(page_json, path, generated_image)  # Note: path starts with '.'
+                    path = ig[0][1:]  # Remove leading '.', this path is used to update json content, i.e, 'a.b[0]'
+                    current_url = ig[1]
+                    gen_url, gen_path = generated_images[i]  # This path is full file path of the generated image
+                    app.logger.info(f'Update page content {path} -> {gen_url}')
+                    # Check if any special handling needed
+                    # i.e, if path endswith size=440x660 means we need to resize the generated image to 440x660
+                    if '?' in current_url:
+                        option = current_url.split('?')[1]
+                        # Use regex to extract width and height
+                        m = re.search(r'size=(\d+)x(\d+)', option)
+                        if m:
+                            width, height = int(m.group(1)), int(m.group(2))
+                            # Resize image to widthxheight
+                            resize_image(gen_path, gen_path, '!', width, height, 'c')
+                            # Append option to gen_url
+                            gen_url += '?' + option
+                    #
+                    json_update_by_path(page_json, path, gen_url)
                     updated += 1
             #
-            print(f'Totally {updated} images updated')
+            app.logger.info(f'Totally {updated} images updated')
             if updated > 0:
                 with open(fp, 'w', encoding='utf-8') as f:
                     f.write(json_dumps(page_json, pretty=True))

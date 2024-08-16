@@ -81,7 +81,7 @@
                         </div>
                         <div class="card-body">
                             <code class="highlight" data-toggle="typed"
-                                  data-options='{"backSpeed":2, "strings": ["&gt;&nbsp;$&nbsp;npm&nbsp;install<br/><span class=\"text-success\">Everything&nbsp;is&nbsp;installed</span><br/><br/>&gt;&nbsp;$&nbsp;gulp<br/><span class=\"text-success\">scss&nbsp;watching</span><br/><span class=\"text-success\">LiveReload&nbsp;started</span><br/><span class=\"text-success\">Opening&nbsp;localhost:3000</span><br/><br/>&gt;&nbsp;$&nbsp;that&#x2019;s&nbsp;it<br/><span class=\"text-success\">Yup,&nbsp;that&#x2019;s&nbsp;it.</span>"]}'
+                                  data-options='{"backSpeed":2, "strings":["> Hello", "> 你好", "> Bonjour", "> Hallo", "> Ciao", "> 안녕하세요", "> こんにちは", "> Olá", "> Привет", "> hej"]}'
                                   style="min-height: 183px;"></code>
                         </div>
                     </div>
@@ -103,9 +103,9 @@
                 {% for t in test.children %}
                     <div class="col-12 col-md-5">
                         <blockquote class="blockquote text-center">
-                            <div class="img-fluid mb-5 mb-md-7 mx-auto svg-shim">
-                                <img src="{{ t.icon }}" style="max-width: 120px;">
-                            </div>
+                            <h2 class="mb-5 mb-md-7">
+                                {{ t.title }}
+                            </h2>
                             <p class="mb-5 mb-md-7">{{ t.content }}</p>
                             <footer class="blockquote-footer mb-8 mb-md-0">
                                 <div class="avatar mr-3">
@@ -131,7 +131,7 @@
                     <h1 class="text-white">{{ action.title }}</h1>
                     <p class="font-size-lg text-white-80 mb-6 mb-md-8">{{ action.content }}</p>
                     <a href="{{ action.action.url }}" class="btn btn-pill btn-primary lift">
-                        {{ action.action.title }} <i class="{{ action.action.icon }} ml-2"></i>
+                        {{ action.action.title }} <i class="fe fe-arrow-right ml-2"></i>
                     </a>
                 </div>
             </div>

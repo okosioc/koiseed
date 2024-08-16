@@ -19,7 +19,7 @@ from urllib.parse import urlencode
 from PIL import Image
 
 from contextlib import closing
-from websocket import create_connection
+from websocket import create_connection, _exceptions as exceptions
 
 
 class ComfyUISupport(object):
@@ -85,72 +85,80 @@ class ComfyUISupport(object):
         self.app.logger.info(f'Queue prompt with id {prompt_id}')
         # TODO: Auto retry on websocket._exceptions.WebSocketTimeoutException:
         # Open websocket
-        with closing(create_connection(f'ws://{self.server}/ws?clientId={self.client_id}', timeout=30)) as conn:
-            # Tracking progress
-            node_ids = list(prompt.keys())
-            finished_nodes = []
-            # TODO: Support timeout
-            while True:
-                out = conn.recv()
-                if isinstance(out, str):
-                    message = json.loads(out)
-                    if message['type'] == 'progress':
-                        data = message['data']
-                        current_step = data['value']
-                        self.app.logger.info(f'Sampler: {current_step}/{data["max"]} steps done')
-                    if message['type'] == 'execution_cached':
-                        data = message['data']
-                        for itm in data['nodes']:
-                            if itm not in finished_nodes:
-                                finished_nodes.append(itm)
-                                self.app.logger.info(f'Progess: {len(finished_nodes)}/{len(node_ids)} tasks done')
-                    if message['type'] == 'executing':
-                        data = message['data']
-                        if data['node'] not in finished_nodes:
-                            finished_nodes.append(data['node'])
-                            self.app.logger.info(f'Progess: {len(finished_nodes)}/{len(node_ids)} tasks done')
-                        # Execution is done
-                        if data['node'] is None and data['prompt_id'] == prompt_id:
-                            break
-                else:
-                    continue
-        # Get images
-        output_images = []
-        history = self.get_history(prompt_id)[prompt_id]
-        # NOTE: In your comfyui prompt, there should be only one save/preview image node, or all images will be savee
-        for node_id in history['outputs']:
-            node_output = history['outputs'][node_id]
-            if 'images' in node_output:
-                for image in node_output['images']:
-                    if image['type'] == 'output':
-                        fn, ft = image['filename'], image['type']
-                        image_data = self.get_image(fn, image['subfolder'], ft)
-                        output_data = {'image_data': image_data, 'file_name': fn, 'type': ft}
-                        output_images.append(output_data)
-        #
-        if not output_images:
-            self.app.logger.info('No images found')
-            return None
-        # Save image to static folder
-        self.app.logger.info(f'Genereated {len(output_images)} images')
-        ret = []
-        for i, itm in enumerate(output_images):
-            fn = itm['file_name']
+        attempts = 3
+        for attempt in range(1, attempts + 1):
             try:
+                with closing(create_connection(f'ws://{self.server}/ws?clientId={self.client_id}', timeout=10)) as conn:
+                    # Tracking progress
+                    node_ids = list(prompt.keys())
+                    finished_nodes = []
+                    # TODO: Support timeout
+                    while True:
+                        out = conn.recv()
+                        if isinstance(out, str):
+                            message = json.loads(out)
+                            if message['type'] == 'progress':
+                                data = message['data']
+                                current_step = data['value']
+                                self.app.logger.info(f'Sampler: {current_step}/{data["max"]} steps done')
+                            if message['type'] == 'execution_cached':
+                                data = message['data']
+                                for itm in data['nodes']:
+                                    if itm not in finished_nodes:
+                                        finished_nodes.append(itm)
+                                        self.app.logger.info(f'Progess: {len(finished_nodes)}/{len(node_ids)} tasks done')
+                            if message['type'] == 'executing':
+                                data = message['data']
+                                if data['node'] not in finished_nodes:
+                                    finished_nodes.append(data['node'])
+                                    self.app.logger.info(f'Progess: {len(finished_nodes)}/{len(node_ids)} tasks done')
+                                # Execution is done
+                                if data['node'] is None and data['prompt_id'] == prompt_id:
+                                    break
+                        else:
+                            continue
+                # Get images
+                output_images = []
+                history = self.get_history(prompt_id)[prompt_id]
+                # NOTE: In your comfyui prompt, there should be only one save/preview image node, or all images will be savee
+                for node_id in history['outputs']:
+                    node_output = history['outputs'][node_id]
+                    if 'images' in node_output:
+                        for image in node_output['images']:
+                            if image['type'] == 'output':
+                                fn, ft = image['filename'], image['type']
+                                image_data = self.get_image(fn, image['subfolder'], ft)
+                                output_data = {'image_data': image_data, 'file_name': fn, 'type': ft}
+                                output_images.append(output_data)
                 #
-                key = f'static/{self.folder}/{prompt_id}/{fn}'
-                path = os.path.join(self.app.root_path, key)
-                parent = os.path.dirname(path)
-                if not os.path.exists(parent):
-                    os.makedirs(parent)
+                if not output_images:
+                    self.app.logger.info('No images found')
+                    return None
+                # Save image to static folder
+                self.app.logger.info(f'Genereated {len(output_images)} images')
+                ret = [] # [(key, path)]
+                for i, itm in enumerate(output_images):
+                    fn = itm['file_name']
+                    try:
+                        #
+                        key = f'static/{self.folder}/{prompt_id}/{fn}'
+                        path = os.path.join(self.app.root_path, key)
+                        parent = os.path.dirname(path)
+                        if not os.path.exists(parent):
+                            os.makedirs(parent)
+                        #
+                        image = Image.open(io.BytesIO(itm['image_data']))
+                        image.save(path)
+                        self.app.logger.info(f'Saved {path}')
+                        # [(key, path)]
+                        ret.append(('/' + key, path))
+                    except Exception as e:
+                        self.app.logger.info(f'Failed to save image {fn}: {e}')
+                        return None
                 #
-                image = Image.open(io.BytesIO(itm['image_data']))
-                image.save(path)
-                self.app.logger.info(f'Saved {path}')
+                return ret
+            except exceptions.WebSocketTimeoutException as exc:
+                self.app.logger.warning(f'Attempt {attempt} failed because of {exc}')
                 #
-                ret.append('/' + key)
-            except Exception as e:
-                self.app.logger.info(f'Failed to save image {fn}: {e}')
-                return None
-        #
-        return ret
+                if attempt == attempts:
+                    raise

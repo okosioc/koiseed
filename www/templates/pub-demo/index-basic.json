@@ -17,17 +17,17 @@
     ],
     "children": [
       {
-        "icon": "../../static/landkit/assets/img/icons/duotone-icons/General/Settings-1.svg",
+        "icon": "/static/landkit/assets/img/icons/duotone-icons/General/Settings-1.svg",
         "title": "数据结构",
         "content": "通过简单的方式定义业务所需的数据结构，无需考虑存储细节，支持主流数据库。"
       },
       {
-        "icon": "../../static/landkit/assets/img/icons/duotone-icons/Layout/Layout-arrange.svg",
+        "icon": "/static/landkit/assets/img/icons/duotone-icons/Layout/Layout-arrange.svg",
         "title": "项目模板",
         "content": "根据数据结构及其视图，即可配合项目模板生成各个平台的种子项目，如网站、小程序、iOS和Android应用等等。"
       },
       {
-        "icon": "../../static/landkit/assets/img/icons/duotone-icons/Code/Code.svg",
+        "icon": "/static/landkit/assets/img/icons/duotone-icons/Code/Code.svg",
         "title": "二次开发",
         "content": "通过自动合并的机制实现了代码生成与定制开发的平衡。"
       }
@@ -84,13 +84,13 @@
       {
         "title": "锦鲤规划",
         "author": "Simon Hong",
-        "image": "/static/landkit/assets/img/photos/photo-1.jpg",
+        "image": "/static/landkit/assets/img/photos/photo-1.jpg?size=775x666",
         "content": "定义完数据结构后，即可生成一个完整可用的种子项目，使得我们可以专注于业务逻辑进行开发，不愧为AI时代的低代码平台。"
       },
       {
         "title": "锦鲤模型",
         "author": "Samuel Feng",
-        "image": "/static/landkit/assets/img/photos/photo-26.jpg",
+        "image": "/static/landkit/assets/img/photos/photo-26.jpg?size=775x666",
         "content": "快速的生成项目，方便的二次开发；更改数据结构后往往需要重新生成代码，平台通过一个自动合并的机制实现了代码生成与定制开发的平衡。"
       }
     ]

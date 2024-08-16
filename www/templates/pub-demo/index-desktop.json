@@ -42,30 +42,26 @@
         "title": "生成的种子项目易于维护，<br>且符合最佳实践",
         "content": "KoiSeed 通过自动合并的机制，实现了代码生成与定制开发的平衡，保证了项目的可扩展性与易于维护性。",
         "images": [
-          "/static/landkit/assets/img/photos/photo-10.jpg",
-          "/static/landkit/assets/img/photos/photo-12.jpg",
-          "/static/landkit/assets/img/photos/photo-9.jpg",
-          "/static/landkit/assets/img/photos/photo-11.jpg"
+          "/static/landkit/assets/img/photos/photo-10.jpg?size=440x660",
+          "/static/landkit/assets/img/photos/photo-12.jpg?size=440x350",
+          "/static/landkit/assets/img/photos/photo-9.jpg?size=440x350",
+          "/static/landkit/assets/img/photos/photo-11.jpg?size=440x690"
         ],
         "children": [
           {
             "title": "代码自动合并",
-            "icon": "fe fe-check",
             "cls": "success"
           },
           {
             "title": "定制开发支持",
-            "icon": "fe fe-check",
             "cls": "success"
           },
           {
             "title": "项目可扩展性",
-            "icon": "fe fe-check",
             "cls": "success"
           },
           {
             "title": "维护简便",
-            "icon": "fe fe-check",
             "cls": "success"
           }
         ]
@@ -145,8 +141,7 @@
     "action": {
       "title": "立即开始",
       "url": "#!",
-      "cls": "btn btn-primary-desat lift",
-      "icon": "fe fe-arrow-right ml-2"
+      "cls": "btn btn-primary-desat lift"
     }
   }
 }

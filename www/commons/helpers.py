@@ -237,11 +237,12 @@ def generate_image_preview(path, ops=None):
                 return
             #
             preview_path = path.replace('.' + ext, f'{ops}.{ext}')
-            _generate_image_preview(path, preview_path, match.group(1), match.group(2), match.group(3), match.group(4))
+            resize_image(path, preview_path, match.group(1), match.group(2), match.group(3), match.group(4))
 
 
-def _generate_image_preview(path, preview_path, prefix, target_width, target_height, suffix):
+def resize_image(path, target_path, prefix, target_width, target_height, suffix):
     """ Generate a preview for given image path. """
+    current_app.logger.info(f'Try to resize image {path} -> {target_path}')
     with Image.open(path) as image:
         width, height = image.size
         # fix width
@@ -267,17 +268,16 @@ def _generate_image_preview(path, preview_path, prefix, target_width, target_hei
                 target_width, target_height = int(width * ratio), int(height * ratio)
         #
         image = image.resize((target_width, target_height))
-        current_app.logger.info(f'Resize image to {target_width}x{target_height}')
+        msg = f'Resize image to {target_width}x{target_height}'
         # crop to center, alway works with starts !
         if suffix == 'c':
             x = (target_width - tw) // 2
             y = (target_height - th) // 2
             image = image.crop((x, y, x + tw, y + th))
-            current_app.logger.info(f'Crop image from ({x}, {y}) with {tw}x{th}')
+            msg += f' and crop image from ({x},{y}) with {tw}x{th}'
         #
-        image.save(preview_path)
-        #
-        current_app.logger.info(f'Generate preview image at {preview_path}')
+        image.save(target_path)
+        current_app.logger.info(msg)
 
 
 def generate_video_poster(path):
@@ -314,4 +314,4 @@ def generate_video_poster(path):
                 current_app.logger.error(f'Invalid preview ops {preview_ops}')
                 return
             #
-            _generate_image_preview(poster_path, poster_path, preview_match.group(1), preview_match.group(2), preview_match.group(3), preview_match.group(4))
+            resize_image(poster_path, poster_path, preview_match.group(1), preview_match.group(2), preview_match.group(3), preview_match.group(4))

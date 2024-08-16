@@ -18,10 +18,12 @@
         </div>
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-10 col-lg-8 text-center">
+                <div class="col-12 col-md-10 text-center">
                     <h1 class="display-2 font-weight-bold text-white">{{ hero.title | safe }}</h1>
                     <p class="lead text-white mb-8">{{ hero.subtitle }}</p>
-                    <a href="{{ hero.action.url }}" class="btn btn-white shadow lift">{{ hero.action.title }}</a>
+                    <a href="{{ hero.action.url }}" class="btn btn-white shadow lift">
+                        {{ hero.action.title }} <i class="fe fe-arrow-right ml-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -146,9 +148,7 @@
                                 <div class="card card-border shadow-light-lg lift lift-lg"
                                      style="border-top-color: {{ child.color }}">
                                     <div class="card-body text-center">
-                                        <div class="img-fluid mb-5 w-50 svg-shim mx-auto">
-                                            <img src="{{ child.image }}" style="color: {{ child.color }}">
-                                        </div>
+                                        <h3 class="mb-4">{{ child.title }}</h3>
                                         <p class="text-gray-700">{{ child.content }}</p>
                                     </div>
                                 </div>

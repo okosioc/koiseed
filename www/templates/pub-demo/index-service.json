@@ -59,28 +59,28 @@
     "subtitle": "了解我们的客户如何使用 KoiSeed 加速开发",
     "children": [
       {
-        "content": "“KoiSeed 让我们的开发流程大大加速，现在我们可以更专注于产品本身。”",
+        "content": "\"KoiSeed 让我们的开发流程大大加速，现在我们可以更专注于产品本身。\"",
         "author": "来自 Airbnb 的 Casey Fyfe",
         "image": "/static/landkit/assets/img/covers/cover-1.jpg"
       },
       {
-        "content": "“使用 KoiSeed，我们能够快速迭代我们的产品，无需担心后端。”",
-        "image": "/static/landkit/assets/img/brands/logotype/airbnb.svg",
+        "content": "使用 KoiSeed，我们能够快速迭代我们的产品，无需担心后端。",
+        "title": "科技公司A",
         "color": "#FF5A5F"
       },
       {
-        "content": "“KoiSeed 生成的代码清晰易懂，大大提高了我们的开发效率。”",
-        "image": "/static/landkit/assets/img/brands/logotype/netflix.svg",
+        "content": "KoiSeed 生成的代码清晰易懂，大大提高了我们的开发效率。",
+        "title": "软件公司B",
         "color": "#B81D24"
       },
       {
-        "content": "“我们喜欢 KoiSeed 的平台灵活性，它满足了我们所有的开发需求。”",
-        "image": "/static/landkit/assets/img/brands/logotype/coinbase.svg",
+        "content": "我们喜欢 KoiSeed 的平台灵活性，它满足了我们所有的开发需求。",
+        "title": "工作室C",
         "color": "#0081C9"
       },
       {
         "content": "“KoiSeed 给了我们开发的自由，同时还保证了项目的质量。”",
-        "image": "/static/landkit/assets/img/brands/logotype/stripe.svg",
+        "title": "初创公司D",
         "color": "#6772E5"
       }
     ]
