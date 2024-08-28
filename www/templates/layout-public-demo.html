@@ -91,7 +91,7 @@
         },
     ],
 } %}
-<nav class="navbar navbar-expand-lg navbar-light border-bottom">
+<nav class="navbar navbar-expand-lg {{ header_class or 'navbar-light border-bottom' }}">
     <div class="container">
         <a class="navbar-brand" href="{{ nav.url }}">
             {% if nav.icon %}
@@ -328,14 +328,14 @@
         },
     ],
 } %}
-<footer class="py-8 py-md-11">
+<footer class="py-8 py-md-11 {{ footer_class or '' }}">
     <div class="container">
         <div class="row">
             <div class="col-12 col-md">
                 {% if footer.image %}
                     <img src="./assets/img/brand.svg" alt="..." class="footer-brand img-fluid mb-2">
                 {% else %}
-                    <h3 class="text-dark mb-2">{{ footer.title }}</h3>
+                    <h3 class="text-{{ 'light' if 'dark' in footer_class else 'dark' }} mb-2">{{ footer.title }}</h3>
                 {% endif %}
                 <ul class="list-unstyled list-inline list-social mb-3">
                     {% for a in footer.actions %}

@@ -1,28 +1,37 @@
 {% extends "layout-public-demo.html" %}
 {% set title = _('Portfolio') %}
-{% set header_class = 'navbar-dark' %}
-{% set footer_class = 'bg-gray-200' %}
+{% set footer_class = 'bg-light' %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
     {% set hero = page.hero %}
-    <section class="pt-12 pt-md-14 pb-12 pb-md-15 bg-gray-900" style="margin-top: -83px;">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-10 col-lg-7 text-center">
-                    <h1 class="display-2 font-weight-bold text-white">{{ hero.title | safe }}</h1>
-                    <p class="lead text-white-75 mb-6">{{ hero.subtitle }}</p>
-                    <nav class="nav justify-content-center">
-                        {% for a in hero.actions %}
-                            <a class="badge badge-pill badge-white-soft mr-1 mb-1{{ ' active' if loop.first }}"
-                               href="#" data-toggle="pill" data-target="#portfolio" data-filter="{{ a.cls }}">
-                                <span class="h6 text-uppercase">{{ a.title }}</span>
-                            </a>
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-12 col-md-4 position-md-sticky d-flex align-items-center vh-md-100" style="top: 0;">
+                <aside class="py-8 py-md-10">
+                    <h2 class="display-2 font-weight-bold">{{ hero.title | safe }}</h2>
+                    <p class="font-size-lg mb-7 text-muted">{{ hero.subtitle }}</p>
+                    <ul class="list-group list-group-flush">
+                        {% for c in hero.children %}
+                            <li class="list-group-item">
+                                <h6 class="d-flex mb-0 text-uppercase">
+                                    {{ c.title }} <span class="ml-auto">{{ c.content }}</span>
+                                </h6>
+                            </li>
                         {% endfor %}
-                    </nav>
-                </div>
+                    </ul>
+                </aside>
+            </div>
+            <div class="col-12 col-md-7">
+                <section class="py-8 py-md-10">
+                    {% for i in hero.images %}
+                        <a class="d-block mb-8" data-fancybox href="{{ i }}">
+                            <img class="img-fluid rounded" src="{{ i }}" alt="...">
+                        </a>
+                    {% endfor %}
+                </section>
             </div>
         </div>
-    </section>
+    </div>
     <div class="position-relative">
         <div class="shape shape-bottom shape-fluid-x svg-shim text-light">
             <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,22 +39,27 @@
             </svg>
         </div>
     </div>
-    {% set intro = page.intro %}
-    <section class="py-8 py-md-11 mt-n10 mt-md-n14">
+    {% set intro = page.intro.children[0] %}
+    <section class="pt-7 pt-md-10 bg-light">
         <div class="container">
-            <div class="row" id="portfolio" data-isotope='{"layoutMode": "fitRows"}'>
+            <div class="row align-items-center mb-5">
+                <div class="col-12 col-md">
+                    <h3 class="mb-0">{{ intro.title }}</h3>
+                    <p class="mb-0 text-muted">{{ intro.subtitle }}</p>
+                </div>
+                <div class="col-12 col-md-auto">
+                    <a href="{{ intro.action.url }}"
+                       class="btn btn-sm btn-outline-gray-300 d-none d-md-inline">{{ intro.action.title }}
+                    </a>
+                </div>
+            </div>
+            <div class="row">
                 {% for c in intro.children %}
-                    {% set col = 'col-12 col-md-4' %}
-                    {% if loop.first %}
-                        {% set col = 'col-12' %}
-                    {% elif loop.index0 in (1, 4) %}
-                        {% set col = 'col-12 col-md-5' %}
-                    {% elif loop.index0 in (2, 3) %}
-                        {% set col = 'col-12 col-md-7' %}
-                    {% endif %}
-                    <div class="{{ col }} {{ c.cls }}">
-                        <a class="card lift lift-lg shadow-light-lg mb-7" href="{{ c.url }}">
-                            <img class="card-img-top" src="{{ c.image }}" alt="..."/>
+                    <div class="col-12 col-md-6 col-lg-4 d-flex">
+                        <a class="card mb-6 mb-lg-0 shadow-light-lg" href="#!">
+                            <div class="card-zoom">
+                                <img class="card-img-top" src="{{ c.image }}" alt="...">
+                            </div>
                             <div class="card-body">
                                 <div class="shape shape-bottom-100 shape-fluid-x svg-shim text-white">
                                     <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -62,15 +76,8 @@
         </div>
     </section>
     {% set action = page.action %}
-    <div class="position-relative">
-        <div class="shape shape-bottom shape-fluid-x svg-shim text-gray-200">
-            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
-            </svg>
-        </div>
-    </div>
-    <section class="pt-6 pt-md-8 bg-gray-200">
-        <div class="container pb-6 pb-md-8 border-bottom border-gray-300">
+    <section class="pt-7 pt-md-10 bg-light">
+        <div class="container py-6 py-md-8 border-top border-bottom border-gray-300">
             <div class="row align-items-center">
                 <div class="col-12 col-md">
                     <h3 class="mb-1 font-weight-bold">

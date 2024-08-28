@@ -68,14 +68,20 @@ def index_mobile():
 
 @pub_demo.route('/portfolio-grid')
 def portfolio_grid():
-    """ Index portfolio page. """
+    """ Portfolio grid page. """
     return render_template_with_page('pub-demo/portfolio-grid.html')
 
 
 @pub_demo.route('/portfolio-parallax')
 def portfolio_parallax():
-    """ Index portfolio page. """
+    """ Portfolio parallax page. """
     return render_template_with_page('pub-demo/portfolio-parallax.html')
+
+
+@pub_demo.route('/portfolio-sidebar')
+def portfolio_sidebar():
+    """ Portfolio sidebar page. """
+    return render_template_with_page('pub-demo/portfolio-sidebar.html')
 
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,71 @@
+{
+  "hero": {
+    "image": "/static/landkit/assets/img/portfolio/portfolio-cover-1.jpg",
+    "title": "KoiSeed",
+    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目",
+    "images": [
+      "/static/landkit/assets/img/portfolio/portfolio-21.jpg",
+      "/static/landkit/assets/img/portfolio/portfolio-22.jpg",
+      "/static/landkit/assets/img/portfolio/portfolio-23.jpg",
+      "/static/landkit/assets/img/portfolio/portfolio-24.jpg",
+      "/static/landkit/assets/img/portfolio/portfolio-25.jpg"
+    ],
+    "children": [
+      {
+        "title": "Year",
+        "content": "2019"
+      },
+      {
+        "title": "Service",
+        "content": "Product Design"
+      },
+      {
+        "title": "Timeline",
+        "content": "60 Days"
+      }
+    ]
+  },
+  "intro": {
+    "children": [
+      {
+        "title": "Other Showcases",
+        "subtitle": "Check out some of our other success.",
+        "action": {
+          "title": "View All",
+          "url": "#!"
+        },
+        "children": [
+          {
+            "url": "#!",
+            "image": "/static/landkit/assets/img/portfolio/portfolio-4.jpg",
+            "title": "Doodle Pads",
+            "subtitle": "Ideation",
+            "cls": "ux"
+          },
+          {
+            "url": "#!",
+            "image": "/static/landkit/assets/img/portfolio/portfolio-2.jpg",
+            "title": "Honest Packaging",
+            "subtitle": "Branding",
+            "cls": "ux"
+          },
+          {
+            "url": "#!",
+            "image": "/static/landkit/assets/img/portfolio/portfolio-7.jpg",
+            "title": "Larq Bottle Redesign",
+            "subtitle": "Product Design",
+            "cls": "ux"
+          }
+        ]
+      }
+    ]
+  },
+  "action": {
+    "title": "Get our stories delivered",
+    "content": "From us to your inbox weekly.",
+    "action": {
+      "title": "Subscribe",
+      "url": "coming();"
+    }
+  }
+}
