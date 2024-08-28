@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "image": "/static/landkit/assets/img/portfolio/portfolio-cover-1.jpg",
+    "title": "Welcome to <span class=\"text-primary\">KoiSeed</span><br>Develop anything",
+    "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目"
+  },
+  "intro": {
+    "children": [
+      {
+        "image": "/static/landkit/assets/img/portfolio/portfolio-cover-2.jpg"
+      },
+      {
+        "title": "科技公司A",
+        "content": "\"KoiSeed的使用极大地提升了我们的开发效率，让我们能够更加专注于业务逻辑的实现。\"",
+        "author": "Bill Callan",
+        "avatar": "/static/landkit/assets/img/avatars/avatar-1.jpg"
+      },
+      {
+        "image": "/static/landkit/assets/img/portfolio/portfolio-cover-3.jpg"
+      },
+      {
+        "image": "/static/landkit/assets/img/portfolio/portfolio-cover-4.jpg"
+      },
+      {
+        "tag": "Seed",
+        "title": "快速生成跨平台的种子项目",
+        "content": "KoiSeed利用数据结构及其视图，使得跨平台种子项目的生成变得快速而简便。",
+        "images": [
+          "/static/landkit/assets/img/photos/photo-13.jpg",
+          "/static/landkit/assets/img/photos/photo-14.jpg",
+          "/static/landkit/assets/img/photos/photo-15.jpg"
+        ]
+      },
+      {
+        "image": "/static/landkit/assets/img/covers/cover-2.jpg"
+      },
+      {
+        "title": "Other Showcases",
+        "subtitle": "Check out some of our other success.",
+        "action": {
+          "title": "View All",
+          "url": "#!"
+        },
+        "children": [
+          {
+            "url": "#!",
+            "image": "/static/landkit/assets/img/portfolio/portfolio-4.jpg",
+            "title": "Doodle Pads",
+            "subtitle": "Ideation",
+            "cls": "ux"
+          },
+          {
+            "url": "#!",
+            "image": "/static/landkit/assets/img/portfolio/portfolio-2.jpg",
+            "title": "Honest Packaging",
+            "subtitle": "Branding",
+            "cls": "ux"
+          },
+          {
+            "url": "#!",
+            "image": "/static/landkit/assets/img/portfolio/portfolio-7.jpg",
+            "title": "Larq Bottle Redesign",
+            "subtitle": "Product Design",
+            "cls": "ux"
+          }
+        ]
+      }
+    ]
+  },
+  "action": {
+    "title": "Get our stories delivered",
+    "content": "From us to your inbox weekly.",
+    "action": {
+      "title": "Subscribe",
+      "url": "coming();"
+    }
+  }
+}

@@ -66,6 +66,18 @@ def index_mobile():
     return render_template_with_page('pub-demo/index-mobile.html')
 
 
+@pub_demo.route('/portfolio-grid')
+def portfolio_grid():
+    """ Index portfolio page. """
+    return render_template_with_page('pub-demo/portfolio-grid.html')
+
+
+@pub_demo.route('/portfolio-parallax')
+def portfolio_parallax():
+    """ Index portfolio page. """
+    return render_template_with_page('pub-demo/portfolio-parallax.html')
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Contact
 #

@@ -307,7 +307,7 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
                             for ii, vv in enumerate(v):
                                 it = _guess_image_type(vv)
                                 if not it:
-                                    app.logger.info(f'Error: unknown image type for {vv}')
+                                    app.logger.info(f'Warning: unsupport image type for {vv}')
                                     continue
                                 #
                                 if it in groups_for_generation:
@@ -320,7 +320,7 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
                         if k == 'image':
                             it = _guess_image_type(v)
                             if not it:
-                                app.logger.info(f'Error: unknown image type for {v}')
+                                app.logger.info(f'Warning: unsupport image type for {v}')
                                 continue
                             #
                             if it in groups_for_generation:
@@ -371,7 +371,7 @@ def ai1(ctx, file=None, theme='landkit', suffix='.json'):
 1. 只需包含具体的人物和环境，返回一句英文的简单的描述即可
 2. 人物和环境的描述尽可能简单明了，不超过3人，环境不超过5个物件
 
-下面是已有的描述，请避免生成类似的描述，且不使用已经出现过的人物和物件：
+下面是已有的描述，请避免生成类似的描述，即不使用已经出现过的人物和物件, 也更换不同的环境：
 
 {'；'.join(generated_prompts)}
 

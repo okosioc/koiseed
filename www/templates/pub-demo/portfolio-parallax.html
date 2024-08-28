@@ -1,0 +1,162 @@
+{% extends "layout-public-demo.html" %}
+{% set title = _('Index') %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% set hero = page.hero %}
+    <section class="overlay overlay-dark overlay-40" data-jarallax data-speed=".8"
+             style="background-image: url({{ hero.image }})">
+        <div class="container d-flex flex-column">
+            <div class="row align-items-center justify-content-center min-vh-100 py-8 py-md-11">
+                <div class="col-12 col-md-10 col-lg-7 mt-auto text-center">
+                    <h1 class="display-2 font-weight-bold text-white">{{ hero.title | safe }}</h1>
+                    <p class="lead text-white-75 mb-6">{{ hero.subtitle }}</p>
+                </div>
+                <div class="col-12 mt-auto text-center">
+                    <a class="btn btn-white btn-rounded-circle shadow" data-toggle="smooth-scroll" data-offset="0"
+                       href="#portfolio">
+                        <i class="fe fe-arrow-down"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set intro = page.intro.children[0] %}
+    <section class="min-vh-100" id="portfolio" data-jarallax data-speed=".8"
+             style="background-image: url({{ intro.image }})"></section>
+    {% set intro = page.intro.children[1] %}
+    <section>
+        <div class="container d-flex flex-column">
+            <div class="row align-items-center justify-content-center min-vh-100 py-8 py-md-11">
+                <div class="col-12 col-lg-10 col-xl-8">
+                    <blockquote class="blockquote text-center">
+                        <h1 class="mb-5 mb-md-7 text-primary">{{ intro.title }}</h1>
+                        <p class="h2 mb-5 mb-md-7">{{ intro.content }}</p>
+                        <footer class="blockquote-footer mb-0">
+                            <div class="avatar mr-3">
+                                <img src="{{ intro.avatar }}" class="avatar-img rounded-circle" alt="...">
+                            </div>
+                            <span class="h6 text-uppercase">{{ intro.author }}</span>
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set intro = page.intro.children[2] %}
+    <section class="min-vh-100" data-jarallax data-speed=".8"
+             style="background-image: url({{ intro.image }})"></section>
+    {% set intro = page.intro.children[3] %}
+    <section class="min-vh-100" data-jarallax data-speed=".8"
+             style="background-image: url({{ intro.image }})"></section>
+    {% set intro = page.intro.children[4] %}
+    <section>
+        <div class="container d-flex flex-column">
+            <div class="row align-items-center min-vh-100 py-8 py-md-11">
+                <div class="col-12">
+                    <div class="row align-items-center justify-content-between mb-8 mb-md-11">
+                        <div class="col-12 col-md-6">
+                            <h6 class="text-uppercase text-primary font-weight-bold">{{ intro.tag }}</h6>
+                            <h2>{{ intro.title }}</h2>
+                            <p class="lead text-muted mb-6 mb-md-0">{{ intro.content }}</p>
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-5">
+                            <div class="row no-gutters">
+                                <div class="col-4">
+                                    <div class="w-150 mt-9 p-1 bg-white shadow-lg" data-aos="fade-up"
+                                         data-aos-delay="100">
+                                        <img src="{{ intro.images[0] }}" class="img-fluid" alt="...">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="w-150 p-1 bg-white shadow-lg" data-aos="fade-up">
+                                        <img src="{{ intro.images[1] }}" class="img-fluid" alt="...">
+                                    </div>
+                                </div>
+                                <div class="col-4 position-relative">
+                                    <div class="w-150 mt-11 float-right p-1 bg-white shadow-lg" data-aos="fade-up"
+                                         data-aos-delay="150">
+                                        <img src="{{ intro.images[2] }}" class="img-fluid" alt="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% set intro = page.intro.children[5] %}
+    <section class="min-vh-100" data-jarallax data-speed=".8"
+             style="background-image: url({{ intro.image }})"></section>
+    <div class="position-relative">
+        <div class="shape shape-bottom shape-fluid-x svg-shim text-light">
+            <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+            </svg>
+        </div>
+    </div>
+    {% set intro = page.intro.children[6] %}
+    <section class="pt-7 pt-md-10">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-12 col-md">
+                    <h3 class="mb-0">{{ intro.title }}</h3>
+                    <p class="mb-0 text-muted">{{ intro.subtitle }}</p>
+                </div>
+                <div class="col-12 col-md-auto">
+                    <a href="{{ intro.action.url }}"
+                       class="btn btn-sm btn-outline-gray-300 d-none d-md-inline">{{ intro.action.title }}
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                {% for c in intro.children %}
+                    <div class="col-12 col-md-6 col-lg-4 d-flex">
+                        <a class="card mb-6 mb-lg-0 shadow-light-lg" href="#!">
+                            <div class="card-zoom">
+                                <img class="card-img-top" src="{{ c.image }}" alt="...">
+                            </div>
+                            <div class="card-body">
+                                <div class="shape shape-bottom-100 shape-fluid-x svg-shim text-white">
+                                    <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z" fill="currentColor"/>
+                                    </svg>
+                                </div>
+                                <h6 class="text-uppercase mb-1 text-muted">{{ c.subtitle }}</h6>
+                                <h4 class="mb-0">{{ c.title }}</h4>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% set action = page.action %}
+    <section class="pt-7 pt-md-10">
+        <div class="container py-6 py-md-8 border-top border-bottom border-gray-300">
+            <div class="row align-items-center">
+                <div class="col-12 col-md">
+                    <h3 class="mb-1 font-weight-bold">
+                        {{ action.title }}
+                    </h3>
+                    <p class="font-size-lg text-muted mb-6 mb-md-0">
+                        {{ action.content }}
+                    </p>
+                </div>
+                <div class="col-12 col-md-5">
+                    <form>
+                        <div class="row">
+                            <div class="col">
+                                <input type="email" class="form-control" placeholder="Enter your email">
+                            </div>
+                            <div class="col-auto ml-n5">
+                                <button class="btn btn-primary" type="button"
+                                        onclick="{{ action.action.url }}">{{ action.action.title }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
