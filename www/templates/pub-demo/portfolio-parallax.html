@@ -1,6 +1,7 @@
 {% extends "layout-public-demo.html" %}
 {% set title = _('Portfolio') %}
 {% set header_class = 'navbar-dark navbar-togglable fixed-top' %}
+{% set footer_class = 'bg-light' %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
     {% set hero = page.hero %}
@@ -97,7 +98,7 @@
         </div>
     </div>
     {% set intro = page.intro.children[6] %}
-    <section class="pt-7 pt-md-10">
+    <section class="pt-7 pt-md-10 bg-light">
         <div class="container">
             <div class="row align-items-center mb-5">
                 <div class="col-12 col-md">
@@ -133,7 +134,7 @@
         </div>
     </section>
     {% set action = page.action %}
-    <section class="pt-7 pt-md-10">
+    <section class="pt-7 pt-md-10 bg-light">
         <div class="container py-6 py-md-8 border-top border-bottom border-gray-300">
             <div class="row align-items-center">
                 <div class="col-12 col-md">

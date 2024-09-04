@@ -14,6 +14,7 @@ import os
 import random
 
 from invoke import task as local_task
+from PIL import Image, ImageDraw, ImageFont
 
 from paramiko import RSAKey
 from fabric import task
@@ -102,6 +103,43 @@ theme_settings = {
         'icons_folder': 'www/static/landkit/assets/img/icons/duotone-icons',  # 独立图标的文件夹, 根据文案选择相关的图标
     }
 }
+
+
+@local_task(optional=['color'])
+def logo(ctx, height=100, padding=10, color='#2c7be5'):
+    """ Create text logo according to the SHORT_NAME in config.py. """
+    app = create_www(runscripts=True)
+    with app.app_context():
+        #
+        text = app.config['SHORT_NAME'] + '.'
+        logo_path = os.path.join(app.root_path, 'static/img/logo.png')
+        canvas_height = height
+        text_height = canvas_height - padding * 2
+        # Check if text contains chinese characters
+        if re.search(r'[\u4e00-\u9fa5]', text):
+            font_path = os.path.join(app.root_path, 'static/fonts/ShangShouJingDongTi-2.ttf')
+            font = ImageFont.truetype(font_path, text_height)
+        else:
+            font_path = os.path.join(app.root_path, 'static/fonts/HelveticaNeue.ttc')
+            font = ImageFont.truetype(font_path, text_height, index=4)  # HelveticaNeue Condensed Bold
+        #
+        bbox = font.getbbox(text)
+        text_width = bbox[2] - bbox[0]
+        canvas_width = text_width + 2 * padding
+        # Use getmetrics() to calculate the real text height
+        # - ascent: baseline to the top of the text
+        # - descent: baseline to the bottom of the text
+        ascent, descent = font.getmetrics()
+        text_height = ascent + descent
+        app.logger.info(f'Create logo for {text} with text size ({text_width}, {text_height}) in ({canvas_width}, {canvas_height}) at {logo_path} ')
+        #
+        image = Image.new('RGBA', (canvas_width, canvas_height), (255, 255, 255, 0))  # Transparent background
+        draw = ImageDraw.Draw(image)
+        #
+        text_x = (canvas_width - text_width) // 2
+        text_y = (canvas_height - text_height) // 2
+        draw.text((text_x, text_y), text, font=font, fill=color)
+        image.save(logo_path)
 
 
 @local_task(optional=['theme', 'file', 'suffix'])
