@@ -22,62 +22,62 @@
             </div>
         </div>
     </section>
-    {% set intro = page.intro.children[0] %}
+    {% set case = page.portfolio.children[0] %}
     <section class="min-vh-100" id="portfolio" data-jarallax data-speed=".8"
-             style="background-image: url({{ intro.image }})"></section>
-    {% set intro = page.intro.children[1] %}
+             style="background-image: url({{ case.image }})"></section>
+    {% set case = page.portfolio.children[1] %}
     <section>
         <div class="container d-flex flex-column">
             <div class="row align-items-center justify-content-center min-vh-100 py-8 py-md-11">
                 <div class="col-12 col-lg-10 col-xl-8">
                     <blockquote class="blockquote text-center">
-                        <h1 class="mb-5 mb-md-7 text-primary">{{ intro.title }}</h1>
-                        <p class="h2 mb-5 mb-md-7">{{ intro.content }}</p>
+                        <h1 class="mb-5 mb-md-7 text-primary">{{ case.title }}</h1>
+                        <p class="h2 mb-5 mb-md-7">{{ case.content }}</p>
                         <footer class="blockquote-footer mb-0">
                             <div class="avatar mr-3">
-                                <img src="{{ intro.avatar }}" class="avatar-img rounded-circle" alt="...">
+                                <img src="{{ case.avatar }}" class="avatar-img rounded-circle" alt="...">
                             </div>
-                            <span class="h6 text-uppercase">{{ intro.author }}</span>
+                            <span class="h6 text-uppercase">{{ case.author }}</span>
                         </footer>
                     </blockquote>
                 </div>
             </div>
         </div>
     </section>
-    {% set intro = page.intro.children[2] %}
+    {% set case = page.portfolio.children[2] %}
     <section class="min-vh-100" data-jarallax data-speed=".8"
-             style="background-image: url({{ intro.image }})"></section>
-    {% set intro = page.intro.children[3] %}
+             style="background-image: url({{ case.image }})"></section>
+    {% set case = page.portfolio.children[3] %}
     <section class="min-vh-100" data-jarallax data-speed=".8"
-             style="background-image: url({{ intro.image }})"></section>
-    {% set intro = page.intro.children[4] %}
+             style="background-image: url({{ case.image }})"></section>
+    {% set case = page.portfolio.children[4] %}
     <section>
         <div class="container d-flex flex-column">
             <div class="row align-items-center min-vh-100 py-8 py-md-11">
                 <div class="col-12">
                     <div class="row align-items-center justify-content-between mb-8 mb-md-11">
                         <div class="col-12 col-md-6">
-                            <h6 class="text-uppercase text-primary font-weight-bold">{{ intro.tag }}</h6>
-                            <h2>{{ intro.title }}</h2>
-                            <p class="lead text-muted mb-6 mb-md-0">{{ intro.content }}</p>
+                            <h6 class="text-uppercase text-primary font-weight-bold">{{ case.tag }}</h6>
+                            <h2>{{ case.title }}</h2>
+                            <p class="lead text-muted mb-6 mb-md-0">{{ case.content }}</p>
                         </div>
                         <div class="col-12 col-md-6 col-xl-5">
                             <div class="row no-gutters">
                                 <div class="col-4">
                                     <div class="w-150 mt-9 p-1 bg-white shadow-lg" data-aos="fade-up"
                                          data-aos-delay="100">
-                                        <img src="{{ intro.images[0] }}" class="img-fluid" alt="...">
+                                        <img src="{{ case.images[0] }}" class="img-fluid" alt="...">
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="w-150 p-1 bg-white shadow-lg" data-aos="fade-up">
-                                        <img src="{{ intro.images[1] }}" class="img-fluid" alt="...">
+                                        <img src="{{ case.images[1] }}" class="img-fluid" alt="...">
                                     </div>
                                 </div>
                                 <div class="col-4 position-relative">
                                     <div class="w-150 mt-11 float-right p-1 bg-white shadow-lg" data-aos="fade-up"
                                          data-aos-delay="150">
-                                        <img src="{{ intro.images[2] }}" class="img-fluid" alt="...">
+                                        <img src="{{ case.images[2] }}" class="img-fluid" alt="...">
                                     </div>
                                 </div>
                             </div>
@@ -87,9 +87,9 @@
             </div>
         </div>
     </section>
-    {% set intro = page.intro.children[5] %}
+    {% set case = page.portfolio.children[5] %}
     <section class="min-vh-100" data-jarallax data-speed=".8"
-             style="background-image: url({{ intro.image }})"></section>
+             style="background-image: url({{ case.image }})"></section>
     <div class="position-relative">
         <div class="shape shape-bottom shape-fluid-x svg-shim text-light">
             <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,22 +97,22 @@
             </svg>
         </div>
     </div>
-    {% set intro = page.intro.children[6] %}
+    {% set case = page.portfolio.children[6] %}
     <section class="pt-7 pt-md-10 bg-light">
         <div class="container">
             <div class="row align-items-center mb-5">
                 <div class="col-12 col-md">
-                    <h3 class="mb-0">{{ intro.title }}</h3>
-                    <p class="mb-0 text-muted">{{ intro.subtitle }}</p>
+                    <h3 class="mb-0">{{ case.title }}</h3>
+                    <p class="mb-0 text-muted">{{ case.subtitle }}</p>
                 </div>
                 <div class="col-12 col-md-auto">
-                    <a href="{{ intro.action.url }}"
-                       class="btn btn-sm btn-outline-gray-300 d-none d-md-inline">{{ intro.action.title }}
+                    <a href="{{ case.action.url }}"
+                       class="btn btn-sm btn-outline-gray-300 d-none d-md-inline">{{ case.action.title }}
                     </a>
                 </div>
             </div>
             <div class="row">
-                {% for c in intro.children %}
+                {% for c in case.children %}
                     <div class="col-12 col-md-6 col-lg-4 d-flex">
                         <a class="card mb-6 mb-lg-0 shadow-light-lg" href="#!">
                             <div class="card-zoom">

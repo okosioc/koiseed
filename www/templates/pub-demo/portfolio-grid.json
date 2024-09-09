@@ -4,80 +4,76 @@
     "subtitle": "基于数据结构及其视图，快速生成跨平台的种子项目",
     "actions": [
       {
-        "title": "Primary",
         "cls": "*"
       },
       {
-        "title": "Product",
-        "cls": ".product"
+        "cls": "category-1"
       },
       {
-        "title": "UX",
-        "cls": ".ux"
+        "cls": "category-2"
       },
       {
-        "title": "Resources",
-        "cls": ".resources"
+        "cls": "category-3"
       }
     ]
   },
-  "intro": {
+  "portfolio": {
     "children": [
       {
         "url": "#!",
         "image": "/static/landkit/assets/img/portfolio/portfolio-26.jpg",
         "title": "Larq Bright Campaign",
         "subtitle": "Lifestyle Branding",
-        "cls": "ux"
+        "cls": "category-1"
       },
       {
         "url": "#!",
         "image": "/static/landkit/assets/img/portfolio/portfolio-17.jpg",
         "title": "Curology 'Any Face' Campaign",
         "subtitle": "Branding Exploration",
-        "cls": "product"
+        "cls": "category-2"
       },
       {
         "url": "#!",
         "image": "/static/landkit/assets/img/portfolio/portfolio-18.jpg",
         "title": "Goby Brush Prototype",
         "subtitle": "Product Exploration",
-        "cls": "product"
+        "cls": "category-2"
       },
       {
         "url": "#!",
         "image": "/static/landkit/assets/img/portfolio/portfolio-19.jpg",
         "title": "Goby Packaging",
         "subtitle": "Product Design",
-        "cls": "resources"
+        "cls": "category-3"
       },
       {
         "url": "#!",
         "image": "/static/landkit/assets/img/portfolio/portfolio-20.jpg",
         "title": "Larq Earthtones Collection",
         "subtitle": "Lifestyle Branding",
-        "cls": "resources"
+        "cls": "category-3"
       },
       {
         "url": "#!",
         "image": "/static/landkit/assets/img/portfolio/portfolio-4.jpg",
         "title": "Doodle Pads",
         "subtitle": "Ideation",
-        "cls": "ux"
+        "cls": "category-1"
       },
       {
         "url": "#!",
         "image": "/static/landkit/assets/img/portfolio/portfolio-2.jpg",
         "title": "Honest Packaging",
         "subtitle": "Branding",
-        "cls": "ux"
+        "cls": "category-1"
       },
       {
         "url": "#!",
         "image": "/static/landkit/assets/img/portfolio/portfolio-7.jpg",
         "title": "Larq Bottle Redesign",
         "subtitle": "Product Design",
-        "cls": "ux"
+        "cls": "category-1"
       }
     ]
   },

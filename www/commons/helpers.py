@@ -122,27 +122,26 @@ def json_update_by_path(json_obj, path, value):
 
 def json_simplify(json_obj, keep_fields=('tag', 'subtitle', 'title', 'content', 'author')):
     """
-    递归遍历JSON对象，只保留subtitle、title和content字段。
+    递归遍历JSON对象，只保留指定的字段。
 
     :param json_obj: 输入的JSON对象
     :param keep_fields: 保留的字段
     :return: 简化后的JSON对象
     """
-    if isinstance(json_obj, dict):
-        simplified_obj = {}
-        for key, value in json_obj.items():
-            if key in keep_fields:
-                simplified_obj[key] = value
+    simplified_dict = {}
+    for key, value in json_obj.items():
+        if key in keep_fields:
+            simplified_dict[key] = value
+        else:
+            if isinstance(value, dict):
+                simplified_dict[key] = json_simplify(value)
+            elif isinstance(value, list):
+                if value and isinstance(value[0], dict):
+                    simplified_dict[key] = [json_simplify(item) for item in value]
             else:
-                nested_result = json_simplify(value)
-                if nested_result:
-                    simplified_obj[key] = nested_result
-        #
-        return simplified_obj
-    elif isinstance(json_obj, list):
-        return [json_simplify(item) for item in json_obj if json_simplify(item)]
-    else:
-        return None
+                pass
+    #
+    return simplified_dict
 
 
 def json_merge(a, b):

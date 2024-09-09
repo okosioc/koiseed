@@ -83,7 +83,6 @@ class ComfyUISupport(object):
         # Queue prompt
         prompt_id = self.queue_prompt(prompt)['prompt_id']
         self.app.logger.info(f'Queue prompt with id {prompt_id}')
-        # TODO: Auto retry on websocket._exceptions.WebSocketTimeoutException:
         # Open websocket
         attempts = 3
         for attempt in range(1, attempts + 1):
@@ -136,7 +135,7 @@ class ComfyUISupport(object):
                     return None
                 # Save image to static folder
                 self.app.logger.info(f'Genereated {len(output_images)} images')
-                ret = [] # [(key, path)]
+                ret = []  # [(key, path)]
                 for i, itm in enumerate(output_images):
                     fn = itm['file_name']
                     try:

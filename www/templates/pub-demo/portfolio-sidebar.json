@@ -25,38 +25,34 @@
       }
     ]
   },
-  "intro": {
+  "portfolio": {
+    "title": "Other Showcases",
+    "subtitle": "Check out some of our other success.",
+    "action": {
+      "title": "View All",
+      "url": "#!"
+    },
     "children": [
       {
-        "title": "Other Showcases",
-        "subtitle": "Check out some of our other success.",
-        "action": {
-          "title": "View All",
-          "url": "#!"
-        },
-        "children": [
-          {
-            "url": "#!",
-            "image": "/static/landkit/assets/img/portfolio/portfolio-4.jpg",
-            "title": "Doodle Pads",
-            "subtitle": "Ideation",
-            "cls": "ux"
-          },
-          {
-            "url": "#!",
-            "image": "/static/landkit/assets/img/portfolio/portfolio-2.jpg",
-            "title": "Honest Packaging",
-            "subtitle": "Branding",
-            "cls": "ux"
-          },
-          {
-            "url": "#!",
-            "image": "/static/landkit/assets/img/portfolio/portfolio-7.jpg",
-            "title": "Larq Bottle Redesign",
-            "subtitle": "Product Design",
-            "cls": "ux"
-          }
-        ]
+        "url": "#!",
+        "image": "/static/landkit/assets/img/portfolio/portfolio-4.jpg",
+        "title": "Doodle Pads",
+        "subtitle": "Ideation",
+        "cls": "ux"
+      },
+      {
+        "url": "#!",
+        "image": "/static/landkit/assets/img/portfolio/portfolio-2.jpg",
+        "title": "Honest Packaging",
+        "subtitle": "Branding",
+        "cls": "ux"
+      },
+      {
+        "url": "#!",
+        "image": "/static/landkit/assets/img/portfolio/portfolio-7.jpg",
+        "title": "Larq Bottle Redesign",
+        "subtitle": "Product Design",
+        "cls": "ux"
       }
     ]
   },

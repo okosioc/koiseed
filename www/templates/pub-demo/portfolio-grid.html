@@ -14,8 +14,9 @@
                     <nav class="nav justify-content-center">
                         {% for a in hero.actions %}
                             <a class="badge badge-pill badge-white-soft mr-1 mb-1{{ ' active' if loop.first }}"
-                               href="#" data-toggle="pill" data-target="#portfolio" data-filter="{{ a.cls }}">
-                                <span class="h6 text-uppercase">{{ a.title }}</span>
+                               href="#" data-toggle="pill" data-target="#portfolio"
+                               data-filter="{{ '*' if a.cls == '*' else '.'~a.cls }}">
+                                <span class="h6 text-uppercase">{{ 'All' if a.cls == '*' else a.cls|capitalize }}</span>
                             </a>
                         {% endfor %}
                     </nav>
@@ -30,11 +31,11 @@
             </svg>
         </div>
     </div>
-    {% set intro = page.intro %}
+    {% set portfolio = page.portfolio %}
     <section class="py-8 py-md-11 mt-n10 mt-md-n14">
         <div class="container">
             <div class="row" id="portfolio" data-isotope='{"layoutMode": "fitRows"}'>
-                {% for c in intro.children %}
+                {% for c in portfolio.children %}
                     {% set col = 'col-12 col-md-4' %}
                     {% if loop.first %}
                         {% set col = 'col-12' %}

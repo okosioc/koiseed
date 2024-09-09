@@ -106,7 +106,7 @@ theme_settings = {
 
 
 @local_task(optional=['color'])
-def logo(ctx, height=100, padding=10, color='#2c7be5'):
+def ailogo(ctx, height=100, padding=10, color='#2c7be5'):
     """ Create text logo according to the SHORT_NAME in config.py. """
     app = create_www(runscripts=True)
     with app.app_context():
@@ -142,10 +142,77 @@ def logo(ctx, height=100, padding=10, color='#2c7be5'):
         image.save(logo_path)
 
 
+def _aijson(app, fn, simple_json):
+    """ Get valid json from GPT with retry mechanism. """
+    attempts = 3
+    for attempt in range(1, attempts + 1):
+        #
+        if fn.startswith('index-') or fn.startswith('portfolio-'):
+            gpt_template = f'''下面是用来渲染我的jinja2模版的json数据，用于网页的各个部分, 如hero用于页头、intro用于介绍业务内容、test是客户点评、portfolio是作品集、action是行动号召等等：
+    
+{simple_json}
+
+我将提供一个新网站的介绍，请生成符合该介绍的json数据，并满足如下要求：
+
+1. 保证生成的内容符合该介绍，且无需参考原始数据的内容
+2. 保持json结构不变，例如，对象字段应包含一样的键，数组字段应该有同样的长度
+3. 生成的内容应当与我提供的介绍是同一个语言，只有tag字段可以使用对应的英文
+4. 生成的内容如果有客户信息或者作品集信息，可以使用虚构的数据
+
+如果你明白了，请确认并等待新网站的介绍 ~
+'''
+        else:
+            gpt_template = f'''下面是用来渲染我的jinja2模版的json数据，用于网页的各个部分：
+    
+{simple_json}                        
+
+我将提供一个新网站的介绍，你只需根据该介绍的语言进行翻译即可：
+
+1. 保持原始数据的意思不变，无需参考新网站的介绍
+2. 保持json结构不变，并生成合法的json数据
+
+如果你明白了，请确认并等待新网站的介绍 ~
+'''
+        #
+        app.logger.info(gpt_template)
+        response = openai.chat_stream(messages=[
+            {'role': 'system', 'content': '你是一个网站开发'},
+            {'role': 'user', 'content': gpt_template},
+            {'role': 'assistant', 'content': '明白了，请提供新网站的介绍'},
+            {'role': 'user', 'content': '''锦鲤模型，专注于大模型的实际应用
+- 针对具体的应用场景，选择合适的大模型，实现并开源了最小可行产品
+- 您可以在线体验这些应用，或下载源代码自行二次开发，或联系我们量身定制
+'''
+             }
+        ])
+        #
+        content = ''
+        print('gpt> ', end='')
+        for chunk in response:
+            print(chunk, end='')
+            content += chunk
+        #
+        json_pattern = re.compile(r"```json(.*?)```", re.DOTALL)
+        json_match = json_pattern.search(content)
+        if not json_match:
+            app.logger.warning(f'Attempt {attempt} failed because of no json content returned')
+            continue
+        #
+        response_data = json_match.group(1).strip()
+        try:
+            response_json = json.loads(response_data)
+            return response_json
+        except json.JSONDecodeError as e:
+            app.logger.warning(f'Attempt {attempt} failed because of invalid json content returned')
+            continue
+    # If all attempts failed, return None
+    return None
+
+
 @local_task(optional=['theme', 'file', 'suffix'])
-def ai0(ctx, file=None, theme='landkit', suffix='.json'):
+def aitext(ctx, file=None, theme='landkit', suffix='.json'):
     """ Invoke AI tools to generate page content for specified page, i.e, index-basic.json -> index-basic.ai.json. """
-    if not confirm('Are you sure to gen page content(s)?'):
+    if not confirm('Are you sure to gen text for page content(s)?'):
         return
     # Read content of README.md
     with open('README.md') as f:
@@ -154,6 +221,7 @@ def ai0(ctx, file=None, theme='landkit', suffix='.json'):
         #     print('# koiseed is found in README.md, Please make update readme file to describe your project')
         #     return
     #
+    updated = []
     ai_suffix = '.ai' + suffix
     theme_setting = theme_settings[theme]
     templates_folder = theme_setting['templates_folder']
@@ -165,8 +233,8 @@ def ai0(ctx, file=None, theme='landkit', suffix='.json'):
         app.logger.info(readme)
         # Generate page content for each json file in specified folder
         for fn in os.listdir(templates_folder):
-            #
-            if not fn.endswith(suffix) and not fn.endswith(ai_suffix):
+            # Only works for json files, and skip ai generated json files, i.e, .ai.json
+            if not fn.endswith(suffix) or fn.endswith(ai_suffix):
                 continue
             #
             app.logger.info(f'----- {fn} -----')
@@ -185,74 +253,24 @@ def ai0(ctx, file=None, theme='landkit', suffix='.json'):
             # 从json提取文本字段, 从而减少gpt的生成内容
             demo_json = json.loads(demo_data)
             simple_json = json_simplify(demo_json)
-            #
-            if fn.startswith('index-'):
-                gpt_template = f'''下面是用来渲染我的jinja2模版的json数据，用于网页的各个部分：
-
-{simple_json}
-
-我将提供一个新网站的介绍，请生成符合该介绍的json数据，并满足如下要求：
-
-1. 保证生成的内容符合该介绍，且无需参考原始数据的内容
-2. 保持json结构不变，并生成合法的json数据
-3. 生成的内容应当与我提供的介绍是同一个语言，只有tag字段可以使用对应的英文
-
-如果你明白了，请确认并等待新网站的介绍 ~
-'''
-            else:
-                gpt_template = f'''下面是用来渲染我的jinja2模版的json数据，用于网页的各个部分：
-                    
-{simple_json}                        
-
-我将提供一个新网站的介绍，你只需根据该介绍的语言进行翻译即可：
-
-1. 保持原始数据的意思不变，无需参考新网站的介绍
-2. 保持json结构不变，并生成合法的json数据
-
-如果你明白了，请确认并等待新网站的介绍 ~
-'''
-            #
-            app.logger.info(gpt_template)
-            response = openai.chat_stream(messages=[
-                {'role': 'system', 'content': '你是一个网站开发'},
-                {'role': 'user', 'content': gpt_template},
-                {'role': 'assistant', 'content': '明白了，请提供新网站的介绍'},
-                {'role': 'user', 'content': '''锦鲤模型，专注于大模型的实际应用
-- 针对具体的应用场景，选择合适的大模型，实现并开源了最小可行产品
-- 您可以在线体验这些应用，或下载源代码自行二次开发，或联系我们量身定制
-'''
-                 }
-            ])
-            #
-            content = ''
-            print('gpt> ', end='')
-            for chunk in response:
-                print(chunk, end='')
-                content += chunk
-            #
-            json_pattern = re.compile(r"```json(.*?)```", re.DOTALL)
-            json_match = json_pattern.search(content)
-            # TODO: retry if no json content found or invalid json content
-            if not json_match:
-                app.logger.info('No json content found, try to retry')
-                break
-            #
-            response_data = json_match.group(1).strip()
-            try:
-                response_json = json.loads(response_data)
-            except json.JSONDecodeError as e:
-                app.logger.info('Invalid json content, try to retry')
-                break
-            # Consolidate back to demo_json and save to file .jsonai
+            response_json = _aijson(app, fn, simple_json)
+            if not response_json:
+                app.logger.warning(f'Skip as failed to generate content for {fn}')
+                continue
+            # Consolidate back to demo_json and save to file .ai.json
             json_merge(demo_json, response_json)
             with open(fg, 'w', encoding='utf-8') as f:
                 f.write(json_dumps(demo_json, pretty=True))
+            #
+            updated.append(fn)
+    #
+    app.logger.info(f'Totally {len(updated)} files updated: {updated}')
 
 
 @local_task(optional=['theme', 'file', 'suffix'])
-def ai1(ctx, file=None, theme='landkit', suffix='.json'):
-    """ Invoke AI tools to generate medias, i.e, image/video, from generated page content. """
-    if not confirm('Are you sure to gen medias for page content(s)?'):
+def aiimage(ctx, file=None, theme='landkit', suffix='.json'):
+    """ Invoke AI tools to generate images from generated page content. """
+    if not confirm('Are you sure to gen images for page content(s)?'):
         return
     #
     # Prepare
