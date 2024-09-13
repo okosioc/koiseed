@@ -305,6 +305,17 @@ def aiimage(ctx, file=None, theme='landkit', suffix='.json'):
         for r, _, fs in os.walk(icons_folder):
             for f in fs:
                 icons.append(os.path.relpath(os.path.join(r, f), icons_folder))
+    # TODO: Support more image types, i.e, product image, screenshot, etc
+    groups_for_generation = {
+        'illustration': [],  # [(fn, path, demo/current image, related content), ...]
+        'photo': [],
+        'icon': [],
+    }
+    # You can comment out a type to skip generation for that type
+    if not icons:
+        groups_for_generation.pop('icon')
+    #
+    page_jsons = {}  # {fn: json}
     #
     app = create_www(runscripts=True)
     with app.app_context():
@@ -324,18 +335,11 @@ def aiimage(ctx, file=None, theme='landkit', suffix='.json'):
                 page_data = f.read()
             #
             page_json = json.loads(page_data)
+            page_jsons[fn] = page_json
             #
             # ChatGPT4o generation
             #
-            app.logger.info(f'--- Analyze Page Content ---')
-            groups_for_generation = {
-                'illustration': [],  # [(path, demo/current image, related content), ...]
-                'photo': [],
-                'icon': [],
-            }
-            # You can comment out a type to skip generation for that type
-            if not icons:
-                groups_for_generation.pop('icon')
+            app.logger.info(f'--- Analyze Page Contents ---')
 
             def _guess_image_type(image_url):
                 """ Guess image type from image url. """
@@ -367,7 +371,7 @@ def aiimage(ctx, file=None, theme='landkit', suffix='.json'):
                                     continue
                                 #
                                 if it in groups_for_generation:
-                                    groups_for_generation[it].append([f'{path_}.{k}[{ii}]', vv, related_content_])
+                                    groups_for_generation[it].append([fn, f'{path_}.{k}[{ii}]', vv, related_content_])
                         else:
                             for ii, vv in enumerate(v):
                                 if isinstance(vv, dict):
@@ -380,33 +384,35 @@ def aiimage(ctx, file=None, theme='landkit', suffix='.json'):
                                 continue
                             #
                             if it in groups_for_generation:
-                                groups_for_generation[it].append([f'{path_}.{k}', v, related_content_])
+                                groups_for_generation[it].append([fn, f'{path_}.{k}', v, related_content_])
                         elif k == 'icon':
                             if 'icon' in groups_for_generation:
-                                groups_for_generation['icon'].append([f'{path_}.{k}', v, related_content_])
+                                groups_for_generation['icon'].append([fn, f'{path_}.{k}', v, related_content_])
 
             #
             _iterate(page_json)
-            #
-            updated = 0
-            for image_type, images_for_generation in groups_for_generation.items():
-                app.logger.info(f'--- Prompt for {image_type} ---')
-                # Invoke ChatGPT4o to generate prompt
-                generated_prompts = []
-                for ig in images_for_generation:
-                    related_content = ig[2]
-                    app.logger.info(f'Image {ig[0]}: {ig[1]} with related content: {related_content}')
-                    if not related_content:
-                        app.logger.info('Skip as no related content found')
-                        continue
-                    #
-                    if image_type == 'icon':
-                        response = openai.chat_stream(messages=[
-                            {'role': 'system', 'content': f'''你是一个网站的图标设计专家，已经设计了很多图标，下面每行表示一个图标，包含了类别和名字：
+        #
+        updated_image = 0
+        updated_fns = set()
+        for image_type, images_for_generation in groups_for_generation.items():
+            app.logger.info(f'--- Prompt for {image_type} ---')
+            # Invoke ChatGPT4o to generate prompt
+            generated_prompts = []
+            for ig in images_for_generation:
+                fn, image_path, image_url, related_content = ig[0], ig[1], ig[2], ig[3]
+                app.logger.info(f'File {fn} image {image_path}: {image_url}')
+                app.logger.debug(f'With related content: {related_content}')
+                if not related_content:
+                    app.logger.info('Skip as no related content found')
+                    continue
+                #
+                if image_type == 'icon':
+                    response = openai.chat_stream(messages=[
+                        {'role': 'system', 'content': f'''你是一个网站的图标设计专家，已经设计了很多图标，下面每行表示一个图标，包含了类别和名字：
 
 {chr(10).join(icons)}                          
-                            '''},
-                            {'role': 'user', 'content': f'''我将提供一两句文案，请根据文案从上述图标中选择一个合适的，并满足如下要求：
+                        '''},
+                        {'role': 'user', 'content': f'''我将提供一两句文案，请根据文案从上述图标中选择一个合适的，并满足如下要求：
 
 1. 从中选择一个图标并直接返回，不能凭空生成不存在的图标
 2. 选中的图标能够恰当的体现文案的意思即可
@@ -414,16 +420,16 @@ def aiimage(ctx, file=None, theme='landkit', suffix='.json'):
 下面是已经选择的图标，请勿重复选择：
 
 {'；'.join(generated_prompts)}
-                            
+                        
 '''},
-                            {'role': 'assistant', 'content': '明白了，请提供文案'},
-                            {'role': 'user', 'content': related_content}
-                        ])
-                    else:
-                        response = openai.chat_stream(messages=[
-                            {'role': 'system', 'content': '你是一个网站设计专家'},
-                            {'role': 'user', 'content': f'''我将提供一两句文案，请根据文案设计一个简洁的画面，让网站的用户能够更加直观的理解该文案，并满足如下要求：
-    
+                        {'role': 'assistant', 'content': '明白了，请提供文案'},
+                        {'role': 'user', 'content': related_content}
+                    ])
+                else:
+                    response = openai.chat_stream(messages=[
+                        {'role': 'system', 'content': '你是一个网站设计专家'},
+                        {'role': 'user', 'content': f'''我将提供一两句文案，请根据文案设计一个简洁的画面，让网站的用户能够更加直观的理解该文案，并满足如下要求：
+
 1. 只需包含具体的人物和环境，返回一句英文的简单的描述即可
 2. 人物和环境的描述尽可能简单明了，不超过3人，环境不超过5个物件
 
@@ -432,101 +438,107 @@ def aiimage(ctx, file=None, theme='landkit', suffix='.json'):
 {'；'.join(generated_prompts)}
 
 '''},
-                            {'role': 'assistant', 'content': '明白了，请提供文案'},
-                            {'role': 'user', 'content': related_content}
-                        ])
-                    # Consolidate response stream
-                    content = ''
-                    print('gpt> ', end='')
-                    for chunk in response:
-                        print(chunk, end='')
-                        content += chunk
-                    #
-                    content = content.strip().strip("\"").strip("'")  # 返回描述时有可能会带上引号
-                    generated_prompts.append(content)
+                        {'role': 'assistant', 'content': '明白了，请提供文案'},
+                        {'role': 'user', 'content': related_content}
+                    ])
+                # Consolidate response stream
+                content = ''
+                print('gpt> ', end='')
+                for chunk in response:
+                    print(chunk, end='')
+                    content += chunk
                 #
-                # ComfyUI generation or Icon selection
+                content = content.strip().strip("\"").strip("'")  # 返回描述时有可能会带上引号
+                generated_prompts.append(content)
+            #
+            # ComfyUI generation or Icon selection
+            #
+            if not generated_prompts:
+                app.logger.info(f'Skip as no prompt generated')
+                continue
+            #
+            app.logger.info(f'--- Generate for {image_type} ---')
+            if image_type == 'icon':
+                generated_images = []
+                # TODO: Hard code icon base folder here, different themes may have different icon sets
+                for i, prompt in enumerate(generated_prompts):
+                    app.logger.info(f'{i}: {prompt}')
+                    generated_images.append((f'/static/landkit/assets/img/icons/duotone-icons/{prompt}', None))
+            else:
+                # Load comfyui icon template from file
+                comfyui_setting = comfyui_settings[image_type]
+                pre_prompt = comfyui_setting[0]
+                app_prompt = comfyui_setting[1]
+                negative_prompt = comfyui_setting[2]
+                schedule_prompt = ''
+                # TODO: Need to batch the generated prompts to prevent too long prompt
+                for i, prompt in enumerate(generated_prompts):
+                    schedule_prompt += f'"{i}": "{prompt}",\n'
                 #
-                if not generated_prompts:
-                    app.logger.info(f'Skip as no prompt generated')
+                schedule_prompt = schedule_prompt.rstrip(',\n')
+                app.logger.info(f'positive prompt: {pre_prompt}\n{schedule_prompt}\n{app_prompt}')
+                app.logger.info(f'negative prompt: {negative_prompt}')
+                # Load comfyui prompt template from file
+                # 对comfyui的json文件的要求:
+                # 1. 没有多余节点, 否则无法正确显示自行进度
+                # 2. 可以直接在测试环境部署使用, 方便调试
+                # 3. 节点序号不能随意更改, 下面更新内容的时候需要根据节点序号来更新
+                # 4. 由于comfyui有些字段的内容诸如模型的名字等依赖于本地的文件名, 因此应当尽可能保证线上和各个测试环境的统一
+                with open(os.path.join(app.root_path, 'ai/comfyui-api-sdxl-batch-with-aligned-style.json'), 'r', encoding='utf-8') as f:
+                    comfyui_prompt = json.load(f)
+                #
+                comfyui_prompt['3']['inputs']['seed'] = random.randint(1000000000, 9999999999)
+                comfyui_prompt['3']['inputs']['steps'] = comfyui_setting[3]
+                comfyui_prompt['3']['inputs']['cfg'] = comfyui_setting[4]
+                comfyui_prompt['5']['inputs']['width'] = comfyui_setting[5]
+                comfyui_prompt['5']['inputs']['height'] = comfyui_setting[6]
+                comfyui_prompt['5']['inputs']['batch_size'] = len(generated_prompts)
+                comfyui_prompt['7']['inputs']['text'] = negative_prompt
+                comfyui_prompt['9']['inputs']['filename_prefix'] = image_type
+                comfyui_prompt['12']['inputs']['text'] = schedule_prompt
+                comfyui_prompt['12']['inputs']['max_frames'] = len(generated_prompts)
+                comfyui_prompt['12']['inputs']['pre_text'] = pre_prompt
+                comfyui_prompt['12']['inputs']['app_text'] = app_prompt
+                #
+                generated_images = comfyui.generate_images(comfyui_prompt)
+                if not generated_images:
+                    app.logger.info(f'Skip as no images generated')
                     continue
                 #
-                app.logger.info(f'--- Generate for {image_type} ---')
-                if image_type == 'icon':
-                    generated_images = []
-                    # TODO: Hard code icon base folder here, different themes may have different icon sets
-                    for i, prompt in enumerate(generated_prompts):
-                        app.logger.info(f'{i}: {prompt}')
-                        generated_images.append((f'/static/landkit/assets/img/icons/duotone-icons/{prompt}', None))
-                else:
-                    # Load comfyui icon template from file
-                    comfyui_setting = comfyui_settings[image_type]
-                    pre_prompt = comfyui_setting[0]
-                    app_prompt = comfyui_setting[1]
-                    negative_prompt = comfyui_setting[2]
-                    schedule_prompt = ''
-                    for i, prompt in enumerate(generated_prompts):
-                        schedule_prompt += f'"{i}": "{prompt}",\n'
-                    #
-                    schedule_prompt = schedule_prompt.rstrip(',\n')
-                    app.logger.info(f'positive prompt: {pre_prompt}\n{schedule_prompt}\n{app_prompt}')
-                    app.logger.info(f'negative prompt: {negative_prompt}')
-                    # Load comfyui prompt template from file
-                    # 对comfyui的json文件的要求:
-                    # 1. 没有多余节点, 否则无法正确显示自行进度
-                    # 2. 可以直接在测试环境部署使用, 方便调试
-                    # 3. 节点序号不能随意更改, 下面更新内容的时候需要根据节点序号来更新
-                    # 4. 由于comfyui有些字段的内容诸如模型的名字等依赖于本地的文件名, 因此应当尽可能保证线上和各个测试环境的统一
-                    with open(os.path.join(app.root_path, 'ai/comfyui-api-sdxl-batch-with-aligned-style.json'), 'r', encoding='utf-8') as f:
-                        comfyui_prompt = json.load(f)
-                    #
-                    comfyui_prompt['3']['inputs']['seed'] = random.randint(1000000000, 9999999999)
-                    comfyui_prompt['3']['inputs']['steps'] = comfyui_setting[3]
-                    comfyui_prompt['3']['inputs']['cfg'] = comfyui_setting[4]
-                    comfyui_prompt['5']['inputs']['width'] = comfyui_setting[5]
-                    comfyui_prompt['5']['inputs']['height'] = comfyui_setting[6]
-                    comfyui_prompt['5']['inputs']['batch_size'] = len(generated_prompts)
-                    comfyui_prompt['7']['inputs']['text'] = negative_prompt
-                    comfyui_prompt['9']['inputs']['filename_prefix'] = image_type
-                    comfyui_prompt['12']['inputs']['text'] = schedule_prompt
-                    comfyui_prompt['12']['inputs']['max_frames'] = len(generated_prompts)
-                    comfyui_prompt['12']['inputs']['pre_text'] = pre_prompt
-                    comfyui_prompt['12']['inputs']['app_text'] = app_prompt
-                    #
-                    generated_images = comfyui.generate_images(comfyui_prompt)
-                    if not generated_images:
-                        app.logger.info(f'Skip as no images generated')
-                        continue
-                    #
-                    if len(generated_images) != len(images_for_generation):
-                        app.logger.info(f'Error: images count not match')
-                        continue
-                #
-                # Update Page Content
-                #
-                app.logger.info(f'--- Update Content ---')
-                for i, ig in enumerate(images_for_generation):
-                    path = ig[0][1:]  # Remove leading '.', this path is used to update json content, i.e, 'a.b[0]'
-                    current_url = ig[1]
-                    gen_url, gen_path = generated_images[i]  # This path is full file path of the generated image
-                    app.logger.info(f'Update page content {path} -> {gen_url}')
-                    # Check if any special handling needed
-                    # i.e, if path endswith size=440x660 means we need to resize the generated image to 440x660
-                    if '?' in current_url:
-                        option = current_url.split('?')[1]
-                        # Use regex to extract width and height
-                        m = re.search(r'size=(\d+)x(\d+)', option)
-                        if m:
-                            width, height = int(m.group(1)), int(m.group(2))
-                            # Resize image to widthxheight
-                            resize_image(gen_path, gen_path, '!', width, height, 'c')
-                            # Append option to gen_url
-                            gen_url += '?' + option
-                    #
-                    json_update_by_path(page_json, path, gen_url)
-                    updated += 1
+                if len(generated_images) != len(images_for_generation):
+                    app.logger.info(f'Error: images count not match')
+                    continue
             #
-            app.logger.info(f'Totally {updated} images updated')
-            if updated > 0:
+            # Update Page Content
+            #
+            app.logger.info(f'--- Update Contents ---')
+            for i, ig in enumerate(images_for_generation):
+                fn, image_path, image_url = ig[0], ig[1][1:], ig[2]  # Remove leading '.', this path is used to update json content, i.e, 'a.b[0]'
+                gen_url, gen_path = generated_images[i]  # This path is full file path of the generated image
+                app.logger.info(f'Update page content {image_path} -> {gen_url}')
+                # Check if any special handling needed
+                # i.e, if path endswith size=440x660 means we need to resize the generated image to 440x660
+                if '?' in image_url:
+                    option = image_url.split('?')[1]
+                    # Use regex to extract width and height
+                    m = re.search(r'size=(\d+)x(\d+)', option)
+                    if m:
+                        width, height = int(m.group(1)), int(m.group(2))
+                        # Resize image to widthxheight
+                        resize_image(gen_path, gen_path, '!', width, height, 'c')
+                        # Append option to gen_url
+                        gen_url += '?' + option
+                #
+                page_json = page_jsons[fn]
+                json_update_by_path(page_json, image_path, gen_url)
+                updated_image += 1
+                updated_fns.add(fn)
+        #
+        app.logger.info(f'Totally {updated_image} images in {updated_fns} files updated')
+        if updated_image > 0:
+            for fn in updated_fns:
+                page_json = page_jsons[fn]
+                fp = os.path.join(templates_folder, fn)
                 with open(fp, 'w', encoding='utf-8') as f:
                     f.write(json_dumps(page_json, pretty=True))
+                    app.logger.info(f'File {fn} updated')
