@@ -179,11 +179,7 @@ def _aijson(app, fn, simple_json):
             {'role': 'system', 'content': '你是一个网站开发'},
             {'role': 'user', 'content': gpt_template},
             {'role': 'assistant', 'content': '明白了，请提供新网站的介绍'},
-            {'role': 'user', 'content': '''锦鲤模型，专注于大模型的实际应用
-- 针对具体的应用场景，选择合适的大模型，实现并开源了最小可行产品
-- 您可以在线体验这些应用，或下载源代码自行二次开发，或联系我们量身定制
-'''
-             }
+            {'role': 'user', 'content': app.config['INTRO']}
         ])
         #
         content = ''
@@ -214,12 +210,6 @@ def aitext(ctx, file=None, theme='landkit', suffix='.json'):
     """ Invoke AI tools to generate page content for specified page, i.e, index-basic.json -> index-basic.ai.json. """
     if not confirm('Are you sure to gen text for page content(s)?'):
         return
-    # Read content of README.md
-    with open('README.md') as f:
-        readme = f.read()
-        # if '# koiseed' in readme:
-        #     print('# koiseed is found in README.md, Please make update readme file to describe your project')
-        #     return
     #
     updated = []
     ai_suffix = '.ai' + suffix
@@ -228,9 +218,6 @@ def aitext(ctx, file=None, theme='landkit', suffix='.json'):
     #
     app = create_www(runscripts=True)
     with app.app_context():
-        # Print readme content
-        app.logger.info('----- README.md -----')
-        app.logger.info(readme)
         # Generate page content for each json file in specified folder
         for fn in os.listdir(templates_folder):
             # Only works for json files, and skip ai generated json files, i.e, .ai.json
@@ -407,6 +394,7 @@ def aiimage(ctx, file=None, theme='landkit', suffix='.json'):
                     continue
                 #
                 if image_type == 'icon':
+                    # TODO: 可以一次性选择多个图标, 无需每个图标都调用一次gpt4
                     response = openai.chat_stream(messages=[
                         {'role': 'system', 'content': f'''你是一个网站的图标设计专家，已经设计了很多图标，下面每行表示一个图标，包含了类别和名字：
 
