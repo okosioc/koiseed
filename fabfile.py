@@ -142,7 +142,7 @@ def ailogo(ctx, height=100, padding=10, color='#2c7be5'):
         image.save(logo_path)
 
 
-def _aijson(app, fn, simple_json):
+def _aijson(app, intro, fn, simple_json):
     """ Get valid json from GPT with retry mechanism. """
     attempts = 3
     for attempt in range(1, attempts + 1):
@@ -154,7 +154,7 @@ def _aijson(app, fn, simple_json):
 
 我将提供一个新网站的介绍，请生成符合该介绍的json数据，并满足如下要求：
 
-1. 保证生成的内容符合该介绍，且无需参考原始数据的内容
+1. 保证生成的内容符合该介绍，且无需参考上述原始数据的内容
 2. 保持json结构不变，例如，对象字段应包含一样的键，数组字段应该有同样的长度
 3. 生成的内容应当与我提供的介绍是同一个语言，只有tag字段可以使用对应的英文
 4. 生成的内容如果有客户信息或者作品集信息，可以使用虚构的数据
@@ -168,7 +168,7 @@ def _aijson(app, fn, simple_json):
 
 我将提供一个新网站的介绍，你只需根据该介绍的语言进行翻译即可：
 
-1. 保持原始数据的意思不变，无需参考新网站的介绍
+1. 保持上述原始数据的意思不变，只需做翻译, 无需参考新介绍的内容
 2. 保持json结构不变，并生成合法的json数据
 
 如果你明白了，请确认并等待新网站的介绍 ~
@@ -179,7 +179,7 @@ def _aijson(app, fn, simple_json):
             {'role': 'system', 'content': '你是一个网站开发'},
             {'role': 'user', 'content': gpt_template},
             {'role': 'assistant', 'content': '明白了，请提供新网站的介绍'},
-            {'role': 'user', 'content': app.config['INTRO']}
+            {'role': 'user', 'content': intro}
         ])
         #
         content = ''
@@ -218,6 +218,14 @@ def aitext(ctx, file=None, theme='landkit', suffix='.json'):
     #
     app = create_www(runscripts=True)
     with app.app_context():
+        # Get intro
+        intro = app.config['INTRO']
+        if not intro:
+            with open('README.md') as f:
+                intro = f.read()
+        #
+        app.logger.info('----- Intro -----')
+        app.logger.info(intro)
         # Generate page content for each json file in specified folder
         for fn in os.listdir(templates_folder):
             # Only works for json files, and skip ai generated json files, i.e, .ai.json
@@ -240,7 +248,7 @@ def aitext(ctx, file=None, theme='landkit', suffix='.json'):
             # 从json提取文本字段, 从而减少gpt的生成内容
             demo_json = json.loads(demo_data)
             simple_json = json_simplify(demo_json)
-            response_json = _aijson(app, fn, simple_json)
+            response_json = _aijson(app, intro, fn, simple_json)
             if not response_json:
                 app.logger.warning(f'Skip as failed to generate content for {fn}')
                 continue

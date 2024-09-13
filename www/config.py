@@ -4,8 +4,7 @@ SECRET_KEY = 'FIXME'
 # Introduction
 #
 SHORT_NAME = 'KoiSeed'
-INTRO = '''FIXME
-'''
+INTRO = None
 #
 # Cache
 #
