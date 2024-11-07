@@ -1,5 +1,5 @@
-werkzeug < 3
-Flask >= 2.2
+werkzeug
+Flask
 Flask-Caching
 Flask-Login
 Flask-WTF

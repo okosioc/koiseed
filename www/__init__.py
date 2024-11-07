@@ -18,14 +18,13 @@ import string
 from datetime import datetime
 from importlib import import_module
 from logging.handlers import SMTPHandler, TimedRotatingFileHandler
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote as url_quote, urlencode as url_encode
 
 from flask import Flask, request, redirect, jsonify, url_for, render_template, session, has_request_context, abort, current_app, Blueprint
 from flask_babel import Babel
 from flask_login import LoginManager
 from py3seed import ModelJSONProvider, connect, SimpleEnumMeta
 from werkzeug.datastructures import MultiDict
-from werkzeug.urls import url_quote, url_encode
 
 from core.models import DemoUser
 from www.commons import SSLSMTPHandler, helpers, ListConverter, BSONObjectIdConverter, prepare_demo_data
