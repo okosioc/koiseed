@@ -69,7 +69,7 @@
             <div class="col-lg-8">
                 <div class="array relation" name="members" format="table">
                     <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-users mr-2"></i>团队成员</h4></div><div class="table-responsive">
-                    <div class="field-group array-table relation">
+                    <div class="field-group array-table relation" name="members">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -101,8 +101,8 @@
                                     </td>
                                     <td name="roles" format="select" enum="DemoUserRole">
                                         {% for roles_item in members_item.roles %}
-                                        {{ ' ' if not loop.fist }}{% if roles_item is not none %}{{ enum_titles('DemoUserRole')[roles_item] }}{% else %}-{% endif %}
-                                        {% endfor %}
+                                        {{ ' ' if not loop.fist }}{{ enum_titles('DemoUserRole')[roles_item] }}
+                                        {% else %}-{% endfor %}
                                     </td>
                                     <td name="email" format="text" enum="">
                                         {{ members_item.email or '-' }}

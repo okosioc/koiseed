@@ -11,6 +11,7 @@ instance/*.py
 instance/*.pem
 instance/*.txt
 instance/*.key
+instance/*.json
 
 # PyCharm
 .idea/
@@ -54,3 +55,6 @@ venv/
 
 # ai generated json files
 *.ai.json
+
+# nohup out
+nohup.out

@@ -117,7 +117,7 @@ def upload_file():
     #
     file.save(path)
     if type_ == 'image':
-        ops = request.values.get('ops', None)
+        ops = request.values.get('image_ops', None)
         generate_image_preview(path, ops)
     elif type_ == 'video':
         generate_video_poster(path)

@@ -104,8 +104,8 @@
                 <div class="group" name="1" format="">
                     <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-check-square mr-2"></i>任务基本信息</h4></div><div class="card-body">
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group string-text">
+                        <div class="col-sm">
+                            <div class="field-group string-text" name="title">
                                 <label class="text-gray-700">任务标题</label>
                                 <div class="field-control">
                                     {{ demo_task.title or '-' }}
@@ -114,8 +114,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group string-select">
+                        <div class="col-sm">
+                            <div class="field-group string-select" name="status">
                                 <label class="text-gray-700">任务状态</label>
                                 <div class="field-control">
                                     {% if demo_task.status is not none %}<span class="text-{{ demo_task.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoTaskStatus')[demo_task.status] }}{% else %}-{% endif %}
@@ -124,26 +124,26 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group string-textarea">
+                        <div class="col-sm">
+                            <div class="field-group string-textarea" name="content">
                                 <label class="text-gray-700">任务详情</label>
                                 <div class="field-control">
-                                    <div>{{ demo_task.content if demo_task.content is not none else '-' }}</div>
+                                    <div>{{ demo_task.content or '-' }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group date-date">
+                        <div class="col-sm">
+                            <div class="field-group date-date" name="start">
                                 <label class="text-gray-700">开始日期</label>
                                 <div class="field-control">
                                     {{ demo_task.start|date if demo_task.start is not none else '-' }}
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="field-group date-date">
+                        <div class="col-sm">
+                            <div class="field-group date-date" name="end">
                                 <label class="text-gray-700">结束日期</label>
                                 <div class="field-control">
                                     {{ demo_task.end|date if demo_task.end is not none else '-' }}
@@ -152,13 +152,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-sm">
                             <div class="object relation" name="user" format="select">
-                                <div class="field-group object-select relation">
+                                <div class="field-group object-select relation" name="user">
                                     <label class="text-gray-700">负责人</label>
                                     <div class="field-control">
                                         {% if demo_task.user %}
-                                        <span class="font-size-base badge badge-soft-secondary mr-2">{{ demo_task.user.name if demo_task.user.name is not none }}</span>
+                                        <a href="javascript:;"><span class="font-size-base badge badge-soft-secondary">{{ demo_task.user.name if demo_task.user.name is not none }}</span></a>
                                         {% else %}
                                         -
                                         {% endif %}
@@ -168,8 +168,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group date-datetime">
+                        <div class="col-sm">
+                            <div class="field-group date-datetime" name="create_time">
                                 <label class="text-gray-700">创建时间</label>
                                 <div class="field-control">
                                     {{ demo_task.create_time|datetime if demo_task.create_time is not none else '-' }}

@@ -544,7 +544,7 @@ function _install_components(container) {
 
         // Switch
         // https://getbootstrap.com/docs/4.5/components/forms/#switches
-        formGroup.find(".custom-switch").each(function (i, n) {
+        formGroup.find("> .custom-switch, > div > .custom-switch").each(function (i, n) {
             var id = "switch-" + my_random();
             var btn = $(n).find(":checkbox");
             btn.attr("id", id);
@@ -553,7 +553,7 @@ function _install_components(container) {
 
         // Flatpickr
         // https://flatpickr.js.org/formatting/
-        formGroup.find("input.date-time").each(function (i, n) {
+        formGroup.find("> input.date-time, > div > input.date-time").each(function (i, n) {
             $(n).flatpickr({
                 locale: "zh",
                 allowInput: true,
@@ -563,7 +563,7 @@ function _install_components(container) {
                 defaultMinute: new Date().getMinutes()
             })
         });
-        formGroup.find("input.date").each(function (i, n) {
+        formGroup.find("> input.date, > div > input.date").each(function (i, n) {
             $(n).flatpickr({
                 allowInput: true,
                 locale: "zh",
@@ -572,7 +572,7 @@ function _install_components(container) {
         });
 
         // Cascador
-        formGroup.find('.cascader-input-group').each(function (i, n) {
+        formGroup.find('> .cascader-input-group, > div > .cascader-input-group').each(function (i, n) {
             var $cascaderInput = $(n).find('.cascader');
             var $cascaderList = $(n).find(".cascader-list");
             var source = window[$cascaderInput.attr("data-source")];
@@ -652,7 +652,7 @@ function _install_components(container) {
 
         // Tag Cloud, Tags + .Typeahead
         // https://github.com/corejavascript/typeahead.js
-        formGroup.find(".tag-cloud-input-group").each(function (i, n) {
+        formGroup.find("> .tag-cloud-input-group, > div > .tag-cloud-input-group").each(function (i, n) {
             var cloud = $(n);
             var tags = cloud.attr("data-tags") ? JSON.parse(cloud.attr("data-tags")) : [];
             var substringMatcher = function (strs) {
@@ -707,7 +707,7 @@ function _install_components(container) {
         });
 
         // ranger
-        formGroup.find(".range-input-group").each(function (i, n) {
+        formGroup.find("> .range-input-group, > div > .range-input-group").each(function (i, n) {
             var ranger = $(n).find(".custom-range");
             var range_value = $(n).find(".range-value");
             var value = range_value.text();
@@ -737,7 +737,7 @@ function _install_components(container) {
 
         // Select2
         // https://select2.org/
-        formGroup.find("select.select2").each(function (i, n) {
+        formGroup.find("> select.select2, > div > select.select2").each(function (i, n) {
             var change_event = n.getAttribute("data-onchange");
             var option = {
                 containerCssClass: n.getAttribute("class").replace("select2", "").replace("select2-hidden-accessible", ""), // Remove class select2 as it impacts display
@@ -755,7 +755,7 @@ function _install_components(container) {
 
         // Plupload
         // https://www.plupload.com/docs/v2/Getting-Started
-        formGroup.find(".plupload").each(function (i, n) {
+        formGroup.find("> .plupload, > div > .plupload").each(function (i, n) {
             // Install
             install_plupload($(n));
             // Sortable for image plupload-input-result
@@ -770,16 +770,20 @@ function _install_components(container) {
 
         // Rte
         // https://github.com/quilljs/quill/
-        formGroup.find(".quill").each(function (i, n) {
+        formGroup.find("> .quill, > div > .quill").each(function (i, n) {
             install_quill($(n));
         });
         // https://github.com/codex-team/editor.js
-        formGroup.find(".editorjs").each(function (i, n) {
-            var id = $(n).attr("id"),
-                content = $(n).next(":hidden").val(), // current value
-                image_token = $(n).data("token"),
-                image_upload = $(n).data("upload"),
-                image_types = $(n).data("types"); // e.g, image/png, image/jpg
+        formGroup.find("> .editorjs, > div > .editorjs").each(function (i, n) {
+            var div = $(n);
+            var id = div.attr("id"),
+                content = div.next(":hidden").val(), // current value
+                image_base = div.data("base"),
+                image_upload = div.data("upload"),
+                params = div.attr("data-params") ? JSON.parse(div.attr("data-params")) : {},
+                image_types = div.data("types"); // e.g, image/png, image/jpg
+            //
+            params["uploader"] = "editorjs";
             var editor = new EditorJS({ // https://github.com/codex-team/editor.js
                 holder: id,
                 placeholder: 'Let`s write somthing awesome!',
@@ -796,7 +800,9 @@ function _install_components(container) {
                             },
                             field: "file",
                             types: image_types,
-                            additionalRequestData: {"token": image_token, "uploader": "editorjs"},
+                            additionalRequestData: params,
+                            // TODO: Backend is expected to return below format, Only local upload supported now
+                            // {"success": 1,"file": {"url" : "...", "id" : "..." }}
                         },
                     },
                     list: { // https://github.com/editor-js/nested-list
@@ -832,7 +838,7 @@ function _install_components(container) {
         });
 
         // Autosize
-        formGroup.find('.autosize').each(function (i, n) {
+        formGroup.find('> .autosize, > div > .autosize').each(function (i, n) {
             autosize(n);
         });
     });
@@ -844,23 +850,35 @@ function install_plupload(btn) {
     var result = btn.closest(".plupload-input-group").find(".plupload-input-result"),
         multi = btn.is("[multiple]"),
         hiddens = btn.data("hiddens"),
+        // Online storage service may return full url directly, for the services only return a relative path, we need to add base to it
+        base = btn.data("base"),
         upload = btn.data("upload"),
-        token = btn.data("token"),
+        // Params will be posted to upload url
+        params = btn.attr("data-params") ? JSON.parse(btn.attr("data-params")) : {},
         max = btn.data("max"),
+        // preview will be added to url for previewing
+        // e.g, {"image": "?imageMogr2/thumbnail/x300"}
         preview = btn.attr("data-preview") ? JSON.parse(btn.attr("data-preview")) : {},
+        // suffix will be added to url for saving, always used in avatar upload as we need to use a smaller and square image instead of original one
+        // e.g, {"image": "?imageView2/1/w/200/h/200"}
         suffix = btn.attr("data-suffix") ? JSON.parse(btn.attr("data-suffix")) : {},
+        // Filters when choosing files
         filters = btn.attr("data-filters") ? JSON.parse(btn.attr("data-filters")) : {};
     var isImageResult = result.is(".image-input-result");
     // Generate a unique id for button so it can work correctly
     btn.attr("id", "plupload-" + my_random());
-    var image_ops = preview.image ? preview.image : "";
+    // If using local upload service, we need to add a param to tell the service to generate a thumbnail
+    if (preview.image) {
+        params["image_ops"] = preview.image;
+    }
+    //
     var uploader = new plupload.Uploader({
         browse_button: btn[0],
         url: upload,
         max_file_size: max,
         filters: filters,
         multi_selection: multi,
-        multipart_params: {token: token, ops: image_ops},
+        multipart_params: params,
     });
     uploader.init();
     uploader.bind('FilesAdded', function (up, files) {
@@ -900,32 +918,40 @@ function install_plupload(btn) {
             var html = '<small class="text-danger">' + file.name + (isImageResult ? '<br>' : ' ') + d.error + '</small>';
             $("#" + file.id).removeClass("uploading").addClass("error").html(html);
         } else {
-            // Defined response, https://developer.qiniu.com/kodo/manual/1654/response-body
-            // d
-            //   url - uploaded url = base + '/' + key, e.g, //cdn.koiseed.com/20200521/183247_821388.jpg
-            //   key - relative path from base, e.g, 20200521/183247_821388.jpg
-            //   name - upload file name
-            //   width - image width, int
-            //   height - image height, int
+            // 1. For qiniu, we can predefined response, https://developer.qiniu.com/kodo/manual/1654/response-body
+            //   d
+            //     url - uploaded url = base + '/' + key, e.g, //cdn.koiseed.com/20200521/183247_821388.jpg
+            //     key - relative path from base, e.g, 20200521/183247_821388.jpg
+            //     name - upload file name
+            //     width - image width, int
+            //     height - image height, int
+            // 2. For local upload or other online service can not define response, we need to manually handle the uploaded object
             var uploaded = $("#" + file.id);
             uploaded.removeClass("uploading").addClass("uploaded");
             if (isImageResult) {
-                var src = my_preview(d.url, preview);
+                var url = d.url;
+                if (base) {
+                    url = base + url
+                }
+                var src = my_preview(url, preview);
                 var img = $('<img>').one("load", function () {
                     $(this).closest(".image").css("width", "auto");
                 }).attr("src", src);
                 uploaded.html(img);
-                var btns = '<div class="btns"><a href="' + d.url + '" target="_blank">i</a><a href="javascript:;" onclick="$(this).closest(\'.image\').remove();">x</a></div>';
+                var btns = '<div class="btns"><a href="' + url + '" target="_blank">i</a><a href="javascript:;" onclick="$(this).closest(\'.image\').remove();">x</a></div>';
                 uploaded.append(btns);
             } else {
                 uploaded.find(".flex-grow-1").remove();
-                var btns = '<div><a class="mr-3" href="' + d.url + '" target="_blank">i</a><a href="javascript:;" onclick="$(this).closest(\'.file\').remove();">x</a></div>';
+                var btns = '<div><a class="mr-3" href="' + url + '" target="_blank">i</a><a href="javascript:;" onclick="$(this).closest(\'.file\').remove();">x</a></div>';
                 uploaded.append(btns);
             }
             $.each(hiddens.split(','), function (i, k) {
                 var v = k in d ? d[k] : "";
                 if (k == "url") {
                     v = my_preview(v, suffix);
+                    if (base) {
+                        v = base + v
+                    }
                 }
                 var hidden = $('<input type="hidden" name="' + k + '">').val(v);
                 uploaded.append(hidden);
@@ -939,10 +965,10 @@ function install_plupload(btn) {
 
 function install_quill(div) {
     var random = my_random(),
+        base = div.data("base"),
         upload = div.data("upload"),
-        token = div.data("token"),
+        params = div.attr("data-params") ? JSON.parse(div.attr("data-params")) : {},
         max = div.data("max"),
-        preview = div.attr("data-preview") ? JSON.parse(div.attr("data-preview")) : {},
         filters = div.attr("data-filters") ? JSON.parse(div.attr("data-filters")) : {};
     div.attr("id", "quill-" + random);
     // Install quill
@@ -982,7 +1008,7 @@ function install_quill(div) {
         max_file_size: max,
         filters: filters,
         multi_selection: true,
-        multipart_params: {token: token}
+        multipart_params: params
     });
     uploader.init();
     uploader.bind('FilesAdded', function (up, files) {
@@ -1002,7 +1028,11 @@ function install_quill(div) {
             showError("Failed when uploading file " + file.name + ", " + d.error);
         } else {
             var length = (quill.getSelection() || {}).index || quill.getLength();
-            quill.insertEmbed(length, 'image', my_preview(d.url, preview));
+            var url = d.url;
+            if (base) {
+                url = base + url
+            }
+            quill.insertEmbed(length, 'image', url);
             quill.insertText(length + 1, '\n');
             quill.setSelection(length + 2);
         }
@@ -1373,31 +1403,71 @@ function debug(msg, more) {
     }
 }
 
+//
+// Get extension from url
+//
+function my_extension(url) {
+    const parts = url.split('/');
+    const filename = parts.pop();
+    const ext = filename.split('.').pop();
+    if (filename === ext) {
+        return null;
+    }
+    // Make sure no query string or hash
+    return ext.split(/[\?#!]/)[0];
+}
+
+//
+// Generate preview url for image or video
+// E.g,
+// 1. Using online storage service such as qiniu, append ops to url
+//    a/b.jpg -> a/b.jpg?imageMogr2/thumbnail/x300
+//    a/b.jpg?imageView2/1/w/200/h/200 -> a/b.jpg?imageView2/1/w/200/h/200
+//    a/b.jpg!lrg -> a/b.jpg!sml
+// 2. Using local service, insert ops before ext
+//    a/b.jpg -> a/b_thumbnail_x300.jpg
+//
 function my_preview(url, config) {
-    var rawUrl = url.split(/[#?]/)[0];
-    var ext = rawUrl.split('.').pop().trim();
-    var isVideo = /mov|mp4|mpeg|webm/i.test(ext);
-    if (isVideo && "video" in config) {
+    const ext = my_extension(url);
+    if (!ext) {
+        return url;
+    }
+    var isVideo = /^(mov|mp4|mpeg|webm)$/i.test(ext);
+    if (isVideo && config.video) {
         // poster ops
-        var preview_ops = config["video"];
-        if (rawUrl.indexOf(preview_ops) >= 0) {
-            return rawUrl;
+        const preview_ops = config.video;
+        if (url.indexOf(preview_ops) >= 0) {
+            return url;
         }
+        //
         if (preview_ops.startsWith("_")) {
-            return rawUrl.replace('.' + ext, preview_ops + '.jpg');
+            return url.replace('.' + ext, preview_ops + '.jpg');
         } else {
-            return rawUrl + config["video"];
+            const mark = '.' + ext + preview_ops[0];
+            const last_index = url.lastIndexOf(mark);
+            if (last_index > 0) {
+                return url.substring(0, last_index) + '.' + ext + preview_ops;
+            } else {
+                return url + preview_ops;
+            }
         }
-    } else if ("image" in config) {
+    } else if (config.image) {
         // preview ops
-        var preview_ops = config["image"];
-        if (rawUrl.indexOf(preview_ops) >= 0) {
-            return rawUrl;
+        const preview_ops = config.image;
+        if (url.indexOf(preview_ops) >= 0) {
+            return url;
         }
+        //
         if (preview_ops.startsWith("_")) {
-            return rawUrl.replace('.' + ext, preview_ops + '.' + ext);
+            return url.replace('.' + ext, preview_ops + '.' + ext);
         } else {
-            return rawUrl + config["image"];
+            const mark = '.' + ext + preview_ops[0];
+            const last_index = url.lastIndexOf(mark);
+            if (last_index > 0) {
+                return url.substring(0, last_index) + '.' + ext + preview_ops;
+            } else {
+                return url + preview_ops;
+            }
         }
     } else {
         return url;

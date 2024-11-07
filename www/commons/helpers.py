@@ -13,7 +13,10 @@ import re
 import json
 import ffmpeg
 import yaml
+import string
+import random
 
+from bson import ObjectId
 from datetime import datetime, timedelta
 from typing import Type
 from PIL import Image
@@ -78,7 +81,7 @@ def datetime_str(dt):
 
 
 def str_datetime(dts):
-    """ Convert datetime string to datetine. """
+    """ Convert datetime string to datetime. """
     return datetime.strptime(dts, '%Y-%m-%d %H:%M:%S')
 
 
@@ -164,16 +167,35 @@ def json_merge(a, b):
     return a
 
 
-def get_id(type_: Type):
+def get_id(type_: Type = None):
     """ Try to get model id from request.args and request.form.  """
     id_ = request.values.get('id')
     if id_:
+        type_ = type_ or ObjectId
         try:
             id_ = type_(id_)
         except ValueError:
             abort(400)
     #
     return id_
+
+
+def get_ids(type_: Type = None):
+    """ Try to get model id from request.args and request.form.
+
+    ids are separated by '+', e.g, 1+2+3+4
+    """
+    ids_ = request.values.get('ids')
+    if ids_:
+        type_ = type_ or ObjectId
+        try:
+            ids_ = [type_(id_) for id_ in ids_.split('+')]
+        except ValueError:
+            abort(400)
+    else:
+        ids_ = []
+    #
+    return ids_
 
 
 def render_template_with_page(name: str, **context):
@@ -241,7 +263,8 @@ def generate_image_preview(path, ops=None):
 
 def resize_image(path, target_path, prefix, target_width, target_height, suffix):
     """ Generate a preview for given image path. """
-    current_app.logger.info(f'Try to resize image {path} -> {target_path}')
+    target_name = os.path.basename(target_path)
+    current_app.logger.info(f'Try to resize image {path} -> {target_name}')
     with Image.open(path) as image:
         width, height = image.size
         # fix width
@@ -273,7 +296,7 @@ def resize_image(path, target_path, prefix, target_width, target_height, suffix)
             x = (target_width - tw) // 2
             y = (target_height - th) // 2
             image = image.crop((x, y, x + tw, y + th))
-            msg += f' and crop image from ({x},{y}) with {tw}x{th}'
+            msg += f' and crop image at ({x},{y}) with {tw}x{th}'
         #
         image.save(target_path)
         current_app.logger.info(msg)
@@ -314,3 +337,21 @@ def generate_video_poster(path):
                 return
             #
             resize_image(poster_path, poster_path, preview_match.group(1), preview_match.group(2), preview_match.group(3), preview_match.group(4))
+
+
+def generate_random_string(length=5):
+    """ Generate a random string with specified length. """
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choices(characters, k=length))
+    return random_string
+
+
+def numerical_sort(value):
+    """ 按照数字部分排序, 常用于文件排序. """
+    parts = re.split(r'(\d+)', value)
+    return [int(part) if part.isdigit() else part for part in parts]
+
+
+def safe_file_name(file_name):
+    """ 将不安全字符或者系统保留字符替换为下划线, 得到一个安全的文件名. """
+    return re.sub(r'[<>:"/\\|?*]', '_', file_name)

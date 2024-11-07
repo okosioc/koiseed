@@ -105,7 +105,7 @@
                     <fieldset class="group" name="1" format="">
                         <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-check-square mr-2"></i>任务基本信息</h4></div><div class="card-body">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-text" name="title">
                                     <label class=""><span class="text-danger mr-1">*</span>任务标题</label>
                                     <input name="title" type="text" required class="form-control"
@@ -115,7 +115,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-select" name="status">
                                     <label class=""><span class="text-danger mr-1">*</span>任务状态</label>
                                     <select class="custom-select select2" required>
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-textarea" name="content">
                                     <label class="">任务详情</label>
                                     <textarea name="content" rows="5" class="form-control autosize">{{ demo_task.content or '' }}</textarea>
@@ -138,7 +138,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group date-date" name="start">
                                     <label class="">开始日期</label>
                                     <input name="start" type="text" class="form-control date" 
@@ -146,7 +146,7 @@
                                     <div class="invalid-feedback">__(Invalid )开始日期__(!)</div>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group date-date" name="end">
                                     <label class="">结束日期</label>
                                     <input name="end" type="text" class="form-control date" 
@@ -156,7 +156,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <fieldset class="object relation" name="user" format="select">
                                     <div class="form-group object-select relation" name="@">
                                         <label class=""><span class="text-danger mr-1">*</span>负责人</label>

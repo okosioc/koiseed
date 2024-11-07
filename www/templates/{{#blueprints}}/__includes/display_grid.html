@@ -1,15 +1,16 @@
 {% if field_schema.type == 'array' %}
 {% set item_schema = field_schema['items'] %}
-{% set title_field = 'title' if 'title' in item_schema.properties else 'name' %}
-<div class="array-items row row-cols-1 row-cols-lg-2">
-{{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
+<div class="array-items row row-cols-1 row-cols-lg-2 row-cols-xl-3">
+    {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
     <div class="array-item col">
         {# grid always need card #}
-        {% filter right(8) %}{{ display_summary('-', field_name~'_item', item_schema, field_layout, false) }}{% endfilter %}
+        <div class="card">
+            {% filter right(12) %}{{ display_summary('-', field_name~'_item', item_schema, field_layout, true) }}{% endfilter %}
+        </div>
     </div>
-{{ '{%' }} else {{ '%}' }}
+    {{ '{%' }} else {{ '%}' }}
     <div class="alert alert-light mb-0"><i class="fe fe-alert-circle mr-2"></i>__(No ){{ item_schema.title }}__(!)</div>
-{{ '{%' }} endfor {{ '%}' }}
+    {{ '{%' }} endfor {{ '%}' }}
 </div>
 {% else %}
 UNSUPPORTED! {{ field_schema.format }} format do not support {{ field_schema.type }}!

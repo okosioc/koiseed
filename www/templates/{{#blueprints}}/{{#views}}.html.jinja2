@@ -1,9 +1,16 @@
 {# * #}
+{# * vars defined in context when rending a view #}
+{# * 1. models:{name:model_setting} - all models #}
+{# * 2. domain:str - current domain #}
+{# * 3. blueprint:{name, views} - current blueprint #}
+{# * 4. view:str - current view #}
+{# * #}
+{# * #}
 {# * global namespace to control code generation #}
 {# * - relations_needing_search is used in create/update/upcreate to assign out relation object #}
 {# * - relations_needing_async_load is used in read to load related objects asynchronously, e,g, load events for calendar format #}
 {# * #}
-{% set render_controls = namespace(formats=[], actions=[], is_read=false, can_delete=false, is_form=false, is_query=false, relations_needing_search=[], relations_needing_async_load=[]) %}
+{% set render_controls = namespace(formats=[], actions=[], is_read=false, is_form=false, is_query=false, view_is_card=false, view_is_horizontal=false, view_has_gutters=true, relations_needing_search=[], relations_needing_async_load=[]) %}
 {# * #}
 {# * common macros
 {# * #}
@@ -66,22 +73,18 @@
 {% endmacro %}
 {# * #}
 {# * macro - calculate possible actions of current view #}
-{# * NOTE: we use json string instead of a dict for each action, the whole string will be printed directly in a jinja2 code block #}
 {# * #}
 {% macro calculate_actions(model) %}
     {% if render_controls.is_query %}
         {% for v in model.views if blueprint.name == v.blueprint and v.action in ['create', 'upcreate'] %}
-            {% set render_controls.actions = ["{'icon': 'plus', 'title': _('Create ')~'"~model.schema.title~"', 'view': '"~v.name~"'}"] %}
+            {% set render_controls.actions = ["{'icon': 'plus', 'view': '"~v.name~"'}"] %}
             {% break %}
         {% endfor %}
     {% elif render_controls.is_read %}
         {% for v in model.views if blueprint.name == v.blueprint and v.action in ['update', 'upcreate'] %}
-            {% set render_controls.actions = ["{'icon': 'edit', 'title': _('Update ')~'"~model.schema.title~"', 'view': '"~v.name~"?'}"] %}
+            {% set render_controls.actions = ["{'icon': 'edit', 'view': '"~v.name~"?'}"] %}
             {% break %}
         {% endfor %}
-        {% if render_controls.can_delete %}
-            {% set render_controls.actions = render_controls.actions + ["{'icon': 'delete', 'cls': 'danger', 'title': _('Delete ')~'"~model.schema.title~"', 'href': 'javascript:delete_"~model.name_snake~"($(this))'}"] %}
-        {% endif %}
     {% endif %}
 {% endmacro %}
 {# * #}
@@ -91,18 +94,21 @@
 {# below global variables are accessable in this jinja2 template and all the included snippets #}
 {% set model = view.model %}
 {% set action = view.action %}
-{% set view_is_card = view.params.is_card or false %}
-{% set view_is_horizontal = view.params.is_horizontal or false %}
-{# calculate render controls #}
-{% set render_controls.formats = [] %}
+{# define/calculate render_controls which can be accessed anywhere #}
 {% set render_controls.is_read = action == 'read' %}
 {% set render_controls.is_form = action in ['create', 'update', 'upcreate'] %}
 {% set render_controls.is_query = action == 'query' %}
-{% set render_controls.can_delete = view.params.can_delete or false %}
+{# default is not card #}
+{% set render_controls.view_is_card = false if 'is_card' not in view.params else view.params.is_card %}
+{# defaullt is vertical(not horizontal) for .form-group or .field-group #}
+{% set render_controls.view_is_horizontal = false if 'is_horizontal' not in view.params else view.params.is_horizontal %}
+{# default is having gutters #}
+{% set render_controls.view_has_gutters = true if 'has_gutters' not in view.params else view.params.has_gutters %}
+{# calculate formats/actions needed #}
+{% set render_controls.formats = [] %}
 {{- iterate_layout(view.rows, model.schema) -}}
 {{- calculate_actions(model) -}}
 {# render begins #}
-{% set has_gutters = true if 'has_gutters' not in view.params else view.params.has_gutters %}
 {{ '{% extends "' }}{{ view.params.extends }}{{ '.html" %}' }}
 {{ '{%' }} set title = {{ view.params.title|quote }} {{ '%}' }}
 {{ '{%' }} set breadcrumb = {
@@ -161,7 +167,7 @@
 <script src="/static/vendor/@editorjs/delimiter@1.4.0/dist/delimiter.umd.min.js"></script>
 <script src="/static/vendor/@editorjs/table@2.3.0/dist/table.umd.min.js"></script>
 {% endif %}
-{# create/update/upcreate #}
+{# action is create/update/upcreate #}
 {% if render_controls.is_form %}
 <script src="/static/js/form.js?{{ '{{' }} version() {{ '}}' }}"></script>
 {% for relation in render_controls.relations_needing_search %}
@@ -352,7 +358,7 @@
         {% endif %}
     }
 </script>
-{# read #}
+{# action is read #}
 {% elif render_controls.is_read %}
 <script src="/static/js/read.js?{{ '{{' }} version() {{ '}}' }}"></script>
 <script type="text/javascript">
@@ -376,44 +382,6 @@
         }, "json");
     }
 {% endfor %}
-    {% if render_controls.can_delete %}
-    //
-    function delete_{{ model.name_snake }}(btn){
-        if (btn.is(".doing")) {
-            return;
-        }
-        var msg = "__(Are you sure to delete?)";
-        var con = window.confirm(msg);
-        if (!con) {
-            return false;
-        }
-        //
-        btn.addClass("doing");
-        var method = btn.is("input") ? "val" : "text";
-        var oldLabel = btn[method]();
-        btn[method](oldLabel + "...");
-        //
-        var url = "{{ '/'~blueprint.name if blueprint.name!='public' }}/{{ view.name }}-delete?id={{ '{{' }} {{ model.name_snake }}.{{ model.schema.id_name }} {{ '}}' }}";
-        $.post(url, {}, function (result) {
-            if (result.error == 0) {
-                showSuccess(result.message);
-                showInfo('Refreshing...');
-                setTimeout(function () {
-                    {% set target = generate_url(model.schema.py_type, none, ['query']) %}
-                    {% if target == 'javascript:;' %}
-                    location.href = "{{ '{{' }} request.path {{ '}}' }}";
-                    {% else %}
-                    location.href = "{{ target }}";
-                    {% endif %}
-                }, 2000);
-            } else {
-                showError(result.message);
-            }
-            btn.removeClass("doing");
-            btn[method](oldLabel);
-        }, "json");
-    }
-    {% endif %}
 </script>
 {% endif %}
 {{ '{% endblock %}' }}

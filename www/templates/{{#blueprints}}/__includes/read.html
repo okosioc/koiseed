@@ -2,13 +2,13 @@
 {# * main #}
 {# * #}
 <div id="div-{{ view.name_kebab }}">
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     <div class="card"><div class="card-body">
     {% endif %}
     <div class="object" name="{{ model.name_snake }}">
-        {% filter right(8) %}{{ render_layout(false, model.name_snake, model.name_snake, model.schema, view.rows, view_is_card, true) }}{% endfilter %}
+        {% filter right(8) %}{{ render_layout(false, model.name_snake, model.name_snake, model.schema, view.rows, render_controls.view_is_card, true) }}{% endfilter %}
     </div>
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     </div></div>
     {% endif %}
     {% set target_url = generate_url(model.schema.py_type, model.name_snake, ['query']) %}

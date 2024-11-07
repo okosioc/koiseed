@@ -22,10 +22,11 @@
 {% endif %}
 <div class="plupload-input-group image-input-group" {{ 'required' if field_schema.required }}>
     <a class="btn btn-outline-primary plupload" href="javascript:;" {{ 'multiple' if field_schema.type == 'array' }}
-       data-token="{{ '{{ upload_config.token }}' }}"
+       data-base='{{ '{{ upload_config.base or "" }}' }}'
        data-upload="{{ '{{ upload_config.endpoint }}' }}"
+       data-params='{{ '{{ upload_config.params|tojson }}' }}'
        data-max="{{ '{{ upload_config.max }}' }}"
-       data-preview='{"image":"{{ '{{' }} upload_config.image_preview {{ '}}' }}", "video":"{{ '{{' }} upload_config.video_poster {{ '}}' }}"}'
+       data-preview='{"video":"{{ '{{' }} upload_config.video_poster {{ '}}' }}"}'
        data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ '{{' }} upload_config.video_exts|join(",") {{ '}}' }}"}]}'
        data-hiddens="{{ hiddens|join(',') }}">__(Choose Video)...</a>
     <small class="mt-2 form-text text-muted">{{ '__(Support multiple uploads; )' if field_schema.type == 'array' }}__(Availabe formats: ){{ '{{' }} upload_config.video_exts|join('/') {{ '}}' }}</small>

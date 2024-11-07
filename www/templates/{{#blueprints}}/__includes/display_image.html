@@ -9,7 +9,7 @@
             {% set src = field_name~'_item' %}
             {% set caption = src~'|basename' %}
         {% endif %}
-        <a href=":;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ src }} {{ '}}' }}" data-caption="{{ '{{' }} {{ caption }} {{ '}}' }}">
+        <a href="javascript:;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ src }} {{ '}}' }}" data-caption="{{ '{{' }} {{ caption }} {{ '}}' }}">
             <img src="{{ '{{' }} {{ src }} {{ '}}' }}">
         </a>
     {{ '{%' }} endfor {{ '%}' }}
@@ -25,12 +25,12 @@
     {% endif %}
     <div class="gallery">
     {{ '{% if' }} {{ field_path }} {{ '%}' }}
-    <a href=":;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ src }} {{ '}}' }}" data-caption="{{ '{{' }} {{ caption }} {{ '}}' }}">
+    <a href="javascript:;" data-fancybox="{{ field_schema.title }}" data-src="{{ '{{' }} {{ src }} {{ '}}' }}" data-caption="{{ '{{' }} {{ caption }} {{ '}}' }}">
         <img src="{{ '{{' }} {{ src }} {{ '}}' }}">
     </a>
     {{ '{% else %}' }}
     -
     {{ '{% endif %}' }}
-    {% endif %}
     </div>
+    {% endif %}
 </div>

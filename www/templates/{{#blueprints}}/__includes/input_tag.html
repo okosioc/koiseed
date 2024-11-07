@@ -1,3 +1,4 @@
+{% if field_schema.type == 'array' and field_schema['items'].type == 'string' %}
 <div class="tag-cloud-input-group" data-tags='{{ '{{ '~field_path~'_depends'~'|tojson }}' if field_schema.depends else '[]' }}'>
     {{ '{%' }} for value in {{ field_path }} {{ '%}' }}
     <span class="font-size-base badge badge-soft-secondary mr-2 mb-2">{{ '{{' }} value {{ '}}' }}
@@ -6,3 +7,6 @@
     {{ '{%' }} endfor {{ '%}' }}
     <input class="tag-input" type="text" placeholder="+ __(Add ){{ field_schema.title }}">
 </div>
+{% else %}
+UNSUPPORTED! {{ field_schema.format }} format do not support {{ field_schema.type }}!
+{% endif %}

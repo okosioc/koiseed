@@ -355,7 +355,7 @@ class DemoPost(CacheModel):
     __title__ = '文章'
     #
     __views__ = {
-        'www://dash-demo/post-list': '''#!query?extends=layout-dash-demo&is_card=true&title=文章列表
+        'www://dash-demo/post-list': '''#!query?extends=layout-dash-demo&is_card=true&can_delete=true&title=文章列表
             title, status, publish_time, featured, author, tags, create_time
         ''',
         'www://dash-demo/post-edit': '''#!upcreate?extends=layout-dash-demo&title=文章编辑

@@ -19,7 +19,7 @@
                     <fieldset class="group" name="1" format="">
                         <div class="card"><div class="card-body">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-text" name="title">
                                     <label class=""><span class="text-danger mr-1">*</span>标题</label>
                                     <input name="title" type="text" required class="form-control"
@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-text" name="subtitle">
                                     <label class="">副标题</label>
                                     <input name="subtitle" type="text" class="form-control"
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <fieldset class="array" name="tags" format="tag">
                                     <div class="form-group array-tag" name="tags">
                                         <label class="">标签</label>
@@ -57,15 +57,16 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-image" name="cover">
                                     <label class="">封面</label>
                                     <div class="plupload-input-group image-input-group" >
                                         <a class="btn btn-outline-primary plupload" href="javascript:;" 
-                                           data-token="{{ upload_config.token }}"
+                                           data-base='{{ upload_config.base or "" }}'
                                            data-upload="{{ upload_config.endpoint }}"
+                                           data-params='{{ upload_config.params|tojson }}'
                                            data-max="{{ upload_config.max }}"
-                                           data-preview='{"image":"{{ upload_config.image_preview }}", "video":"{{ upload_config.video_poster }}"}'
+                                           data-preview='{"image":"{{ upload_config.image_preview }}"}'
                                            data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ upload_config.image_exts|join(",") }}"}]}'
                                            data-hiddens="url">__(Choose Image)...</a>
                                         <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ upload_config.image_exts|join('/') }}</small>
@@ -88,7 +89,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group boolean-switch" name="featured">
                                     <label class=""><span class="text-danger mr-1">*</span>是否推荐</label>
                                     <div class="custom-control custom-switch mt-2">
@@ -101,7 +102,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-select" name="status">
                                     <label class=""><span class="text-danger mr-1">*</span>状态</label>
                                     <select class="custom-select select2" required>
@@ -121,13 +122,14 @@
                     <fieldset class="group" name="2" format="">
                         <div class="card"><div class="card-body">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-rte" name="content">
                                     <div class="rte-input-group" required>
                                         {% set rte_id = 'rte_'~randstr() %}
                                         <div id="{{ rte_id }}" class="editorjs"
-                                             data-token="{{ upload_config.token }}"
+                                             data-base='{{ upload_config.base or "" }}'
                                              data-upload="{{ upload_config.endpoint }}"
+                                             data-params='{{ upload_config.params|tojson }}'
                                              data-types="{{ upload_config.image_mimes|join(",") }}"></div>
                                         <input type="hidden" value="{{ demo_post.content or '' }}"/>
                                     </div>
@@ -145,6 +147,8 @@
         <a class="btn btn-primary mr-2" onclick="post_edit_upcreate($(this));"><i class="fe fe-save mr-1"></i>__(Save)</a>
         {% if demo_post.id %}
         <a href="post-preview?id={{ demo_post.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        {% else %}
+        <a href="post-list" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
         {% endif %}
     </div>
 </div>

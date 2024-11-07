@@ -72,7 +72,7 @@
                     <fieldset class="group" name="2" format="">
                         <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-users mr-2"></i>团队基本信息</h4></div><div class="card-body">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-text" name="name">
                                     <label class=""><span class="text-danger mr-1">*</span>团队名称</label>
                                     <input name="name" type="text" required class="form-control"
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-text" name="code">
                                     <label class="">邀请码</label>
                                     <input name="code" type="text" class="form-control"
@@ -92,7 +92,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-textarea" name="remarks">
                                     <label class="">备注</label>
                                     <textarea name="remarks" rows="5" class="form-control autosize">{{ demo_team.remarks or '' }}</textarea>
@@ -101,16 +101,17 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-avatar" name="logo">
                                     <label class="">团队图标</label>
                                     <div class="plupload-input-group image-input-group" >
                                         <a class="btn btn-outline-primary plupload" href="javascript:;"
-                                           data-token="{{ upload_config.token }}"
+                                           data-base='{{ upload_config.base or "" }}'
                                            data-upload="{{ upload_config.endpoint }}"
+                                           data-params='{{ upload_config.params|tojson }}'
                                            data-max="{{ upload_config.max }}"
-                                           data-preview='{"image":"{{ upload_config.avatar_preview }}","video":""}'
-                                           data-suffix='{"image":"{{ upload_config.avatar_preview }}","video":""}'
+                                           data-preview='{"image":"{{ upload_config.avatar_preview }}"}'
+                                           data-suffix='{"image":"{{ upload_config.avatar_preview }}"}'
                                            data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ upload_config.image_exts|join(",") }}"}]}'
                                            data-hiddens="url">__(Choose Image)...</a>
                                         <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ upload_config.image_exts|join('/') }}</small>
@@ -139,9 +140,7 @@
     </form>
     <div class="form-actions mb-4">
         <a class="btn btn-primary mr-2" onclick="team_profile_update($(this));"><i class="fe fe-save mr-1"></i>__(Save)</a>
-        {% if demo_team.id %}
         <a href="team-members?id={{ demo_team.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

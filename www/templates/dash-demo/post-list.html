@@ -34,8 +34,8 @@
                 </select>
             </div>
             <div class="col-sm-auto mb-4">
-                <button type="button" class="btn btn-primary btn-default" onclick="search_do($(this));">__(Search)</button>
-                <button type="button" class="btn btn-light btn-default" onclick="search_reset();">__(Reset)</button>
+                <button type="button" class="btn btn-primary" onclick="search_do($(this));">__(Search)</button>
+                <button type="button" class="btn btn-light" onclick="search_reset();">__(Reset)</button>
             </div>
         </div>
     </form>
@@ -46,7 +46,7 @@
                     <i class="fe fe-info mr-2"></i>__(Choosed )<span id="span-checked" class="text-primary mx-1"></span>
                 </div>
                 <div class="col-sm-auto">
-                    <button type="button" class="btn btn-primary btn-default" onclick="coming($(this));">ACTION</button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="delete_demo_posts($(this));">__(Delete)</button>
                 </div>
             </div>
         </div>
@@ -100,8 +100,8 @@
                 </td>
                 <td name="tags" format="tag" enum="">
                     {% for tags_item in demo_post.tags %}
-                    {{ ' ' if not loop.fist }}{{ tags_item or '-' }}
-                    {% endfor %}
+                    {{ ' ' if not loop.fist }}{{ tags_item }}
+                    {% else %}-{% endfor %}
                 </td>
                 <td name="create_time" format="datetime" enum="">
                     {{ demo_post.create_time|datetime if demo_post.create_time is not none else '-' }}
@@ -109,6 +109,7 @@
                 <td>
                     <a class="btn pl-0 py-0" href="post-preview?id={{ demo_post.id }}"><i class="fe fe-eye"></i></a>
                     <a class="btn pl-0 py-0" href="post-edit?id={{ demo_post.id }}"><i class="fe fe-edit"></i></a>
+                    <a class="btn pl-0 py-0" href="javascript:delete_demo_posts($(this), '{{ demo_post.id }}');"><i class="fe fe-delete"></i></a>
                 </td>
             </tr>
             {% else %}
@@ -185,6 +186,43 @@
             btn.removeClass("doing");
             btn[method](oldLabel);
         }, 'json');
+    }
+    //
+    function delete_demo_posts(btn, id=null) {
+        if (btn.is(".doing")) {
+            return;
+        }
+        var msg = "__(Are you sure to delete?)";
+        var con = window.confirm(msg);
+        if (!con) {
+            return false;
+        }
+        //
+        btn.addClass("doing");
+        var method = btn.is("input") ? "val" : "text";
+        var oldLabel = btn[method]();
+        btn[method](oldLabel + "...");
+        //
+        var ids = "";
+        if (id == null) {
+            ids = $(".list-checkbox:checked").map(function () {
+                var checkbox_id = $(this).attr("id");
+                return checkbox_id.split("-").pop();
+            }).get().join("+");
+        } else {
+            ids = id;
+        }
+        //
+        var url = "/dash-demo/post-list-delete-demo-posts";
+        $.post(url, {"ids": ids}, function (result) {
+            if (result.error == 0) {
+                showSuccess(result.message);
+            } else {
+                showError(result.message);
+            }
+            btn.removeClass("doing");
+            btn[method](oldLabel);
+        }, "json");
     }
 </script>
 {% endblock %}

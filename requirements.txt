@@ -7,7 +7,7 @@ email_validator
 Flask-Mail
 Flask-Babel
 pytest
-pymongo
+pymongo < 4.9
 fabric
 schedule
 arrow

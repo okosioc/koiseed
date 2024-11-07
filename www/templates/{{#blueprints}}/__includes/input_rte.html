@@ -1,8 +1,9 @@
 <div class="rte-input-group"{{ ' required' if field_schema.required }}>
     {{ '{%' }} set rte_id = 'rte_'~randstr() {{ '%}' }}
     <div id="{{ '{{' }} rte_id {{ '}}' }}" class="editorjs"
-         data-token="{{ '{{ upload_config.token }}' }}"
+         data-base='{{ '{{ upload_config.base or "" }}' }}'
          data-upload="{{ '{{ upload_config.endpoint }}' }}"
+         data-params='{{ '{{ upload_config.params|tojson }}' }}'
          data-types="{{ '{{ upload_config.image_mimes|join(",") }}' }}"></div>
     <input type="hidden" value="{{ '{{' }} {{ field_path }} or '' {{ '}}' }}"/>
 </div>

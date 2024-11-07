@@ -50,8 +50,8 @@
                                         </div>
                                         <div class="col-auto text-muted" name="roles" format="select" enum="DemoUserRole">
                                             {% for roles_item in demo_user.roles %}
-                                            {{ ' ' if not loop.fist }}{% if roles_item is not none %}{{ enum_titles('DemoUserRole')[roles_item] }}{% else %}-{% endif %}
-                                            {% endfor %}
+                                            {{ ' ' if not loop.fist }}{{ enum_titles('DemoUserRole')[roles_item] }}
+                                            {% else %}-{% endfor %}
                                         </div>
                                     </div>
                                 </div>
@@ -94,7 +94,7 @@
                     <fieldset class="group" name="2" format="">
                         <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-user mr-2"></i>用户基本信息</h4></div><div class="card-body">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-text" name="name">
                                     <label class=""><span class="text-danger mr-1">*</span>用户名</label>
                                     <input name="name" type="text" required class="form-control"
@@ -104,7 +104,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-text" name="phone">
                                     <label class="">手机号</label>
                                     <input name="phone" type="text" class="form-control"
@@ -114,7 +114,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-textarea" name="intro">
                                     <label class="">个人简介</label>
                                     <textarea name="intro" rows="5" class="form-control autosize">{{ demo_user.intro or '' }}</textarea>
@@ -123,16 +123,17 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-avatar" name="avatar">
                                     <label class="">头像</label>
                                     <div class="plupload-input-group image-input-group" >
                                         <a class="btn btn-outline-primary plupload" href="javascript:;"
-                                           data-token="{{ upload_config.token }}"
+                                           data-base='{{ upload_config.base or "" }}'
                                            data-upload="{{ upload_config.endpoint }}"
+                                           data-params='{{ upload_config.params|tojson }}'
                                            data-max="{{ upload_config.max }}"
-                                           data-preview='{"image":"{{ upload_config.avatar_preview }}","video":""}'
-                                           data-suffix='{"image":"{{ upload_config.avatar_preview }}","video":""}'
+                                           data-preview='{"image":"{{ upload_config.avatar_preview }}"}'
+                                           data-suffix='{"image":"{{ upload_config.avatar_preview }}"}'
                                            data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ upload_config.image_exts|join(",") }}"}]}'
                                            data-hiddens="url">__(Choose Image)...</a>
                                         <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ upload_config.image_exts|join('/') }}</small>

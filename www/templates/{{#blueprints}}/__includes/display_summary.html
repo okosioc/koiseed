@@ -22,9 +22,14 @@
                 <a href="{{ target_url }}">{{ '{{' }} {{ field_path }}.{{ title_field_name }} {{ '}}' }}</a>
             </h4>
             {% if subtitle_field_name %}
-            <p class="small text-muted mb-0">
-                {% filter right(16) %}{{ display_inline(subtitle_field_name, field_path~'.'~subtitle_field_name, field_schema.properties[subtitle_field_name]) }}{% endfilter %}
-            </p>
+            <div class="small text-muted mb-0">
+                {% set subtitle_field_schema = field_schema.properties[subtitle_field_name] %}
+                {% if subtitle_field_schema.is_relation %}
+                {% filter right(16) %}{{ display_relation(subtitle_field_name, field_path~'.'~subtitle_field_name, subtitle_field_schema) }}{% endfilter %}
+                {% else %}
+                {% filter right(16) %}{{ display_inline(subtitle_field_name, field_path~'.'~subtitle_field_name, subtitle_field_schema) }}{% endfilter %}
+                {% endif %}
+            </div>
             {% set excludes = excludes + [subtitle_field_name] %}
             {% endif %}
         </div>

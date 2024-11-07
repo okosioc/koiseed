@@ -19,12 +19,13 @@
 {% endif %}
 <div class="plupload-input-group file-input-group" {{ 'required' if field_schema.required }}>
     <a class="btn btn-outline-primary plupload" href="javascript:;" {{ 'multiple' if field_schema.type == 'array' }}
-       data-token="{{ '{{ upload_config.token }}' }}"
-       data-upload="{{ '{{ upload_config.endpoint }}' }}"
-       data-max="{{ '{{ upload_config.max }}' }}"
-       data-preview=''
-       data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ '{{' }} upload_config.exts|join(",") {{ '}}' }}"}]}'
-       data-hiddens="{{ hiddens|join(',') }}">__(Choose File)...</a>
+        data-base='{{ '{{ upload_config.base or "" }}' }}'
+        data-upload="{{ '{{ upload_config.endpoint }}' }}"
+        data-params='{{ '{{ upload_config.params|tojson }}' }}'
+        data-max="{{ '{{ upload_config.max }}' }}"
+        data-preview=''
+        data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ '{{' }} upload_config.exts|join(",") {{ '}}' }}"}]}'
+        data-hiddens="{{ hiddens|join(',') }}">__(Choose File)...</a>
     <small class="mt-2 form-text text-muted">{{ '__(Support multiple uploads; )' if field_schema.type == 'array' }}__(Availabe formats: ){{ '{{' }} upload_config.exts|join('/') {{ '}}' }}</small>
     <div class="plupload-input-result file-input-result mt-1 clearfix">
     {% if field_schema.type == 'array' %}

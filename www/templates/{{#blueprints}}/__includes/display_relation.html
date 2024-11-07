@@ -4,16 +4,24 @@
 {% set title_field_name = related_model_schema|field('title|name|\\w*name') %}
 {% if field_schema.type == 'array' %}
 <div class="field-control">
-    {{ '{%' }} for value in {{ field_path }} {{ '%}' }}
-    <span class="font-size-base badge badge-soft-secondary mr-2">{{ '{{' }} value {{ '}}' }}</span>
+    {# back relations may return a lot of records, so only display length by default #}
+    {% if field_schema.is_back_relation %}
+    {# TODO: just to query page for related model #}
+    {{ '{{' }} {{ field_path }}|length {{ '}}' }}
+    {% else %}
+    {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
+    {% set target_url = generate_url(related_model_name, field_name~'_item', ['read']) %}
+    <a href="{{ target_url }}"><span class="font-size-base badge badge-soft-secondary mr-2 mb-2">{{ '{{' }} {{ field_name }}_item.{{ title_field_name }} {{ '}}' }}</span></a>
     {{ '{%' }} else {{ '%}' }}
     -
     {{ '{%' }} endfor {{ '%}' }}
+    {% endif %}
 </div>
 {% else %}
 <div class="field-control">
     {{ '{%' }} if {{ field_path }} {{ '%}' }}
-    <span class="font-size-base badge badge-soft-secondary mr-2">{{ '{{' }} {{ field_path }}.{{ title_field_name }} if {{ field_path }}.{{ title_field_name }} is not none {{ '}}' }}</span>
+    {% set target_url = generate_url(related_model_name, field_path, ['read']) %}
+    <a href="{{ target_url }}"><span class="font-size-base badge badge-soft-secondary">{{ '{{' }} {{ field_path }}.{{ title_field_name }} if {{ field_path }}.{{ title_field_name }} is not none {{ '}}' }}</span></a>
     {{ '{%' }} else {{ '%}' }}
     -
     {{ '{%' }} endif {{ '%}' }}

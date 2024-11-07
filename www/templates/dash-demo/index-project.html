@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-lg">
                 <div class="card"><div class="card-body">
-                <div class="field-group integer-metric">
+                <div class="field-group integer-metric" name="active_projects_count">
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="text-muted mb-2">活跃项目数量</div>
@@ -32,7 +32,7 @@
             </div>
             <div class="col-lg">
                 <div class="card"><div class="card-body">
-                <div class="field-group number-metric">
+                <div class="field-group number-metric" name="active_projects_value">
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="text-muted mb-2">活跃项目价值(元)</div>
@@ -49,7 +49,7 @@
             </div>
             <div class="col-lg">
                 <div class="card"><div class="card-body">
-                <div class="field-group integer-metric">
+                <div class="field-group integer-metric" name="members_count">
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="text-muted mb-2">团队成员数量</div>
@@ -66,7 +66,7 @@
             </div>
             <div class="col-lg">
                 <div class="card"><div class="card-body">
-                <div class="field-group integer-metric">
+                <div class="field-group integer-metric" name="tasks_count">
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="text-muted mb-2">任务数量</div>
@@ -86,7 +86,7 @@
             <div class="col-lg-8">
                 <div class="array relation" name="active_projects" format="table">
                     <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>活跃项目</h4></div><div class="table-responsive">
-                    <div class="field-group array-table relation">
+                    <div class="field-group array-table relation" name="active_projects">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -138,7 +138,7 @@
             <div class="col-lg-4">
                 <div class="array" name="recent_activities" format="timeline">
                     <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-activity mr-2"></i>最近操作</h4></div><div class="card-body">
-                    <div class="field-group array-timeline">
+                    <div class="field-group array-timeline" name="recent_activities">
                         <ul class="array-items list-group list-group-flush list-group-activity">
                             {% for recent_activities_item in demo_project_dashboard.recent_activities %}
                             <li class="array-item list-group-item">

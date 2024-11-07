@@ -15,7 +15,13 @@
             {% endfor %}
         {% endif %}
     {% endfor %}
-    {% if ns.view %}{{ ns.view.name }}{{ '?id={{ '~model_path~'.'~model.schema.id_name~' }}' if model_path }}{% else %}javascript:;{% endif %}
+    {% if ns.view %}{{ ns.view.name }}{{ '?id={{ '~model_path~'.'~model.schema.id_name~' }}' if model_path and ns.view.action != 'query' }}{% else %}javascript:;{% endif %}
+{% endmacro %}
+{# * #}
+{# * macro - render relation, also used in summary's title section #}
+{# * #}
+{% macro display_relation(field_name, field_path, field_schema, field_layout) %}
+{% include '__includes/display_relation.html' %}
 {% endmacro %}
 {# * #}
 {# * macro - render summary, also used as default grid #}
@@ -24,7 +30,7 @@
 {% include '__includes/display_summary.html' %}
 {% endmacro %}
 {# * #}
-{# * macro - display field content inline, i.e, in a table column or in summary's .list-group-item #}
+{# * macro - display field content inline, i.e, in a table column or in summary's subtitle part or .list-group-item  #}
 {# * #}
 {% macro display_inline(field_name, field_path, field_schema, fallback=none) %}
 {# object #}
@@ -33,18 +39,26 @@
 {{ '{{' }} {{ field_path }}.{{ title_field_name }} or '-' {{ '}}' }}
 {# array #}
 {% elif field_schema.type == 'array' %}
+{% set item_schema = field_schema['items'] %}
 {# display length for object array #}
-{% if field_schema['items'].type == 'object' %}
+{% if item_schema.type == 'object' %}
 {{ '{{' }} {{ field_path }}|length {{ '}}' }}
 {% else %}
 {# display each for simple array #}
 {{ '{%' }} for {{ field_name }}_item in {{ field_path }} {{ '%}' }}
 {% if field_schema.format in ['image', 'carousel'] %}
 <img src="{{ '{{' }} {{ field_name }}_item or '' {{ '}}' }}" alt="..." class="img-thumbnail" style="height:100px;">
+{% elif field_schema.format in ['link'] %}
+<a href="{{ '{{' }} {{ field_name }}_item {{ '}}' }}" target="_blank"><i class="fe fe-external-link mr-2"></i></a>
 {% else %}
-{{ '{{' }} ' ' if not loop.fist {{ '}}' }}{{ display_inline('-', field_name~'_item', field_schema['items']) -}}
+{{ '{{' }} ' ' if not loop.fist {{ '}}' -}}
+{% if item_schema.enum %}
+{{ '{{' }} enum_titles('{{ item_schema.py_type }}')[{{ field_name }}_item] {{ '}}' }}
+{% else %}
+{{ '{{' }} {{ field_name }}_item {{ '}}' }}
 {% endif %}
-{{ '{%' }} endfor {{ '%}' }}
+{% endif %}
+{{ '{%' }} else {{ '%}' }}-{{ '{%' }} endfor {{ '%}' }}
 {% endif %}
 {# simple types #}
 {% else %}
@@ -72,7 +86,7 @@
     {% filter right(4) %}{{ fallback }}{% endfilter %}
 </div>
 {% elif field_schema.format in ['link'] %}
-<a href="{{ '{{' }} {{ field_path }} or 'javascript:;' {{ '}}' }}" target="_blank"><i class="fe fe-external-link mr-2"></i></a>
+{{ '{% if' }} {{ field_path }} {{ '%}' }}<a href="{{ '{{' }} {{ field_path }} {{ '}}' }}" target="_blank"><i class="fe fe-external-link mr-2"></i></a>{{ '{% else %}-{% endif %}' }}
 {% else %}
 {{ '{{' }} {{ field_path }} or '-' {{ '}}' }}
 {% endif %}
@@ -151,11 +165,11 @@
 {# form_group_name is a placeholder(@) for relation as it will be replaced by related object's id when posting #}
 {# e.g, fieldset.object[name=user] > .form-group[name='@'] > :select, we need to replace @ to id when posting, user.@ -> user.id = xxx  #}
 {% set form_group_name = '@' if field_schema.is_relation else field_name %}
-<div class="form-group {{ field_schema.type~'-'~field_format }}{{ ' relation' if field_schema.is_relation }}{{ ' row' if view_is_horizontal }}{{ ' d-none' if field_format == 'hidden' }}" name="{{ form_group_name }}">
+<div class="form-group {{ field_schema.type~'-'~field_format }}{{ ' relation' if field_schema.is_relation }}{{ ' row' if render_controls.view_is_horizontal }}{{ ' d-none' if field_format == 'hidden' }}" name="{{ form_group_name }}">
     {% if show_label %}
-    <label class="{{ 'col-auto col-form-label' if view_is_horizontal }}">{{ '<span class="text-danger mr-1">*</span>' if field_schema.required }}{{ field_schema.title }}</label>
+    <label class="{{ 'col-auto col-form-label' if render_controls.view_is_horizontal }}">{{ '<span class="text-danger mr-1">*</span>' if field_schema.required }}{{ field_schema.title }}</label>
     {% endif %}
-    {% if view_is_horizontal %}
+    {% if render_controls.view_is_horizontal %}
     <div class="col">
     {% endif %}
     {% if exists(format_file) %}
@@ -177,18 +191,18 @@
     {% else %}
     <div class="invalid-feedback">__(Invalid ){{ field_schema.title }}__(!)</div>
     {% endif %}
-    {% if view_is_horizontal %}
+    {% if render_controls.view_is_horizontal %}
     </div>
     {% endif %}
 </div>
 {# display #}
 {% else %}
 {% set format_file = '__includes/display_' ~ field_format ~ '.html' %}
-<div class="field-group {{ field_schema.type~'-'~field_format }}{{ ' relation' if field_schema.is_relation }}{{ ' row' if view_is_horizontal }}">
+<div class="field-group {{ field_schema.type~'-'~field_format }}{{ ' relation' if field_schema.is_relation }}{{ ' row' if render_controls.view_is_horizontal }}" name="{{ field_name }}">
     {% if show_label %}
-    <label class="text-gray-700{{ ' col-auto col-field-label' if view_is_horizontal }}">{{ field_schema.title }}{{ '('~field_schema.unit~')' if field_schema.unit }}</label>
+    <label class="text-gray-700{{ ' col-auto col-field-label' if render_controls.view_is_horizontal }}">{{ field_schema.title }}{{ '('~field_schema.unit~')' if field_schema.unit }}</label>
     {% endif %}
-    {% if view_is_horizontal %}
+    {% if render_controls.view_is_horizontal %}
     <div class="col">
     {% endif %}
     {% if exists(format_file) %}
@@ -198,7 +212,7 @@
     {% else %}
     {% filter right(4) %}{% include '__includes/display_*.html' %}{% endfilter %}
     {% endif %}
-    {% if view_is_horizontal %}
+    {% if render_controls.view_is_horizontal %}
     </div>
     {% endif %}
 </div>
@@ -274,7 +288,8 @@
 <{{ wrapper }} class="array{{ ' relation' if field_schema.is_relation }}" name="{{ field_name }}" format="{{ field_format }}">
 {# array card logic #}
 {# 1. array is card by default and do NOT draw cards inside a card #}
-{% set array_is_card = not is_in_card %}
+{# 2. if array format is grid, do not render card #}
+{% set array_is_card = not is_in_card and field_format not in ['grid'] %}
 {% set array_show_label = true %}
 {# below formats use .table-responsive(w/o x-padding) instead of .card-body #}
 {% set array_card_body_class = 'table-responsive' if field_format in ['table', 'modal', 'chart'] else 'card-body' %}
@@ -298,9 +313,9 @@
                 <div class="col">
                 {# simple types always have a format, this also handle objects that have format #}
                 {% if item_schema.format %}
-                    {% filter right(20) %}{{ render_format(is_form, '-', field_name~'_item', item_schema, field_layout, is_in_card or array_is_card, array_show_label) }}{% endfilter %}
+                    {% filter right(20) %}{{ render_format(true, '-', field_name~'_item', item_schema, field_layout, item_schema.format, is_in_card or array_is_card, array_show_label) }}{% endfilter %}
                 {% elif item_schema.type == 'object' %}
-                    {% filter right(20) %}{{ render_layout(is_form, '-', field_name~'_item', item_schema, field_layout, is_in_card or array_is_card) }}{% endfilter %}
+                    {% filter right(20) %}{{ render_layout(true, '-', field_name~'_item', item_schema, field_layout, is_in_card or array_is_card) }}{% endfilter %}
                 {% else %}
                     UNSUPPORTED! {{ item_schema.type }} with format {{ item_schema.format }} can not in an array!
                 {% endif %}
@@ -324,9 +339,9 @@
         <div class="array-item {{ item_schema.type }}" name="-" format="{{ item_schema.format }}">
             {# simple types always have a format, this also handle objects that have format #}
             {% if item_schema.format %}
-            {% filter right(12) %}{{ display_format('-', field_name~'_item', item_schema, field_layout, is_in_card or array_is_card, array_show_label) }}{% endfilter %}
+            {% filter right(12) %}{{ render_format(false, '-', field_name~'_item', item_schema, field_layout, item_schema.format, is_in_card or array_is_card, array_show_label) }}{% endfilter %}
             {% elif item_schema.type == 'object' %}
-            {% filter right(12) %}{{ display_layout('-', field_name~'_item', item_schema, field_layout, is_in_card or array_is_card) }}{% endfilter %}
+            {% filter right(12) %}{{ render_layout(false, '-', field_name~'_item', item_schema, field_layout, is_in_card or array_is_card) }}{% endfilter %}
             {% else %}
             UNSUPPORTED! {{ item_schema.type }} with format {{ item_schema.format }} can not in an array!
             {% endif %}
@@ -387,7 +402,7 @@
     {% set column_layout = column['rows'] %}
     {# column format overwrites schema format #}
     {% set column_format = column.format or column_schema.format %}
-    {% set column_class = 'col-lg' if is_first_level else 'col' %}
+    {% set column_class = 'col-lg' if is_first_level else 'col-sm' %}
     {# column wrapper #}
     <div class="{{ (column_class~'-'~column.span|string) if column.span else column_class }}">
     {# blank column #}

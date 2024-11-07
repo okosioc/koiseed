@@ -10,7 +10,7 @@ from flask_login import current_user
 from py3seed import populate_model, populate_search
 
 from core.models import DemoPostStatus, DemoPost, DemoUser, DemoProject, DemoTask, DemoProjectDashboard, DemoTeam
-from www.commons import get_id, auth_permission, admin_permission, json_dumps
+from www.commons import get_id, get_ids, auth_permission, admin_permission, json_dumps
 
 dash_demo = Blueprint('dash-demo', __name__, url_prefix='/dash-demo')
 
@@ -26,6 +26,27 @@ def post_list():
     #
     return render_template('dash-demo/post-list.html',
                            search=search, pagination=pagination, demo_posts=demo_posts)
+
+
+@dash_demo.route('/post-list-delete-demo-posts', methods=('POST',))
+@auth_permission
+def post_list_delete_demo_posts():
+    """ 删除文章列表. """
+    ids_ = get_ids(int)
+    current_app.logger.info(f'Try to delete demo post(s) with ids {ids_}')
+    total_deleted = 0
+    for id_ in ids_:
+        existing = DemoPost.find_one(id_)
+        if not existing:
+            continue
+        #
+        if existing.delete():
+            total_deleted += 1
+    #
+    if total_deleted == 0:
+        return jsonify(error=1, message='Delete zero demo post!')
+    #
+    return jsonify(error=0, message=f'Deleted {total_deleted} demo post(s).')
 
 
 @dash_demo.route('/post-edit')

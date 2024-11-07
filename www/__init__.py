@@ -56,6 +56,9 @@ def create_www(pytest=False, runscripts=False):
         app.debug = True
         # Use test db
         app.config['MONGODB_URI'] = app.config['MONGODB_URI_PYTEST']
+    #
+    if runscripts:
+        app.debug = True
     # Chain
     configure_logging(app)
     configure_errorhandlers(app)
@@ -143,22 +146,29 @@ def configure_uploads(app):
     @app.context_processor
     def inject_upload_config():
         """ Can use upload_config directly in template. """
-        token = qiniu.gen_token() if is_qiniu else ''
         mimes = app.config['UPLOAD_MIMES']
+        image_preview = app.config.get('UPLOAD_IMAGE_PREVIEW', '')
         uc = {
+            # Basic
             'endpoint': endpoint,
+            'max': f'{upload_max}mb',  # Config unit is megabyte
+            # Mimes/Exts
             'mimes': mimes,
             'exts': get_exts(mimes),
             'image_mimes': [m for m in mimes if m.startswith('image')],
             'image_exts': get_exts(mimes, 'image'),
             'video_mimes': [m for m in mimes if m.startswith('video')],
             'video_exts': get_exts(mimes, 'video'),
-            'max': f'{upload_max}mb',  # Config unit is megabyte
-            'image_preview': app.config['UPLOAD_IMAGE_PREVIEW'],
-            'avatar_preview': app.config['UPLOAD_AVATAR_PREVIEW'],
-            'video_poster': app.config['UPLOAD_VIDEO_POSTER'],
-            'token': token
+            # Image/Video operations
+            'image_preview': image_preview,
+            'avatar_preview': app.config.get('UPLOAD_AVATAR_PREVIEW', ''),
+            'video_poster': app.config.get('UPLOAD_VIDEO_POSTER', ''),
+            # Params when uploading, changed according to different upload services
+            'params': {},
         }
+        if is_qiniu:
+            uc['params'].update({'token': qiniu.gen_token()})
+        #
         return dict(upload_config=uc)
 
 
@@ -167,10 +177,11 @@ def configure_i18n(app):
 
     def get_locale():
         """ Guess locale. """
+        # 默认是英语, 只有在请求中指定了_locale才会变化
         locale = app.config.get('BABEL_DEFAULT_LOCALE')
-        if has_request_context() and request:
+        if request:
             # Request a locale and save to session
-            rl = request.args.get('_locale', None)
+            rl = request.args.get('_locale')
             if rl:
                 accept_languages = app.config.get('ACCEPT_LANGUAGES')
                 if rl not in accept_languages:
@@ -185,7 +196,7 @@ def configure_i18n(app):
     Babel(app, locale_selector=get_locale)
     # Use new style gettext, https://jinja.palletsprojects.com/en/3.0.x/extensions/#new-style-gettext
     app.jinja_env.newstyle_gettext = True
-    # Support inline gettext by _(), , e.g, <h1>_(Welcome)</h1>, <p>_(This is a paragraph)</p>
+    # Support inline gettext by __(), , e.g, <h1>__(Welcome)</h1>, <p>__(This is a paragraph)</p>
     app.jinja_env.add_extension('py3seed.ext.InlineGettext')
 
 
@@ -450,6 +461,9 @@ def configure_template_functions(app):
     @app.template_global()
     def new_model(class_name):
         """ 初始化一个BaseModel. """
+        if class_name in ['bool', 'int', 'float', 'str', 'datetime']:
+            return None
+        #
         klazz = getattr(MODELS_MODULE, class_name)
         return klazz()
 
@@ -491,11 +505,6 @@ def configure_before_handlers(app):
         request.IPHONE = True if platform == 'iphone' else False
         request.ANDROID = True if platform == 'android' else False
 
-    @app.before_request
-    def set_is_xhr():
-        """ Set XHR. """
-        request.XHR = request.accept_mimetypes.best == 'application/json'
-
 
 def configure_errorhandlers(app):
     """ Register error handlers. """
@@ -508,7 +517,7 @@ def configure_errorhandlers(app):
             'title': 'Invalid Request',
             'content': 'Unexpected request received!'
         }
-        if request.XHR:
+        if request.is_json:
             return jsonify(error=error.code, message='{content}({status})'.format(**err))
         #
         return render_template('public/error.html', error=err), error.code
@@ -521,7 +530,7 @@ def configure_errorhandlers(app):
             'title': 'Please Login',
             'content': 'Login required!'
         }
-        if request.XHR:
+        if request.is_json:
             return jsonify(error=error.code, message='{content}({status})'.format(**err))
         #
         return redirect(url_for('public.login', next=request.path))
@@ -534,7 +543,7 @@ def configure_errorhandlers(app):
             'title': 'Permission Denied',
             'content': 'Not allowed or forbidden!'
         }
-        if request.XHR:
+        if request.is_json:
             return jsonify(error=error.code, message='{content}({status})'.format(**err))
         #
         return render_template('public/error.html', error=err), error.code
@@ -547,7 +556,7 @@ def configure_errorhandlers(app):
             'title': 'Page Not Found',
             'content': 'The requested URL was not found on this server!'
         }
-        if request.XHR:
+        if request.is_json:
             return jsonify(error=error.code, message='{content}({status})'.format(**err))
         #
         return render_template('public/error.html', error=err), error.code
@@ -560,7 +569,7 @@ def configure_errorhandlers(app):
             'title': 'Internal Server Error',
             'content': 'Unexpected error occurred! Please try again later.'
         }
-        if request.XHR:
+        if request.is_json:
             return jsonify(error=error.code, message='{content}({status})'.format(**err))
         #
         return render_template('public/error.html', error=err), error.code

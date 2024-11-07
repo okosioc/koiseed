@@ -3,11 +3,12 @@ UNSUPPORTED! {{ field_schema.format }} format do not support {{ field_schema.typ
 {% else %}
 <div class="plupload-input-group image-input-group" {{ 'required' if field_schema.required }}>
     <a class="btn btn-outline-primary plupload" href="javascript:;"
-       data-token="{{ '{{ upload_config.token }}' }}"
+       data-base='{{ '{{ upload_config.base or "" }}' }}'
        data-upload="{{ '{{ upload_config.endpoint }}' }}"
+       data-params='{{ '{{ upload_config.params|tojson }}' }}'
        data-max="{{ '{{ upload_config.max }}' }}"
-       data-preview='{"image":"{{ '{{' }} upload_config.avatar_preview {{ '}}' }}","video":""}'
-       data-suffix='{"image":"{{ '{{' }} upload_config.avatar_preview {{ '}}' }}","video":""}'
+       data-preview='{"image":"{{ '{{' }} upload_config.avatar_preview {{ '}}' }}"}'
+       data-suffix='{"image":"{{ '{{' }} upload_config.avatar_preview {{ '}}' }}"}'
        data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ '{{' }} upload_config.image_exts|join(",") {{ '}}' }}"}]}'
        data-hiddens="url">__(Choose Image)...</a>
     <small class="mt-2 form-text text-muted">__(Availabe formats: ){{ '{{' }} upload_config.image_exts|join('/') {{ '}}' }}</small>

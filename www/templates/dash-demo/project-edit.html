@@ -19,7 +19,7 @@
                     <fieldset class="group" name="1" format="">
                         <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-briefcase mr-2"></i>项目基本信息</h4></div><div class="card-body">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-text" name="title">
                                     <label class=""><span class="text-danger mr-1">*</span>项目名称</label>
                                     <input name="title" type="text" required class="form-control"
@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-textarea" name="description">
                                     <label class="">项目介绍</label>
                                     <textarea name="description" rows="5" class="form-control autosize">{{ demo_project.description or '' }}</textarea>
@@ -38,7 +38,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group string-select" name="status">
                                     <label class=""><span class="text-danger mr-1">*</span>项目状态</label>
                                     <select class="custom-select select2" required>
@@ -50,7 +50,7 @@
                                     <div class="invalid-feedback">__(Please choose at least one )项目状态__(!)</div>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group number-float" name="value">
                                     <label class=""><span class="text-danger mr-1">*</span>项目价值</label>
                                     <div class="input-group input-group-merge" required>
@@ -63,7 +63,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group date-date" name="start">
                                     <label class=""><span class="text-danger mr-1">*</span>开始日期</label>
                                     <input name="start" type="text" class="form-control date" required
@@ -71,7 +71,7 @@
                                     <div class="invalid-feedback">__(Invalid )开始日期__(!)</div>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group date-date" name="end">
                                     <label class=""><span class="text-danger mr-1">*</span>结束日期</label>
                                     <input name="end" type="text" class="form-control date" required
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <div class="form-group number-float" name="percent">
                                     <label class=""><span class="text-danger mr-1">*</span>项目进度</label>
                                     <div class="input-group input-group-merge" required>
@@ -92,7 +92,7 @@
                                     <div class="invalid-feedback">__(Invalid )项目进度__(!)</div>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-sm">
                             </div>
                         </div>
                         </div></div>
@@ -103,7 +103,7 @@
                 <div class="col-lg-6">
                     <fieldset class="group" name="2" format="">
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <fieldset class="array relation" name="members" format="media">
                                     <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-users mr-2"></i>项目成员</h4></div><div class="card-body">
                                     <div class="form-group array-media relation" name="@">
@@ -150,7 +150,7 @@
                                                                     <input name="id" type="text" value="{{ members_item.id or '' }}">
                                                                 </div>
                                                             </fieldset>
-                                                            <div class="card-body">
+                                                            <div class="">
                                                                 <div class="row text-center">
                                                                     <div class="col">
                                                                         <div name="avatar" format="avatar">
@@ -182,8 +182,8 @@
                                                                             </div>
                                                                             <div class="col-auto text-muted" name="roles" format="select" enum="DemoUserRole">
                                                                                 {% for roles_item in members_item.roles %}
-                                                                                {{ ' ' if not loop.fist }}{% if roles_item is not none %}{{ enum_titles('DemoUserRole')[roles_item] }}{% else %}-{% endif %}
-                                                                                {% endfor %}
+                                                                                {{ ' ' if not loop.fist }}{{ enum_titles('DemoUserRole')[roles_item] }}
+                                                                                {% else %}-{% endfor %}
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -238,18 +238,19 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-sm">
                                 <fieldset class="array" name="files" format="file">
                                     <div class="card"><div class="card-header"><h4 class="card-header-title"><i class="fe fe-file-plus mr-2"></i>项目文件</h4></div><div class="card-body">
                                     <div class="form-group array-file" name="files">
                                         <div class="plupload-input-group file-input-group" >
                                             <a class="btn btn-outline-primary plupload" href="javascript:;" multiple
-                                               data-token="{{ upload_config.token }}"
-                                               data-upload="{{ upload_config.endpoint }}"
-                                               data-max="{{ upload_config.max }}"
-                                               data-preview=''
-                                               data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ upload_config.exts|join(",") }}"}]}'
-                                               data-hiddens="url">__(Choose File)...</a>
+                                                data-base='{{ upload_config.base or "" }}'
+                                                data-upload="{{ upload_config.endpoint }}"
+                                                data-params='{{ upload_config.params|tojson }}'
+                                                data-max="{{ upload_config.max }}"
+                                                data-preview=''
+                                                data-filters='{"mime_types":[{"title":"Custom files","extensions":"{{ upload_config.exts|join(",") }}"}]}'
+                                                data-hiddens="url">__(Choose File)...</a>
                                             <small class="mt-2 form-text text-muted">__(Support multiple uploads; )__(Availabe formats: ){{ upload_config.exts|join('/') }}</small>
                                             <div class="plupload-input-result file-input-result mt-1 clearfix">
                                                 {% for e in demo_project.files %}
@@ -315,7 +316,7 @@
                                             <div class="modal-body">
                                                 <fieldset class="object" name="-">
                                                     <div class="row">
-                                                        <div class="col">
+                                                        <div class="col-sm">
                                                             <fieldset class="object relation" name="user" format="select">
                                                                 <div class="form-group object-select relation" name="@">
                                                                     <label class=""><span class="text-danger mr-1">*</span>操作人</label>
@@ -331,7 +332,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col">
+                                                        <div class="col-sm">
                                                             <div class="form-group string-text" name="title">
                                                                 <label class=""><span class="text-danger mr-1">*</span>操作标题</label>
                                                                 <input name="title" type="text" required class="form-control"
@@ -341,7 +342,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col">
+                                                        <div class="col-sm">
                                                             <div class="form-group string-textarea" name="content">
                                                                 <label class="">操作详情</label>
                                                                 <textarea name="content" rows="5" class="form-control autosize">{{ activities_item.content or '' }}</textarea>
@@ -350,7 +351,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col">
+                                                        <div class="col-sm">
                                                             <div class="form-group date-datetime" name="time">
                                                                 <label class=""><span class="text-danger mr-1">*</span>操作时间</label>
                                                                 <input name="time" type="text" class="form-control date-time" required
@@ -385,6 +386,8 @@
         <a class="btn btn-primary mr-2" onclick="project_edit_upcreate($(this));"><i class="fe fe-save mr-1"></i>__(Save)</a>
         {% if demo_project.id %}
         <a href="project-detail?id={{ demo_project.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        {% else %}
+        <a href="project-list" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
         {% endif %}
     </div>
 </div>
@@ -477,8 +480,8 @@
                                 </td>
                                 <td name="roles" format="select" enum="DemoUserRole">
                                     {% for roles_item in demo_user.roles %}
-                                    {{ ' ' if not loop.fist }}{% if roles_item is not none %}{{ enum_titles('DemoUserRole')[roles_item] }}{% else %}-{% endif %}
-                                    {% endfor %}
+                                    {{ ' ' if not loop.fist }}{{ enum_titles('DemoUserRole')[roles_item] }}
+                                    {% else %}-{% endfor %}
                                 </td>
                                 <td name="email" format="text" enum="">
                                     {{ demo_user.email or '-' }}

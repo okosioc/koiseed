@@ -4,21 +4,34 @@
 <div id="div-{{ view.name_kebab }}">
     <form id="{{ view.name_kebab }}" class="form-editor needs-validation" novalidate method="post">
         <fieldset class="object" name="{{ model.name_snake }}">
-            {% if view_is_card %}
+            {% if render_controls.view_is_card %}
             <div class="card"><div class="card-body">
             {% endif %}
-            {% filter right(12) %}{{ render_layout(true, model.name_snake, model.name_snake, model.schema, view.rows, view_is_card, true) }}{% endfilter %}
-            {% if view_is_card %}
+            {% filter right(12) %}{{ render_layout(true, model.name_snake, model.name_snake, model.schema, view.rows, render_controls.view_is_card, true) }}{% endfilter %}
+            {% if render_controls.view_is_card %}
             </div></div>
             {% endif %}
         </fieldset>
     </form>
     <div class="form-actions mb-4">
         <a class="btn btn-primary mr-2" onclick="{{ view.name_snake }}_{{ action }}($(this));"><i class="fe fe-save mr-1"></i>__(Save)</a>
-        {% set target_url = generate_url(model.schema.py_type, model.name_snake, ['read', 'query']) %}
-        {% if target_url != 'javascript:;' %}
+        {# return logic #}
+        {# 1. create action return to query page directly #}
+        {# 2. update action return to read page, if read page is not defined, return to query page #}
+        {# 3. upcreate action, need to check if it is updating or creating, return to differnt page #}
+        {% set target_query_url = generate_url(model.schema.py_type, model.name_snake, ['query']) %}
+        {% set target_read_query_url = generate_url(model.schema.py_type, model.name_snake, ['read', 'query']) %}
+        {% if view.action == 'create' and target_query_url != 'javascript:;' %}
+        <a href="{{ target_query_url }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        {% elif view.action == 'update' and target_read_query_url != 'javascript:;' %}
+        <a href="{{ target_read_query_url }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        {% elif view.action == 'upcreate' and target_read_query_url != 'javascript:;' %}
         {{ '{%' }} if {{ model.name_snake }}.{{ model.schema.id_name }} {{ '%}' }}
-        <a href="{{ target_url }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        <a href="{{ target_read_query_url }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        {% if target_query_url != 'javascript:;' %}
+        {{ '{%' }} else {{ '%}' }}
+        <a href="{{ target_query_url }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Cancel)</a>
+        {% endif %}
         {{ '{%' }} endif {{ '%}' }}
         {% endif %}
     </div>

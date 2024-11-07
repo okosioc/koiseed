@@ -33,8 +33,7 @@ class ListConverter(BaseConverter):
         """
         被url_for()调用，来转换参数成为符合URL的形式
         """
-        return '+'.join(BaseConverter.to_url(value)
-                        for value in values)
+        return '+'.join(BaseConverter.to_url(value) for value in values)
 
 
 class BSONObjectIdConverter(BaseConverter):

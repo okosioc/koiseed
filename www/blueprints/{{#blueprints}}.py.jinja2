@@ -149,7 +149,7 @@ from flask_login import current_user
 from py3seed import populate_model, populate_search
 
 from core.models import {{ blueprint.models|map(attribute='name')|unique|join(', ') }}
-from www.commons import get_id, auth_permission, admin_permission, json_dumps
+from www.commons import get_id, get_ids, auth_permission, admin_permission, json_dumps
 {# public blueprint with blank url_prefix is defined at www/public.py #}
 {% if blueprint.name == 'public' %}
 from www.public import public
@@ -157,10 +157,10 @@ from www.public import public
 
 {{ blueprint.name_snake }} = Blueprint('{{ blueprint.name }}', __name__, url_prefix='/{{ blueprint.name }}')
 {% endif %}
-
-
 {# iterate each view under current blueprint #}
 {% for view in blueprint.views %}
+
+
 {# core variables #}
 {% set model = view.model %}
 {% set action = view.action %}
@@ -169,7 +169,7 @@ from www.public import public
 {% set render_controls.relations_needing_preload = [] %}
 {% set render_controls.relations_needing_search = [] %}
 {% set render_controls.relations_needing_async_load = [] %}
-{% set render_controls.can_delete = view.params.can_delete or false %}
+{% set render_controls.can_delete = false if 'can_delete' not in view.params else view.params.can_delete %}
 {{- iterate_layout(layout, model.schema) -}}
 {# define view function #}
 @{{ blueprint.name_snake }}.route('/{{ view.name }}')
@@ -222,12 +222,38 @@ def {{ view.name_snake }}():
     # FIXME: UNSUPPORTED action {{ action }}!
     return render_template('{{ blueprint.name }}/{{ view.name }}.html')
     {% endif %}
-
-
 {# define post function in read #}
-{% if action == 'read' %}
+{% if action == 'query' %}
+{# define delete, supporting batch #}
+{% if render_controls.can_delete %}
+
+
+@{{ blueprint.name_snake }}.route('/{{ view.name }}-delete-{{ model.name_kebab_plural }}', methods=('POST',))
+{{ render_permisson(blueprint.name) -}}
+def {{ view.name_snake }}_delete_{{ model.name_snake_plural }}():
+    """ $$(text_delete){{ view.params.title }}. """
+    ids_ = get_ids({{ model.schema.id_type }})
+    current_app.logger.info(f'Try to delete {{ model.name_title_lower }}(s) with ids {ids_}')
+    total_deleted = 0
+    for id_ in ids_:
+        existing = {{ model.name }}.find_one(id_)
+        if not existing:
+            continue
+        #
+        if existing.delete():
+            total_deleted += 1
+    #
+    if total_deleted == 0:
+        return jsonify(error=1, message='Delete zero {{ model.name_title_lower }}!')
+    #
+    return jsonify(error=0, message=f'Deleted {total_deleted} {{ model.name_title_lower }}(s).')
+{% endif %}
+{# define post function in read #}
+{% elif action == 'read' %}
 {# define load relation function in read, i.e, loading events monthly in a calendar #}
 {% for relation, projection in render_controls.relations_needing_async_load %}
+
+
 {% set related_model = models[relation] %}
 @{{ blueprint.name_snake }}.route('/{{ view.name }}-load-{{ related_model.name_kebab_plural }}', methods=('POST',))
 {{ render_permisson(blueprint.name) -}}
@@ -238,29 +264,11 @@ def {{ view.name_snake }}_load_{{ related_model.name_snake_plural }}():
     current_app.logger.info(f'Try to load {{ related_model.name_title_lower }} at page {page} by {condition}, sort by {sort}')
     {{ related_model.name_snake_plural }}, pagination = {{ related_model.name }}.search(condition, page, projection={{ projection }}, sort=sort)
     return jsonify(error=0, message='Load {{ related_model.name_title_lower }} successfully.', pagination=dict(pagination), {{ related_model.name_snake_plural }}={{ related_model.name_snake_plural }})
-
-
 {% endfor %}
-{# define delete #}
-{% if render_controls.can_delete %}
-@{{ blueprint.name_snake }}.route('/{{ view.name }}-delete', methods=('POST',))
-{{ render_permisson(blueprint.name) -}}
-def {{ view.name_snake }}_delete():
-    """ $$(text_delete){{ view.params.title }}. """
-    id_ = get_id({{ model.schema.id_type }})
-    current_app.logger.info(f'Try to delete {{ model.name_title_lower }} with id {id_}')
-    existing = {{ model.name }}.find_one(id_)
-    if not existing:
-        abort(404)
-    #
-    existing.delete()
-    return jsonify(error=0, message='Delete {{ model.name_title_lower }} successfully.')
-
-
-{% endif %}
-{% endif %}
 {# define post function for create/update/upcreate #}
-{% if action in ['create', 'update', 'upcreate'] %}
+{% elif action in ['create', 'update', 'upcreate'] %}
+
+
 @{{ blueprint.name_snake }}.route('/{{ view.name }}-{{ action }}', methods=('POST',))
 {{ render_permisson(blueprint.name) -}}
 def {{ view.name_snake }}_{{ action }}():
@@ -281,10 +289,10 @@ def {{ view.name_snake }}_{{ action }}():
     {% endif %}
     #
     return jsonify(error=0, message='Save {{ model.name_title_lower }} successfully.', id=id_)
-
-
 {# define search relation function in create/update/upcreate #}
 {% for relation, projection in render_controls.relations_needing_search %}
+
+
 {% set related_model = models[relation] %}
 @{{ blueprint.name_snake }}.route('/{{ view.name }}-search-{{ related_model.name_kebab_plural }}', methods=('POST',))
 {{ render_permisson(blueprint.name) -}}
@@ -295,9 +303,7 @@ def {{ view.name_snake }}_search_{{ related_model.name_snake_plural }}():
     current_app.logger.info(f'Try to search {{ related_model.name_title_lower }} at page {page} by {condition}, sort by {sort}')
     {{ related_model.name_snake_plural }}, pagination = {{ related_model.name }}.search(condition, page, projection={{ projection }}, sort=sort)
     return jsonify(error=0, message='Search {{ related_model.name_title_lower }} successfully.', pagination=dict(pagination), {{ related_model.name_snake_plural }}={{ related_model.name_snake_plural }})
-
-
 {% endfor %}
 {% endif %}
-{# /.blueprint.views #}
+{# /blueprint.views #}
 {% endfor %}

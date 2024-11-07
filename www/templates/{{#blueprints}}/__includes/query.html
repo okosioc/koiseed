@@ -1,7 +1,10 @@
 {# * #}
 {# * main #}
 {# * #}
-{% set has_search = True if 'has_search' not in view.params else view.params.has_search %}
+{# deletion is disabled by default #}
+{% set can_delete = false if 'can_delete' not in view.params else view.params.can_delete %}
+{# search is enable by default #}
+{% set has_search = true if 'has_search' not in view.params else view.params.has_search %}
 {% set result_view = view.params.result_view or 'table' %}
 {% set grid_type = view.params.grid_type or 'default' %}
 {% set schema = model.schema %}
@@ -69,8 +72,8 @@
         </div>
         {% endfor %}
         <div class="col-sm-auto mb-4">
-            <button type="button" class="btn btn-primary btn-default" onclick="search_do($(this));">__(Search)</button>
-            <button type="button" class="btn btn-light btn-default" onclick="search_reset();">__(Reset)</button>
+            <button type="button" class="btn btn-primary" onclick="search_do($(this));">__(Search)</button>
+            <button type="button" class="btn btn-light" onclick="search_reset();">__(Reset)</button>
         </div>
     </div>
 </form>
@@ -81,7 +84,9 @@
                 <i class="fe fe-info mr-2"></i>__(Choosed )<span id="span-checked" class="text-primary mx-1"></span>
             </div>
             <div class="col-sm-auto">
-                <button type="button" class="btn btn-primary btn-default" onclick="coming($(this));">ACTION</button>
+                {% if can_delete %}
+                <button type="button" class="btn btn-sm btn-danger" onclick="delete_{{ model.name_snake_plural }}($(this));">__(Delete)</button>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -113,6 +118,9 @@
                         {% endif %}
                         {% if edit_url != 'javascript:;' %}
                         <a class="btn btn-link text-reset" href="{{ edit_url }}"><i class="fe fe-edit"></i></a>
+                        {% endif %}
+                        {% if can_delete %}
+                        <a class="btn btn-link text-reset" href="javascript:delete_{{ model.name_snake_plural }}($(this), '{{ '{{' }} {{ model.name_snake }}.{{ model.schema.id_name }} {{ '}}' }}');"><i class="fe fe-delete"></i></a>
                         {% endif %}
                     </p>
                 </div>
@@ -183,6 +191,9 @@ TODO
                 {% if edit_url != 'javascript:;' %}
                 <a class="btn pl-0 py-0" href="{{ edit_url }}"><i class="fe fe-edit"></i></a>
                 {% endif %}
+                {% if can_delete %}
+                <a class="btn pl-0 py-0" href="javascript:delete_{{ model.name_snake_plural }}($(this), '{{ '{{' }} {{ model.name_snake }}.{{ model.schema.id_name }} {{ '}}' }}');"><i class="fe fe-delete"></i></a>
+                {% endif %}
             </td>
         </tr>
         {{ '{%' }} else {{ '%}' }}
@@ -207,42 +218,42 @@ TODO
 <div id="div-{{ view.name_kebab }}">
 {% if result_view == 'grid' %}
     {% if has_search %}
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     <div class="card"><div class="card-body pb-0">
     {% endif %}
     {% filter right(4) %}{{ render_search_form() }}{% endfilter %}
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     </div></div>
     {% endif %}
     {% endif %}
     {# do not wrap card to grid #}
     {% filter right(4) %}{{ render_grid() }}{% endfilter %}
 {% elif result_view == 'media' %}
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     <div class="card"><div class="card-body">
     {% endif %}
     {% if has_search %}
     {% filter right(4) %}{{ render_search_form() }}{% endfilter %}
     {% endif %}
     {% filter right(4) %}{{ render_media() }}{% endfilter %}
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     </div></div>
     {% endif %}
 {% else %}
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     <div class="card">
     {% endif %}
     {% if has_search %}
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     <div class="card-body pb-0">
     {% endif %}
     {% filter right(4) %}{{ render_search_form() }}{% endfilter %}
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     </div>
     {% endif %}
     {% endif %}
     {% filter right(4) %}{{ render_table() }}{% endfilter %}
-    {% if view_is_card %}
+    {% if render_controls.view_is_card %}
     </div>
     {% endif %}
 {% endif %}
@@ -305,4 +316,43 @@ TODO
             btn[method](oldLabel);
         }, 'json');
     }
+    {% if can_delete %}
+    //
+    function delete_{{ model.name_snake_plural }}(btn, id=null) {
+        if (btn.is(".doing")) {
+            return;
+        }
+        var msg = "__(Are you sure to delete?)";
+        var con = window.confirm(msg);
+        if (!con) {
+            return false;
+        }
+        //
+        btn.addClass("doing");
+        var method = btn.is("input") ? "val" : "text";
+        var oldLabel = btn[method]();
+        btn[method](oldLabel + "...");
+        //
+        var ids = "";
+        if (id == null) {
+            ids = $(".list-checkbox:checked").map(function () {
+                var checkbox_id = $(this).attr("id");
+                return checkbox_id.split("-").pop();
+            }).get().join("+");
+        } else {
+            ids = id;
+        }
+        //
+        var url = "{{ '/'~blueprint.name if blueprint.name!='public' }}/{{ view.name }}-delete-{{ model.name_kebab_plural }}";
+        $.post(url, {"ids": ids}, function (result) {
+            if (result.error == 0) {
+                showSuccess(result.message);
+            } else {
+                showError(result.message);
+            }
+            btn.removeClass("doing");
+            btn[method](oldLabel);
+        }, "json");
+    }
+    {% endif %}
 </script>

@@ -18,8 +18,8 @@
                 <div class="group" name="1" format="">
                     <div class="card"><div class="card-body">
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group string-text">
+                        <div class="col-sm">
+                            <div class="field-group string-text" name="title">
                                 <label class="text-gray-700">标题</label>
                                 <div class="field-control">
                                     {{ demo_post.title or '-' }}
@@ -28,8 +28,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group string-text">
+                        <div class="col-sm">
+                            <div class="field-group string-text" name="subtitle">
                                 <label class="text-gray-700">副标题</label>
                                 <div class="field-control">
                                     {{ demo_post.subtitle or '-' }}
@@ -38,9 +38,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-sm">
                             <div class="array" name="tags" format="tag">
-                                <div class="field-group array-tag">
+                                <div class="field-group array-tag" name="tags">
                                     <label class="text-gray-700">标签</label>
                                     <div class="field-control">
                                         {% for value in demo_post.tags %}
@@ -54,13 +54,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group string-image">
+                        <div class="col-sm">
+                            <div class="field-group string-image" name="cover">
                                 <label class="text-gray-700">封面</label>
                                 <div class="field-control">
                                     <div class="gallery">
                                     {% if demo_post.cover %}
-                                    <a href=":;" data-fancybox="封面" data-src="{{ demo_post.cover }}" data-caption="{{ demo_post.cover|basename }}">
+                                    <a href="javascript:;" data-fancybox="封面" data-src="{{ demo_post.cover }}" data-caption="{{ demo_post.cover|basename }}">
                                         <img src="{{ demo_post.cover }}">
                                     </a>
                                     {% else %}
@@ -72,8 +72,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group boolean-switch">
+                        <div class="col-sm">
+                            <div class="field-group boolean-switch" name="featured">
                                 <label class="text-gray-700">是否推荐</label>
                                 <div class="field-control">
                                     {{ '是' if demo_post.featured else '否' }}
@@ -82,8 +82,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group string-select">
+                        <div class="col-sm">
+                            <div class="field-group string-select" name="status">
                                 <label class="text-gray-700">状态</label>
                                 <div class="field-control">
                                     {% if demo_post.status is not none %}<span class="text-{{ demo_post.status|tocolor }} mr-2">●</span>{{ enum_titles('DemoPostStatus')[demo_post.status] }}{% else %}-{% endif %}
@@ -98,8 +98,8 @@
                 <div class="group" name="2" format="">
                     <div class="card"><div class="card-body">
                     <div class="row">
-                        <div class="col">
-                            <div class="field-group string-rte">
+                        <div class="col-sm">
+                            <div class="field-group string-rte" name="content">
                                 <div class="field-control">
                                     <div class="rte-display-group">
                                         {% set rte_id = 'rte_'~randstr() %}
@@ -117,7 +117,7 @@
     </div>
     <div class="mb-4">
     {% if demo_post.id %}
-    <a href="post-list?id={{ demo_post.id }}" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Back)</a>
+    <a href="post-list" class="btn btn-outline-primary mr-2"><i class="fe fe-corner-up-left mr-1"></i>__(Back)</a>
     {% endif %}
     </div>
 </div>

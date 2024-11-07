@@ -21,6 +21,20 @@
     }
 }
 
+/* card columns */
+
+@media (min-width: 576px) {
+    .card-columns {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 992px) {
+    .card-columns {
+        column-count: 3;
+    }
+}
+
 /* margin & padding */
 
 .m1 {
@@ -52,6 +66,29 @@
 
 .table-compact td {
     padding: 0.8rem 1rem;
+}
+
+/* breadcrumb */
+
+.breadcrumb .breadcrumb-item {
+    display: block !important;
+}
+
+/* blockquote */
+
+.blockquote-custom {
+    position: relative;
+    padding: 0.75rem 0 0 2.5rem;
+}
+
+.blockquote-custom::before {
+    content: "“";
+    font-size: 4rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #ccc;
+    line-height: 1;
 }
 
 /* gallery & carousel */

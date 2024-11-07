@@ -1,4 +1,4 @@
-<div class="custom-control custom-switch {{ 'mt-2' if not view_is_horizontal }}">
+<div class="custom-control custom-switch {{ 'mt-2' if not render_controls.view_is_horizontal }}">
     <input type="checkbox" class="custom-control-input" name="{{ field_name }}"
     {{ 'required' if field_schema.required }} {{ '{{' }} 'checked' if {{ field_path }} == true {{ '}}' }}
     >
